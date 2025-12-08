@@ -52,7 +52,7 @@ A comprehensive mental health tracking application with desktop (JavaFX) and bac
 
 ### Android Setup
 
-Coming soon... 
+
 
 ## Technologies
 
