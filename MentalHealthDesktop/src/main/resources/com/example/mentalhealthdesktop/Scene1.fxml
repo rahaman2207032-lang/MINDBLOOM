@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-
-
-<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.image.Image?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" >
-<ImageView>
-<image>
-    <Image url="@/images/background.jpg"/>
-</image>
-</ImageView>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.Scene1controller">
+   <ImageView fitHeight="800.0" fitWidth="800.0" layoutX="-4.0" layoutY="1.0" mouseTransparent="true" pickOnBounds="true">
+      <image>
+         <Image url="@../../../images/background.jpg" />
+      </image>
+      <viewport>
+         <Rectangle2D />
+      </viewport>
+   </ImageView>
+   <Label fx:id="title" alignment="CENTER" layoutX="227.0" layoutY="221.0" text="MINDBLOOM" textAlignment="CENTER" textFill="#c98e8e">
+      <font>
+         <Font name="Georgia" size="55.0" />
+      </font>
+   </Label>
+   <Label fx:id="query" alignment="CENTER" layoutX="186.0" layoutY="453.0" prefHeight="41.0" prefWidth="445.0" text="What is you role?" textFill="#698a78">
+      <font>
+         <Font name="Georgia" size="36.0" />
+      </font>
+   </Label>
+   <RadioButton fx:id="chk" layoutX="325.0" layoutY="560.0" mnemonicParsing="false" text="User" textFill="#698a78" AnchorPane.leftAnchor="325.0">
+      <font>
+         <Font name="Georgia" size="23.0" />
+      </font>
+   </RadioButton>
+   <RadioButton fx:id="chk2" layoutX="329.0" layoutY="623.0" mnemonicParsing="false" text="RadioButton" textFill="#698a78" AnchorPane.leftAnchor="325.0">
+      <font>
+         <Font size="23.0" />
+      </font>
+   </RadioButton>
 
 </AnchorPane>
