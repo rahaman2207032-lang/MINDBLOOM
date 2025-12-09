@@ -11,13 +11,13 @@ import java.util.ResourceBundle;
 public class Login_Signup implements Initializable {
 
     @FXML
-    private AnchorPane rootPane; // Add fx:id="rootPane" to your FXML AnchorPane!
+    private AnchorPane rootPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("=== IMAGE DEBUG TEST ===");
 
-        // Test 1: Check if resource exists
+
         URL imageUrl = getClass().getResource("/images/background.jpg");
         if (imageUrl == null) {
             System.out.println("❌ ERROR: Image NOT FOUND at /images/background.jpg");
@@ -26,7 +26,7 @@ public class Login_Signup implements Initializable {
             System.out.println("✅ Image found at: " + imageUrl);
         }
 
-        // Test 2: Try to load the image
+
         try {
             Image image = new Image(getClass().getResourceAsStream("/images/background.jpg"));
             if (image.isError()) {
@@ -35,7 +35,6 @@ public class Login_Signup implements Initializable {
                 System.out.println("✅ Image loaded successfully!");
                 System.out.println("   Size: " + image.getWidth() + " x " + image.getHeight());
 
-                // Set as background programmatically
                 BackgroundImage bgImage = new BackgroundImage(
                         image,
                         BackgroundRepeat.NO_REPEAT,

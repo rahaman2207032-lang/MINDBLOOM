@@ -22,10 +22,10 @@ public class Scene1controller {
 
     @FXML
     public void initialize() {
-        // This runs when the scene loads
+
         System.out.println("✅ Scene1controller loaded!");
 
-        // Set initial text to verify it's working
+
         if (title != null) {
             title.setText("MINDBLOOM");
         }
@@ -34,7 +34,7 @@ public class Scene1controller {
             query.setText("What is your role?");
         }
 
-        // Check which radio button is selected
+
         chk.setOnAction(event -> {
             System.out.println("First radio button selected");
         });

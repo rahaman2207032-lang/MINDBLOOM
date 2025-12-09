@@ -17,10 +17,10 @@ public class HelloApplication extends Application {
             );
             Parent root = loader.load();
 
-            Scene scene = new Scene(root, 800, 1000);  // Fixed size
+            Scene scene = new Scene(root, 800, 1000);
             stage.setTitle("Mental Health Desktop App");
             stage. setScene(scene);
-            stage.setResizable(false);  // ← ADD THIS LINE
+            stage.setResizable(false);
             stage.show();
 
             System.out.println("✅ Scene1.fxml loaded successfully!");
