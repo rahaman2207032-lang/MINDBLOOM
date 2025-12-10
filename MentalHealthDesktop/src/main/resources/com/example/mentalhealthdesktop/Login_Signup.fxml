@@ -15,7 +15,7 @@
          <font>
             <Font size="17.0" />
          </font></TextField>
-      <Hyperlink fx:id="Signup" layoutX="389.0" layoutY="751.0" maxHeight="32.0" maxWidth="142.0" minHeight="23.0" minWidth="117.0" prefHeight="32.0" prefWidth="142.0" text="Create account" textFill="#66a1bf">
+      <Hyperlink fx:id="Signup" layoutX="399.0" layoutY="751.0" maxHeight="32.0" maxWidth="142.0" minHeight="23.0" minWidth="117.0" prefHeight="32.0" prefWidth="142.0" text="Create account" textFill="#66a1bf">
          <font>
             <Font name="Georgia" size="17.0" />
          </font>

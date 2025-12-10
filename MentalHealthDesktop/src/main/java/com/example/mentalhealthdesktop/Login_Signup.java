@@ -82,7 +82,7 @@ public class Login_Signup implements Initializable {
         else {
             password.requestFocus();
             password.positionCaret(password.getText().length());
-           Toggle.setText("\uD83D\uDC41");
+            Toggle.setText("\uD83D\uDC41");
         }
     }
 }
