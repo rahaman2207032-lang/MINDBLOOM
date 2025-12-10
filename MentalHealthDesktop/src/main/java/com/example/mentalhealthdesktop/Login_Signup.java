@@ -2,9 +2,11 @@ package com.example.mentalhealthdesktop;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx. scene.layout.*;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,6 +14,14 @@ public class Login_Signup implements Initializable {
 
     @FXML
     private AnchorPane rootPane;
+
+    @FXML private Label login,message;
+    @FXML private TextField username, pass;
+    @FXML private PasswordField password;
+    @FXML private Button loginButton;
+    @FXML private ToggleButton Toggle;
+
+    @FXML private Hyperlink Signup;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,10 +54,35 @@ public class Login_Signup implements Initializable {
                 );
                 rootPane.setBackground(new Background(bgImage));
                 System.out.println("✅ Background set programmatically!");
+
             }
         } catch (Exception e) {
             System.out.println("❌ EXCEPTION: " + e.getMessage());
             e.printStackTrace();
+        }
+        password.setVisible(false);
+        password.setManaged(false);
+        pass.textProperty().bindBidirectional(password.textProperty());
+
+        Toggle.setOnAction(event ->{togglePasswordVisibility();});
+
+    }
+
+    public void togglePasswordVisibility() {
+        boolean visible = Toggle.isSelected();
+        password.setVisible(!visible);
+        password.setManaged(!visible);
+        pass.setVisible(visible);
+        pass.setManaged(visible);
+        if (visible) {
+            pass.requestFocus();
+            pass.positionCaret(pass.getText().length());
+           Toggle.setText("\uD83D\uDC41");
+        }
+        else {
+            password.requestFocus();
+            password.positionCaret(password.getText().length());
+           Toggle.setText("\uD83D\uDC41");
         }
     }
 }
