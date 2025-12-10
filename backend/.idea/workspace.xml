@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de69dfaf-f17d-404b-9d04-7800d8b75d08" name="Changes" comment="fixed the folder,deleted the duplicate" />
+    <list default="true" id="de69dfaf-f17d-404b-9d04-7800d8b75d08" name="Changes" comment="fixed the folder,deleted the duplicate">
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/Scene1controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/Scene1controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/Login_Signup.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/Login_Signup.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +104,7 @@
       <workItem from="1765079559464" duration="606000" />
       <workItem from="1765080196364" duration="743000" />
       <workItem from="1765210751855" duration="4808000" />
-      <workItem from="1765247914116" duration="3707000" />
+      <workItem from="1765247914116" duration="5650000" />
     </task>
     <task id="LOCAL-00001" summary="fixed the folder,deleted the duplicate">
       <option name="closed" value="true" />

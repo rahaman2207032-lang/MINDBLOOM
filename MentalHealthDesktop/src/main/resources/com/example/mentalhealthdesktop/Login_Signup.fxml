@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" styleClass="login-background" stylesheets="@/css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.Login_Signup">
-
+<AnchorPane fx:id="rootPane" maxHeight="1000.0" maxWidth="800.0" minHeight="1000.0" minWidth="800.0" prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.Login_Signup">
+   <children>
+      <TextField layoutX="257.0" layoutY="472.0" maxHeight="38.0" maxWidth="283.0" minHeight="38.0" minWidth="283.0" prefHeight="38.0" prefWidth="283.0" promptText="Username">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <Hyperlink layoutX="408.0" layoutY="694.0" maxHeight="23.0" maxWidth="117.0" minHeight="23.0" minWidth="117.0" prefHeight="23.0" prefWidth="117.0" text="Create account" textFill="#66a1bf">
+         <font>
+            <Font name="Georgia" size="14.0" />
+         </font>
+      </Hyperlink>
+      <PasswordField layoutX="258.0" layoutY="563.0" maxHeight="44.0" maxWidth="282.0" minHeight="44.0" minWidth="282.0" prefHeight="44.0" prefWidth="282.0" promptText="Enter your Password">
+         <font>
+            <Font size="14.0" />
+         </font></PasswordField>
+      <ToggleButton ellipsisString="👁" layoutX="505.0" layoutY="563.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="35.0" text="ToggleButton" />
+      <Label alignment="CENTER" layoutX="274.0" layoutY="697.0" maxHeight="17.0" maxWidth="155.0" minHeight="17.0" minWidth="155.0" prefHeight="17.0" prefWidth="155.0" text="New to this app?">
+         <font>
+            <Font name="Georgia" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="194.0" layoutY="319.0" maxHeight="40.0" maxWidth="401.0" minHeight="40.0" minWidth="401.0" prefHeight="40.0" prefWidth="401.0" style="-fx-background-color: #ccdccc; -fx-text-fill: black;" text="Log in to your account" textAlignment="JUSTIFY">
+         <font>
+            <Font name="Georgia" size="33.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>
