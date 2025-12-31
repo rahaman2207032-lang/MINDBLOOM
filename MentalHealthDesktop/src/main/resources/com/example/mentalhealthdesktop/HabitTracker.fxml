@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="700.0" prefWidth="1000.0" spacing="0" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.HabitTrackerController">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #e8a598; -fx-padding: 20;">
+        <Label text="✅ Habit Tracker" textFill="white">
+            <font>
+                <Font name="System Bold" size="24" />
+            </font>
+        </Label>
+        <HBox HBox.hgrow="ALWAYS" />
+        <Button fx:id="backButton" onAction="#handleBack" style="-fx-background-color: white; -fx-text-fill: #e8a598; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10 20; -fx-background-radius: 8;" text="← Back to Dashboard" />
+    </HBox>
+
+    <!-- Main Content -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <VBox spacing="25" style="-fx-padding: 30;">
+
+            <!-- Statistics and Add Button Row -->
+            <HBox alignment="CENTER" spacing="30">
+                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20 40; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <Label text="Total Habits" style="-fx-font-size: 14px; -fx-text-fill: #666;" />
+                    <Label fx:id="totalHabitsLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #e8a598;" />
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20 40; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <Label text="Active Streaks" style="-fx-font-size: 14px; -fx-text-fill: #666;" />
+                    <Label fx:id="activeStreaksLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ff6b6b;" />
+                </VBox>
+
+                <Button fx:id="addHabitButton" onAction="#handleAddHabit" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 15 30; -fx-background-radius: 10;" text="➕ Add New Habit" />
+            </HBox>
+
+            <!-- Habits Container -->
+            <VBox spacing="15" style="-fx-background-color: transparent; -fx-padding: 10;">
+                <Label text="📋 Your Habits" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+
+                <ScrollPane fitToWidth="true" prefHeight="500" style="-fx-background: transparent; -fx-background-color: transparent;">
+                    <VBox fx:id="habitsContainer" spacing="15" style="-fx-padding: 10;" />
+                </ScrollPane>
+            </VBox>
+
+            <!-- Tips Section -->
+            <VBox spacing="10" style="-fx-background-color: #fff3cd; -fx-padding: 20; -fx-background-radius: 10; -fx-border-color: #ffc107; -fx-border-radius: 10; -fx-border-width: 2;">
+                <Label text="💡 Tips for Building Habits" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #856404;" />
+                <Label text="• Start small - Begin with easy habits you can do in 2 minutes" style="-fx-text-fill: #856404;" wrapText="true" />
+                <Label text="• Be consistent - Try to do your habit at the same time each day" style="-fx-text-fill: #856404;" wrapText="true" />
+                <Label text="• Track your progress - Seeing your streak grow is motivating!" style="-fx-text-fill: #856404;" wrapText="true" />
+                <Label text="• Don't break the chain - Even on tough days, do the minimum version" style="-fx-text-fill: #856404;" wrapText="true" />
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>
+

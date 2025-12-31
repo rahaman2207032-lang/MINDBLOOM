@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="832.0" prefWidth="764.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.User_dash_controller">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #E3DAC9; -fx-padding: 15 10;">
+            <Label fx:id="dashboardTitle" text="Mental Wellness Dashboard" textFill="white">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: white; -fx-background-color: white;">
+            <VBox spacing="30" style="-fx-padding: 20 40; -fx-background-color: white;">
+            <!-- First Row of Cards -->
+            <HBox alignment="CENTER" minHeight="160" spacing="25">
+                <!-- Journal Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #6ba3d8; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);">
+                    <Label style="-fx-font-size: 32;" text="📔" />
+                    <Button onAction="#handleJournal" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Journal" />
+                </VBox>
+
+                <!-- Meditation Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #9d8fb8; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);">
+                    <Label style="-fx-font-size: 32;" text="🧘‍♀️" />
+                    <Button onAction="#handleMeditation" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Meditation" />
+                </VBox>
+
+                <!-- Sleep Tracker Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #b8a4c9; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);">
+                    <Label style="-fx-font-size: 32;" text="😴" />
+                    <Button onAction="#handleSleepTracker" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Sleep Tracker" wrapText="true" />
+                </VBox>
+            </HBox>
+
+            <!-- Second Row of Cards -->
+            <HBox alignment="CENTER" minHeight="160" spacing="25">
+                <!-- Habits Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #e8a598; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="3.0">
+                    <Label style="-fx-font-size: 32;" text="✅" />
+                    <Button onAction="#handleHabits" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Habits" />
+                </VBox>
+
+                <!-- Stress Monitor Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #f4b183; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="3.0">
+                    <Label style="-fx-font-size: 32;" text="⚡" />
+                    <Button onAction="#handleStressMonitor" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Stress Monitor" wrapText="true" />
+                </VBox>
+               <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #d3e0ab; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);">
+                  <children>
+                     <Label style="-fx-font-size: 32;" text="🔔" />
+                     <Button onAction="#handleNotification" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Notifications" wrapText="true" />
+                  </children>
+               </VBox>
+            </HBox>
+
+            <!-- Third Row of Cards -->
+            <HBox alignment="CENTER" minHeight="160" spacing="25">
+                <!-- Mood Analytics Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #87b5d8; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="8">
+                    <Label style="-fx-font-size: 32;" text="📊" />
+                    <Button onAction="#handleMoodAnalytics" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Mood Analytics" wrapText="true" />
+                </VBox>
+
+                <!-- Progress Card -->
+                <VBox alignment="CENTER" prefHeight="136.0" prefWidth="180.0" spacing="10" style="-fx-background-color: #95a5c6; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="8.0">
+                    <Label style="-fx-font-size: 32;" text="📈" />
+                    <Button onAction="#handleProgress" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Progress" />
+                </VBox>
+            </HBox>
+
+            <!-- Fourth Row of Cards -->
+            <HBox alignment="CENTER" minHeight="160" spacing="25">
+                <!-- Therapist Zoom Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #d4a5a5; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="15.0">
+                    <Label style="-fx-font-size: 32;" text="💻" />
+                    <Button onAction="#handleTherapistZoom" prefHeight="33.0" prefWidth="135.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold; -fx-cursor: hand;" text="Therapist" wrapText="true" />
+                </VBox>
+
+                <!-- Community Forum Card -->
+                <VBox alignment="CENTER" prefHeight="140" prefWidth="180" spacing="10" style="-fx-background-color: #98c9a3; -fx-background-radius: 15; -fx-padding: 20 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);" translateY="15">
+                    <Label style="-fx-font-size: 32;" text="💬" />
+                    <Button onAction="#handleCommunityForum" prefWidth="120.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-cursor: hand;" text="Community Forum" wrapText="true" />
+                </VBox>
+            </HBox>
+        </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

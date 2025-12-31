@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.TherapistRequestController">
+
+    <!-- Top Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+            <Button onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;" text="← Back" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white;" text="💻 Therapist Sessions" />
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5; -fx-background-color: #f5f5f5;">
+            <VBox spacing="20" style="-fx-padding: 30;">
+
+                <!-- Request New Session Section -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📝 Request New Session" />
+                    <Separator />
+
+                    <!-- ✅ NEW: Instructor Selection -->
+                    <VBox spacing="8">
+                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Select Therapist:" />
+                        <ComboBox fx:id="instructorComboBox" prefWidth="350" promptText="Choose your therapist">
+                            <tooltip>
+                                <Tooltip text="Select the instructor you want to book a session with" />
+                            </tooltip>
+                        </ComboBox>
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Preferred Date and Time:" />
+                        <HBox spacing="10">
+                            <DatePicker fx:id="sessionDatePicker" prefWidth="200" promptText="Select Date" />
+                            <ComboBox fx:id="sessionTimeCombo" prefWidth="150" promptText="Select Time" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Session Type:" />
+                        <ComboBox fx:id="sessionTypeCombo" prefWidth="250" promptText="Choose session type" />
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Reason / Notes (Optional):" />
+                        <TextArea fx:id="reasonTextArea" prefHeight="100" promptText="Briefly describe what you'd like to discuss..." wrapText="true" />
+                    </VBox>
+
+                    <HBox alignment="CENTER_RIGHT" spacing="10">
+                        <Button fx:id="submitRequestBtn" onAction="#handleSubmitRequest" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 5; -fx-cursor: hand;" text="Submit Request" />
+                    </HBox>
+                </VBox>
+
+                <!-- My Session Requests (Pending) Section -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📋 Pending Session Requests" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleRefreshRequests" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12; -fx-padding: 8 15; -fx-background-radius: 5; -fx-cursor: hand;" text="🔄 Refresh" />
+                    </HBox>
+                    <Separator />
+                    <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d; -fx-padding: 5 0;" text="These are requests waiting for instructor approval" />
+
+                    <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background: transparent;">
+                        <VBox fx:id="requestsContainer" spacing="12" style="-fx-padding: 10;" />
+                    </ScrollPane>
+                </VBox>
+
+                <!-- ✅ NEW: Upcoming Confirmed Sessions Section -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #27ae60;" text="✅ Confirmed Upcoming Sessions" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;" text="Ready to join" />
+                    </HBox>
+                    <Separator />
+                    <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d; -fx-padding: 5 0;" text="Your accepted sessions with Join Meeting buttons" />
+
+                    <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background: transparent;">
+                        <VBox fx:id="upcomingSessionsContainer" spacing="12" style="-fx-padding: 10;" />
+                    </ScrollPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
+

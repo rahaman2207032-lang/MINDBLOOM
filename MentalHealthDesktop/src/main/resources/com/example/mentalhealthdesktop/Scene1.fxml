@@ -8,8 +8,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.Scene1controller">
-   <ImageView fitHeight="800.0" fitWidth="800.0" layoutX="-4.0" layoutY="1.0" mouseTransparent="true" pickOnBounds="true">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.Scene1controller">
+   <ImageView fitHeight="850.0" fitWidth="800.0" layoutX="-4.0" layoutY="1.0" mouseTransparent="true" pickOnBounds="true">
       <image>
          <Image url="@../../../images/background.jpg" />
       </image>
@@ -17,22 +17,22 @@
          <Rectangle2D />
       </viewport>
    </ImageView>
-   <Label fx:id="title" alignment="CENTER" layoutX="227.0" layoutY="221.0" text="MINDBLOOM" textAlignment="CENTER" textFill="#c98e8e">
+   <Label fx:id="title" alignment="CENTER" layoutX="226.0" layoutY="180.0" text="MINDBLOOM" textAlignment="CENTER" textFill="#c98e8e">
       <font>
          <Font name="Georgia" size="55.0" />
       </font>
    </Label>
-   <Label fx:id="query" alignment="CENTER" layoutX="186.0" layoutY="453.0" prefHeight="41.0" prefWidth="445.0" text="What is you role?" textFill="#698a78">
+   <Label fx:id="query" alignment="CENTER" layoutX="178.0" layoutY="413.0" prefHeight="41.0" prefWidth="445.0" text="What is your role?" textFill="#698a78">
       <font>
          <Font name="Georgia" size="36.0" />
       </font>
    </Label>
-   <RadioButton fx:id="chk" layoutX="325.0" layoutY="560.0" mnemonicParsing="false" text="User" textFill="#698a78" AnchorPane.leftAnchor="325.0">
+   <RadioButton fx:id="chk" layoutX="326.0" layoutY="509.0" mnemonicParsing="false" text="User" textFill="#698a78" AnchorPane.leftAnchor="326.0">
       <font>
          <Font name="Georgia" size="23.0" />
       </font>
    </RadioButton>
-   <RadioButton fx:id="chk2" layoutX="329.0" layoutY="623.0" mnemonicParsing="false" text="RadioButton" textFill="#698a78" AnchorPane.leftAnchor="325.0">
+   <RadioButton fx:id="chk2" layoutX="326.0" layoutY="577.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="182.0" text="Instructor" textFill="#698a78">
       <font>
          <Font size="23.0" />
       </font>

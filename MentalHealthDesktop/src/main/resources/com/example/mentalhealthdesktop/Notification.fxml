@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.NotificationController">
+
+    <!-- Top Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #34495e; -fx-padding: 20;">
+            <Button onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;" text="← Back" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white;" text="🔔 Notifications" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#handleMarkAllRead" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 12; -fx-padding: 8 15; -fx-background-radius: 5; -fx-cursor: hand;" text="Mark All Read" />
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox style="-fx-background-color: #f5f5f5;">
+            <!-- Filter Tabs -->
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-padding: 15 20;">
+                <Button fx:id="allNotificationsBtn" onAction="#showAllNotifications" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;" text="All" />
+                <Button fx:id="messagesBtn" onAction="#showMessages" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;" text="Messages" />
+                <Button fx:id="sessionsBtn" onAction="#showSessions" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;" text="Sessions" />
+                <Button fx:id="systemBtn" onAction="#showSystem" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;" text="System" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleRefresh" style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-font-size: 14; -fx-cursor: hand;" text="🔄 Refresh" />
+            </HBox>
+
+            <!-- Notifications List -->
+            <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5; -fx-background-color: #f5f5f5;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="notificationsContainer" spacing="10" style="-fx-padding: 20;">
+                    <!-- Notifications will be dynamically added here -->
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>
+

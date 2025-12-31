@@ -20,13 +20,14 @@ public class HelloApplication extends Application {
             Scene scene = new Scene(root, 800, 1000);
             stage.setTitle("Mental Health Desktop App");
             stage. setScene(scene);
-            stage.setResizable(false);
+           // stage.setResizable(false);
+            stage.centerOnScreen();
             stage.show();
 
-            System.out.println("✅ Scene1.fxml loaded successfully!");
+            System.out.println("Scene1.fxml loaded successfully!");
 
         } catch (Exception e) {
-            System.err. println("❌ Error loading FXML file!");
+            System.err. println(" Error loading FXML file!");
             e. printStackTrace();
         }
     }

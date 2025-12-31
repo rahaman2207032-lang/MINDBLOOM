@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.StressMonitorController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #FF9800; -fx-padding: 15;">
+            <Label text="⚡ Stress Monitor" textFill="white">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Instructions -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Rate each aspect from 1 (Low/Good) to 5 (High/Bad)" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                </VBox>
+
+                <!-- Questionnaire -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+                    <!-- Workload -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Workload Level:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="workloadSlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="workloadLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Sleep Quality -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Sleep Quality Issues:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="sleepQualitySlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="sleepQualityLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Anxiety -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Anxiety Level:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="anxietySlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="anxietyLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Mood -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Mood (low=bad):" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="moodSlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="moodLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Physical Symptoms -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Physical Symptoms:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="physicalSymptomsSlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="physicalSymptomsLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Concentration -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Concentration Issues:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="concentrationSlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="concentrationLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+
+                    <!-- Social Connection -->
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Label text="Social Isolation:" prefWidth="180" style="-fx-font-size: 14;"/>
+                        <Slider fx:id="socialConnectionSlider" min="1" max="5" value="3" showTickLabels="true" showTickMarks="true" majorTickUnit="1" minorTickCount="0" prefWidth="400"/>
+                        <Label fx:id="socialConnectionLabel" text="3" style="-fx-font-size: 16; -fx-font-weight: bold;" prefWidth="30"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Results -->
+                <HBox spacing="20">
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Your Stress Score:" style="-fx-font-size: 16;"/>
+                        <Label fx:id="stressScoreLabel" text="21" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                        <Label text="Stress Level:" style="-fx-font-size: 14; -fx-padding: 10 0 0 0;"/>
+                        <Label fx:id="stressLevelLabel" text="MODERATE" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" prefWidth="450">
+                        <Label text="Coping Suggestions:" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="copingSuggestionsArea" editable="false" wrapText="true" prefHeight="120" style="-fx-background-color: #f9f9f9;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Notes -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Additional Notes (optional):" style="-fx-font-size: 14;"/>
+                    <TextArea fx:id="notesArea" wrapText="true" prefHeight="60" promptText="What's causing stress today?"/>
+                </VBox>
+
+                <!-- Stress Trend Chart -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Stress Trend (Last 30 Days)" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <LineChart fx:id="stressTrendChart" prefHeight="250" legendVisible="false">
+                        <xAxis>
+                            <NumberAxis fx:id="xAxis" label="Days" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" label="Stress Score" side="LEFT" lowerBound="0" upperBound="35"/>
+                        </yAxis>
+                    </LineChart>
+                </VBox>
+
+                <!-- Buttons -->
+                <HBox alignment="CENTER" spacing="20" style="-fx-padding: 10 0;">
+                    <Button fx:id="submitButton" text="Submit Assessment" onAction="#handleSubmit" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                    <Button fx:id="backButton" text="Back to Dashboard" onAction="#handleBack" style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
+

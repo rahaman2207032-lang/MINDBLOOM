@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.ProgressController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #95a5c6; -fx-padding: 15;">
+            <Label text="📈 Progress Dashboard" textFill="white">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Date Range Selector -->
+                <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Date Range:" style="-fx-font-size: 14;"/>
+                    <DatePicker fx:id="startDatePicker" promptText="Start Date"/>
+                    <Label text="to" style="-fx-font-size: 14;"/>
+                    <DatePicker fx:id="endDatePicker" promptText="End Date"/>
+                    <Button fx:id="loadButton" text="Load Data" onAction="#handleLoad" style="-fx-background-color: #95a5c6; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+
+                <!-- Key Metrics -->
+                <GridPane hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+
+                    <!-- Average Mood -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="😊" style="-fx-font-size: 24;"/>
+                            <VBox>
+                                <Label text="Average Mood" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                                <Label fx:id="averageMoodLabel" text="0.0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #87b5d8;"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Trend:" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                        <Label fx:id="moodTrendLabel" text="N/A" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                    </VBox>
+
+                    <!-- Average Stress -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="⚡" style="-fx-font-size: 24;"/>
+                            <VBox>
+                                <Label text="Average Stress" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                                <Label fx:id="averageStressLabel" text="0.0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #FF9800;"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Trend:" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                        <Label fx:id="stressTrendLabel" text="N/A" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                    </VBox>
+
+                    <!-- Habit Completion -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="✅" style="-fx-font-size: 24;"/>
+                            <VBox>
+                                <Label text="Habit Completion" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                                <Label fx:id="habitCompletionLabel" text="0%" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Keep building healthy habits!" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                    </VBox>
+
+                    <!-- Average Sleep -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="😴" style="-fx-font-size: 24;"/>
+                            <VBox>
+                                <Label text="Average Sleep" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                                <Label fx:id="averageSleepLabel" text="0.0 hrs" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #9d8fb8;"/>
+                            </VBox>
+                        </HBox>
+                        <Label text="Good sleep improves mood!" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                    </VBox>
+                </GridPane>
+
+                <!-- Progress Chart -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Progress Over Time" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <AreaChart fx:id="progressChart" prefHeight="300">
+                        <xAxis>
+                            <CategoryAxis fx:id="xAxis" label="Time Period" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" label="Score" side="LEFT" lowerBound="0" upperBound="5"/>
+                        </yAxis>
+                    </AreaChart>
+                </VBox>
+
+                <!-- Milestones and Correlations -->
+                <HBox spacing="20">
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Milestones &amp; Achievements" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="milestonesArea" editable="false" wrapText="true" prefHeight="150" style="-fx-background-color: #f9f9f9;"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Correlations &amp; Insights" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="correlationsArea" editable="false" wrapText="true" prefHeight="150" style="-fx-background-color: #f9f9f9;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Back Button -->
+                <HBox alignment="CENTER" style="-fx-padding: 10 0;">
+                    <Button fx:id="backButton" text="Back to Dashboard" onAction="#handleBack" style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
+

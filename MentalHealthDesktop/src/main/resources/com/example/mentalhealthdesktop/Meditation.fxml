@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.MeditationController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #9d8fb8; -fx-padding: 15 20;">
+            <Button fx:id="backButton" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;" text="← Back" />
+            <Label text="Meditation &amp; Mindfulness" textFill="white">
+                <font>
+                    <Font name="System Bold" size="22" />
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: white; -fx-background-color: white;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Current Video Player -->
+                <VBox spacing="10" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 10;">
+                    <Label fx:id="currentVideoTitle" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333;"
+                           text="5 Minute Breathing Exercise" />
+
+                    <WebView fx:id="videoWebView" prefHeight="400.0" prefWidth="900.0" />
+
+                    <Label fx:id="videoDescription" style="-fx-text-fill: #666; -fx-font-size: 13; -fx-wrap-text: true;"
+                           text="A simple breathing exercise to help you relax and center yourself." wrapText="true" />
+                </VBox>
+
+                <!-- Video Selection Buttons -->
+                <VBox spacing="10">
+                    <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333;" text="Choose a Practice:" />
+
+                    <HBox spacing="15">
+                        <!-- Breathing Exercise -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadBreathingExercise"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #e3f2fd; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="🌬️" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1976d2;" text="Breathing Exercise" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="5 minutes" />
+                        </VBox>
+
+                        <!-- Guided Meditation -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadGuidedMeditation"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #f3e5f5; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="🧘" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #7b1fa2;" text="Guided Meditation" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="10 minutes" />
+                        </VBox>
+
+                        <!-- Sleep Meditation -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadSleepMeditation"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #e8eaf6; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="🌙" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #303f9f;" text="Sleep Meditation" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="15 minutes" />
+                        </VBox>
+
+                        <!-- Body Scan -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadBodyScan"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #e0f2f1; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="✨" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #00796b;" text="Body Scan" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="8 minutes" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Second Row -->
+                    <HBox spacing="15">
+                        <!-- Stress Relief -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadStressRelief"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #fff3e0; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="☮️" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #e65100;" text="Stress Relief" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="7 minutes" />
+                        </VBox>
+
+                        <!-- Morning Meditation -->
+                        <VBox alignment="CENTER" onMouseClicked="#loadMorningMeditation"
+                              prefHeight="120" prefWidth="200" spacing="10"
+                              style="-fx-background-color: #fff9c4; -fx-background-radius: 10; -fx-padding: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label style="-fx-font-size: 32;" text="☀️" />
+                            <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f57f17;" text="Morning Meditation" />
+                            <Label style="-fx-font-size: 11; -fx-text-fill: #666;" text="10 minutes" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Tips Section -->
+                <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 10;">
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #2e7d32;" text="💡 Meditation Tips:" />
+                    <Label style="-fx-text-fill: #555; -fx-font-size: 12;" text="• Find a quiet, comfortable place" wrapText="true" />
+                    <Label style="-fx-text-fill: #555; -fx-font-size: 12;" text="• Sit in a relaxed but upright position" wrapText="true" />
+                    <Label style="-fx-text-fill: #555; -fx-font-size: 12;" text="• Close your eyes or maintain a soft gaze" wrapText="true" />
+                    <Label style="-fx-text-fill: #555; -fx-font-size: 12;" text="• Be patient with yourself - meditation is a practice" wrapText="true" />
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
+

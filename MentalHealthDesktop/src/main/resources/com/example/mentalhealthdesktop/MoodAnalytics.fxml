@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.BarChart?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.MoodAnalyticsController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #87b5d8; -fx-padding: 15;">
+            <Label text="📊 Mood Analytics" textFill="white">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Daily Mood Logger -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="How are you feeling today?" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                    <HBox spacing="20" alignment="CENTER">
+                        <RadioButton fx:id="mood1Radio" text="😢 Very Low" style="-fx-font-size: 14;">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="moodGroup"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="mood2Radio" text="😟 Low" toggleGroup="$moodGroup" style="-fx-font-size: 14;"/>
+                        <RadioButton fx:id="mood3Radio" text="😐 Neutral" toggleGroup="$moodGroup" style="-fx-font-size: 14;"/>
+                        <RadioButton fx:id="mood4Radio" text="🙂 Good" toggleGroup="$moodGroup" style="-fx-font-size: 14;"/>
+                        <RadioButton fx:id="mood5Radio" text="😊 Very Good" toggleGroup="$moodGroup" style="-fx-font-size: 14;"/>
+                    </HBox>
+
+                    <Label text="What influenced your mood today?" style="-fx-font-size: 14; -fx-padding: 10 0 0 0;"/>
+                    <TextField fx:id="activitiesField" promptText="e.g., exercise, work, social time, etc."/>
+
+                    <Label text="Any thoughts or notes?" style="-fx-font-size: 14;"/>
+                    <TextArea fx:id="notesArea" wrapText="true" prefHeight="80" promptText="Optional: Reflect on your day..."/>
+
+                    <HBox alignment="CENTER" spacing="15" style="-fx-padding: 10 0 0 0;">
+                        <Button fx:id="submitButton" text="Log Mood" onAction="#handleSubmit" style="-fx-background-color: #87b5d8; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Statistics Cards -->
+                <HBox spacing="20">
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Average Mood" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                        <Label fx:id="averageMoodLabel" text="0.0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #87b5d8;"/>
+                        <Label text="out of 5" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Current Streak" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                        <Label fx:id="currentStreakLabel" text="0 days" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                        <Label text="consecutive logging" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Total Logs" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                        <Label fx:id="totalLogsLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #9d8fb8;"/>
+                        <Label text="entries" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Mood Chart -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Weekly Mood Trend" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <BarChart fx:id="moodChart" prefHeight="300" legendVisible="false">
+                        <xAxis>
+                            <CategoryAxis fx:id="xAxis" label="Date" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" label="Mood Rating" upperBound="5"/>
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+
+                <!-- Correlations and Insights -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                    <Label text="Mood Patterns &amp; Insights" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="correlationArea" editable="false" wrapText="true" prefHeight="150" style="-fx-background-color: #f9f9f9;"/>
+                </VBox>
+
+                <!-- Back Button -->
+                <HBox alignment="CENTER" style="-fx-padding: 10 0;">
+                    <Button fx:id="backButton" text="Back to Dashboard" onAction="#handleBack" style="-fx-background-color: #757575; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
+
+
+

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mentalhealthdesktop.controller.ClientProgressViewController">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #2c3e50; -fx-padding: 15 20;" spacing="20">
+            <Button text="← Back" onAction="#handleBack" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5; -fx-cursor: hand;"/>
+            <Label fx:id="clientNameLabel" text="Client Progress" textFill="white">
+                <font>
+                    <Font name="System Bold" size="22"/>
+                </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Refresh" onAction="#refreshData" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: #f5f5f5; -fx-background-color: #f5f5f5;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <!-- Summary Cards -->
+                <GridPane hgap="20" vgap="20">
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #3498db; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Average Mood" textFill="white" style="-fx-font-size: 14;"/>
+                        <Label fx:id="avgMoodLabel" text="--" textFill="white" style="-fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="(Last 30 Days)" textFill="white" style="-fx-font-size: 11; -fx-opacity: 0.8;"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Stress Level" textFill="white" style="-fx-font-size: 14;"/>
+                        <Label fx:id="stressLevelLabel" text="--" textFill="white" style="-fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="(Current Week)" textFill="white" style="-fx-font-size: 11; -fx-opacity: 0.8;"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #2ecc71; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="Habit Completion" textFill="white" style="-fx-font-size: 14;"/>
+                        <Label fx:id="habitCompletionLabel" text="--%" textFill="white" style="-fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="(This Week)" textFill="white" style="-fx-font-size: 11; -fx-opacity: 0.8;"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #9b59b6; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                        <Label text="Avg Sleep" textFill="white" style="-fx-font-size: 14;"/>
+                        <Label fx:id="avgSleepLabel" text="--h" textFill="white" style="-fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="(Per Night)" textFill="white" style="-fx-font-size: 11; -fx-opacity: 0.8;"/>
+                    </VBox>
+                </GridPane>
+
+                <!-- Mood Logs Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+                    <Label text="📊 Mood Logs (Last 30 Days)" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    <ScrollPane fitToWidth="true" prefHeight="200" style="-fx-background: transparent; -fx-background-color: transparent;">
+                        <VBox fx:id="moodLogsContainer" spacing="10" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+
+                <!-- Stress Assessments Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+                    <Label text="😰 Stress Assessments" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    <ScrollPane fitToWidth="true" prefHeight="200" style="-fx-background: transparent; -fx-background-color: transparent;">
+                        <VBox fx:id="stressAssessmentsContainer" spacing="10" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+
+                <!-- Habits Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+                    <Label text="✅ Active Habits" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    <ScrollPane fitToWidth="true" prefHeight="200" style="-fx-background: transparent; -fx-background-color: transparent;">
+                        <GridPane fx:id="habitsGrid" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+
+                <!-- Sleep Data Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 2);">
+                    <Label text="😴 Sleep Patterns (Last 7 Days)" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Separator/>
+                    <ScrollPane fitToWidth="true" prefHeight="200" style="-fx-background: transparent; -fx-background-color: transparent;">
+                        <VBox fx:id="sleepDataContainer" spacing="10" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Status Bar -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #2c3e50; -fx-padding: 8 20;">
+            <Label text="Status:" textFill="#bdc3c7" style="-fx-font-size: 12;"/>
+            <Label fx:id="statusLabel" text="Ready" textFill="#2ecc71" style="-fx-font-size: 12; -fx-font-weight: bold;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+

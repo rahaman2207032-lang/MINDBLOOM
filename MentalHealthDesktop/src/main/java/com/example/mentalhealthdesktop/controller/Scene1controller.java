@@ -1,6 +1,7 @@
-package com.example.mentalhealthdesktop;
+package com.example.mentalhealthdesktop.controller;
 
-import javafx.fxml. FXML;
+import com.example.mentalhealthdesktop.Dataholder;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 public class Scene1controller {
@@ -30,7 +30,7 @@ public class Scene1controller {
     public void initialize() {
 
 
-        System.out.println("✅ Scene1controller loaded!");
+        System.out.println("Scene1controller loaded!");
 
 
         if (title != null) {
@@ -48,7 +48,7 @@ public class Scene1controller {
         });
 
         chk2.setOnAction(event -> {
-            System.out. println("Second radio button selected");
+            System.out.println("Second radio button selected");
             navigateToLogin("Instructor");
         });
     }
@@ -56,7 +56,7 @@ public class Scene1controller {
     private void navigateToLogin(String role) {
         try {
             System.out.println("Selected role: " + role);
-
+            Dataholder.selectedOption = role;
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/mentalhealthdesktop/Login_Signup.fxml")
@@ -66,7 +66,6 @@ public class Scene1controller {
 
             Login_Signup loginController = loader.getController();
 
-            //loginController.setRole(role);
 
 
             Stage stage = (Stage)chk.getScene().getWindow();
@@ -75,21 +74,22 @@ public class Scene1controller {
 
             stage.setScene(scene);
             stage.setTitle("Login - " + role);
-            stage.setResizable(false);
+           // stage.setResizable(false);
+            stage.centerOnScreen();
             stage.show();
 
-            System.out.println("✅ Navigated to Login page!");
+            System.out.println("Navigated to Login page!");
 
         } catch (IOException e) {
-            System.out.println("❌ Error loading Login_Signup. fxml: " + e.getMessage());
+            System.out.println(" Error loading Login_Signup. fxml: " + e.getMessage());
             e.printStackTrace();
 
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert. setTitle("Navigation Error");
+            alert.setTitle("Navigation Error");
             alert.setHeaderText("Could not load login page");
             alert.setContentText(e.getMessage());
-            alert. showAndWait();
+            alert.showAndWait();
         }
     }
 }
