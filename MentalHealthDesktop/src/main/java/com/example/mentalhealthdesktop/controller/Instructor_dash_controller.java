@@ -1,6 +1,7 @@
 package com.example.mentalhealthdesktop.controller;
 
 import com.example.mentalhealthdesktop.Dataholder;
+import com.example.mentalhealthdesktop.SessionManager;
 import com.example.mentalhealthdesktop.model.ClientOverview;
 import com.example.mentalhealthdesktop.model.Message;
 import com.example.mentalhealthdesktop.model.SessionRequest;
@@ -90,6 +91,20 @@ public class Instructor_dash_controller {
 
     // ✅ FIX #2: Auto-refresh for conversations (polling)
     private java.util.Timer autoRefreshTimer;
+
+    /**
+     * ✅ NEW: Get current instructor ID dynamically (SessionManager + Dataholder fallback)
+     * Prevents hardcoded instructor ID issues
+     */
+    private Long getCurrentInstructorId() {
+        Long instructorId = SessionManager.getInstance().getCurrentUserId();
+        if (instructorId == null) {
+            instructorId = Dataholder.userId;
+            System.out.println("⚠️ [Instructor] Using Dataholder fallback (SessionManager not set)");
+        }
+        System.out.println("🆔 [Instructor] Current instructor ID: " + instructorId);
+        return instructorId;
+    }
 
     @FXML
     public void initialize() {
@@ -272,8 +287,13 @@ public class Instructor_dash_controller {
     private void loadCalendar() {
         new Thread(() -> {
             try {
+                System.out.println("📅 [Instructor] Loading calendar...");
+
                 // Fetch weekly sessions from API
                 weeklySessions = therapySessionService.getWeeklySessions();
+
+                System.out.println("📊 [Instructor] Total sessions loaded: " + weeklySessions.size());
+                System.out.println("📆 [Instructor] Current week starts: " + currentWeekStart);
 
                 Platform.runLater(() -> {
                     calendarContainer.getChildren().clear();
@@ -289,11 +309,18 @@ public class Instructor_dash_controller {
                             }
                         }
 
+                        if (!sessionsForDay.isEmpty()) {
+                            System.out.println("   📍 " + date + ": " + sessionsForDay.size() + " session(s)");
+                        }
+
                         VBox dayCard = createDayCard(date, sessionsForDay);
                         calendarContainer.getChildren().add(dayCard);
                     }
+
+                    System.out.println("✅ [Instructor] Calendar updated successfully");
                 });
             } catch (Exception e) {
+                System.err.println("❌ [Instructor] Error loading calendar: " + e.getMessage());
                 e.printStackTrace();
                 Platform.runLater(() -> {
                     calendarContainer.getChildren().clear();
@@ -301,6 +328,36 @@ public class Instructor_dash_controller {
                     errorLabel.setStyle("-fx-text-fill: #e74c3c;");
                     calendarContainer.getChildren().add(errorLabel);
                 });
+            }
+        }).start();
+    }
+
+    /**
+     * ✅ NEW: Load scheduled sessions for instructor (Feature 1)
+     * Returns all scheduled sessions with zoom links that instructor can join
+     */
+    private void loadScheduledSessions() {
+        new Thread(() -> {
+            try {
+                Long instructorId = getCurrentInstructorId();
+                System.out.println("📅 [Instructor] Loading scheduled sessions from API...");
+
+                // Use existing therapySessionService
+                List<TherapySession> scheduledSessions = therapySessionService.getScheduledSessionsForInstructor(instructorId);
+
+                System.out.println("✅ [Instructor] Found " + scheduledSessions.size() + " scheduled sessions");
+
+                // Update calendar with scheduled sessions
+                weeklySessions = scheduledSessions;
+
+                Platform.runLater(() -> {
+                    // Refresh calendar to show scheduled sessions
+                    loadCalendar();
+                });
+
+            } catch (Exception e) {
+                System.err.println("❌ [Instructor] Error loading scheduled sessions: " + e.getMessage());
+                e.printStackTrace();
             }
         }).start();
     }
@@ -318,11 +375,36 @@ public class Instructor_dash_controller {
 
         if (hasSession) {
             for (TherapySession session : sessions) {
+                // Create session info container
+                VBox sessionBox = new VBox(3);
+
                 String timeStr = session.getSessionDate().format(DateTimeFormatter.ofPattern("h:mm a"));
                 Label sessionLabel = new Label("📅 " + timeStr + " - " + session.getClientName());
                 sessionLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #2d3436;");
                 sessionLabel.setWrapText(true);
-                card.getChildren().add(sessionLabel);
+                sessionBox.getChildren().add(sessionLabel);
+
+                // ✅ Display zoom link if available (FRONTEND_ALL_CHANGES.md)
+                String zoomLink = session.getZoomLink();
+                if (zoomLink != null && !zoomLink.isEmpty()) {
+                    Label zoomLabel = new Label("🎥 Zoom available");
+                    zoomLabel.setStyle("-fx-font-size: 10; -fx-text-fill: #27ae60; -fx-font-weight: bold;");
+                    zoomLabel.setTooltip(new Tooltip(zoomLink));
+
+                    // Make clickable to open zoom
+                    zoomLabel.setOnMouseClicked(e -> {
+                        try {
+                            java.awt.Desktop.getDesktop().browse(new java.net.URI(zoomLink));
+                            System.out.println("✅ [Instructor] Opening Zoom link: " + zoomLink);
+                        } catch (Exception ex) {
+                            System.err.println("❌ [Instructor] Failed to open Zoom: " + ex.getMessage());
+                        }
+                    });
+                    zoomLabel.setStyle(zoomLabel.getStyle() + "; -fx-cursor: hand; -fx-underline: true;");
+                    sessionBox.getChildren().add(zoomLabel);
+                }
+
+                card.getChildren().add(sessionBox);
             }
         } else {
             Label noSession = new Label("No sessions");
@@ -428,9 +510,10 @@ public class Instructor_dash_controller {
     private void loadConversations() {
         new Thread(() -> {
             try {
-                // ✅ FIXED: Show ALL clients (not just those with messages) so instructor can message anyone
+                // ✅ FIXED: Use dynamic instructor ID (not hardcoded)
+                Long instructorId = getCurrentInstructorId();
                 System.out.println("📥 [Instructor] Loading conversations from API...");
-                List<Map<String, Object>> conversations = messageService.getInstructorConversations(Dataholder.userId);
+                List<Map<String, Object>> conversations = messageService.getInstructorConversations(instructorId);
 
                 Platform.runLater(() -> {
                     conversationsContainer.getChildren().clear();
@@ -905,10 +988,14 @@ public class Instructor_dash_controller {
             if (response == ButtonType.OK) {
                 new Thread(() -> {
                     try {
-                        System.out.println("🎥 Accepting session request - Zoom meeting will be created automatically...");
+                        System.out.println("🎯 [Instructor] Accepting session request ID: " + request.getId());
+                        System.out.println("   Client: " + request.getClientName());
+                        System.out.println("   Date: " + request.getRequestedDate());
 
                         // Call backend - it will create Zoom meeting automatically!
                         sessionRequestService.acceptRequest(request.getId(), null);  // null = automatic creation
+
+                        System.out.println("✅ [Instructor] Session accepted successfully!");
 
                         Platform.runLater(() -> {
                             showAlert(Alert.AlertType.INFORMATION, "Request Accepted ✅",
@@ -916,10 +1003,14 @@ public class Instructor_dash_controller {
                                 "✅ Zoom meeting created automatically\n" +
                                 "✅ Client notified with join link\n\n" +
                                 "The meeting link has been sent to the client's notifications.");
-                            loadSessionRequests();
-                            loadCalendar();
+
+                            // ✅ CRITICAL: Refresh both lists to show updated status
+                            System.out.println("🔄 [Instructor] Refreshing pending requests and calendar...");
+                            loadSessionRequests();  // Request will disappear (status changed from PENDING to ACCEPTED)
+                            loadCalendar();         // Session will appear in calendar with zoom link
                         });
                     } catch (Exception e) {
+                        System.err.println("❌ [Instructor] Error accepting request: " + e.getMessage());
                         e.printStackTrace();
                         Platform.runLater(() ->
                             showAlert(Alert.AlertType.ERROR, "Error",
@@ -1057,4 +1148,3 @@ public class Instructor_dash_controller {
         }
     }
 }
-

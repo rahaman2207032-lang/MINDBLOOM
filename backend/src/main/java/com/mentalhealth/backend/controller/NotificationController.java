@@ -185,5 +185,23 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * Get ONLY UNREAD notifications with details (for user dashboard - excludes read notifications)
+     * GET /api/notifications/user/{userId}/unread/with-details
+     */
+    @GetMapping("/user/{userId}/unread/with-details")
+    public ResponseEntity<List<Map<String, Object>>> getUnreadNotificationsWithDetails(@PathVariable Long userId) {
+        try {
+            System.out.println("📬 Fetching UNREAD notifications with details for user: " + userId);
+            List<Map<String, Object>> notifications = notificationService.getUnreadNotificationsWithDetails(userId);
+            System.out.println("✅ Found " + notifications.size() + " unread notifications");
+            return ResponseEntity.ok(notifications);
+        } catch (Exception e) {
+            System.err.println("❌ ERROR getting unread notifications with details: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
 

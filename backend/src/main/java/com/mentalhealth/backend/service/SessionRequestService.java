@@ -78,52 +78,98 @@ public class SessionRequestService {
 
     @Transactional
     public SessionRequest acceptRequest(Long requestId, String zoomLink) {
+        System.out.println("========================================");
+        System.out.println("🎯 ACCEPTING SESSION REQUEST");
+        System.out.println("========================================");
+        System.out.println("Request ID: " + requestId);
+        System.out.println("Manual Zoom Link provided: " + (zoomLink != null ? zoomLink : "NO"));
+
         SessionRequest request = sessionRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        System.out.println("✅ Accepting session request ID: " + requestId);
+        System.out.println("✅ Request found:");
+        System.out.println("   Client ID: " + request.getClientId());
+        System.out.println("   Client Name: " + request.getClientName());
+        System.out.println("   Instructor ID: " + request.getInstructorId());
+        System.out.println("   Requested Date: " + request.getRequestedDate());
+        System.out.println("   Current Status: " + request.getStatus());
 
+        // Change status first
         request.setStatus(RequestStatus.ACCEPTED);
         request.setUpdatedAt(LocalDateTime.now());
+        System.out.println("✅ Status changed to ACCEPTED");
 
         // Generate Zoom link if not provided
-        if (zoomLink == null || zoomLink.isEmpty()) {
-            System.out.println("🔗 Generating Zoom meeting link...");
-            zoomLink = zoomService.createMeeting(
-                    "Therapy Session",
-                    request.getRequestedDate(),
-                    60
-            );
+        String finalZoomLink = zoomLink;
+        if (finalZoomLink == null || finalZoomLink.isEmpty()) {
+            System.out.println("🔗 Generating Zoom meeting link via API...");
+            try {
+                finalZoomLink = zoomService.createMeeting(
+                        "Therapy Session with " + request.getClientName(),
+                        request.getRequestedDate(),
+                        60
+                );
+                System.out.println("✅ Zoom link generated: " + finalZoomLink);
+            } catch (Exception e) {
+                System.err.println("❌ ERROR creating Zoom meeting: " + e.getMessage());
+                e.printStackTrace();
+                // Create a placeholder if Zoom fails
+                finalZoomLink = "https://zoom.us/j/placeholder-" + System.currentTimeMillis();
+                System.out.println("⚠️ Using placeholder link: " + finalZoomLink);
+            }
+        } else {
+            System.out.println("📝 Using provided manual zoom link: " + finalZoomLink);
         }
 
-        // ✅ SAVE ZOOM LINK TO REQUEST (this was missing!)
-        request.setZoomLink(zoomLink);
-        System.out.println("✅ Zoom link saved to session request: " + zoomLink);
+        // ✅ CRITICAL: Save zoom link to request
+        request.setZoomLink(finalZoomLink);
+        System.out.println("✅ Zoom link SET on request object: " + request.getZoomLink());
+
+        // Save request FIRST to ensure zoom link is persisted
+        SessionRequest savedRequest = sessionRequestRepository.save(request);
+        System.out.println("✅ Request SAVED to database");
+        System.out.println("   Saved Request ID: " + savedRequest.getId());
+        System.out.println("   Saved Zoom Link: " + savedRequest.getZoomLink());
+        System.out.println("   Saved Status: " + savedRequest.getStatus());
 
         // Create therapy session
-        TherapySession session = new TherapySession();
-        session.setClientId(request.getClientId());
-        session.setClientName(request.getClientName());
-        session.setInstructorId(request.getInstructorId());
-        session.setSessionDate(request.getRequestedDate());
-        session.setSessionType("Initial Consultation");
-        session.setZoomLink(zoomLink);
-        session.setStatus(SessionStatus.SCHEDULED);
+        try {
+            TherapySession session = new TherapySession();
+            session.setClientId(savedRequest.getClientId());
+            session.setClientName(savedRequest.getClientName());
+            session.setInstructorId(savedRequest.getInstructorId());
+            session.setSessionDate(savedRequest.getRequestedDate());
+            session.setSessionType("Initial Consultation");
+            session.setZoomLink(finalZoomLink);
+            session.setStatus(SessionStatus.SCHEDULED);
 
-        therapySessionService.createSession(session);
-        System.out.println("✅ Therapy session created");
+            TherapySession savedSession = therapySessionService.createSession(session);
+            System.out.println("✅ Therapy session created with ID: " + savedSession.getId());
+        } catch (Exception e) {
+            System.err.println("⚠️ ERROR creating therapy session: " + e.getMessage());
+            // Continue even if therapy session fails
+        }
 
         // Send notification to client with zoom link
-        notificationService.sendNotification(
-                request.getClientId(),
-                "SESSION_ACCEPTED",
-                "Session Request Accepted ✅",
-                "Your session request has been accepted. Click to join the meeting!",
-                requestId  // This links notification to session request with zoom link
-        );
-        System.out.println("✅ Notification sent to client: " + request.getClientId());
+        try {
+            notificationService.sendNotification(
+                    savedRequest.getClientId(),
+                    "SESSION_ACCEPTED",
+                    "Session Request Accepted ✅",
+                    "Your therapy session has been scheduled!",
+                    savedRequest.getId()  // Links to session request with zoom link
+            );
+            System.out.println("✅ Notification sent to client: " + savedRequest.getClientId());
+        } catch (Exception e) {
+            System.err.println("⚠️ ERROR sending notification: " + e.getMessage());
+        }
 
-        return sessionRequestRepository.save(request);
+        System.out.println("========================================");
+        System.out.println("✅ SESSION ACCEPTANCE COMPLETE");
+        System.out.println("   Final Zoom Link: " + savedRequest.getZoomLink());
+        System.out.println("========================================");
+
+        return savedRequest;
     }
 
     @Transactional

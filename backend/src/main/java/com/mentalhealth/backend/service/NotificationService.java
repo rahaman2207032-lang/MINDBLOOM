@@ -263,5 +263,39 @@ public class NotificationService {
                 })
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Get ONLY UNREAD notifications with details for a user
+     * (Used in user dashboard to show only unread after refresh)
+     */
+    public List<Map<String, Object>> getUnreadNotificationsWithDetails(Long userId) {
+        System.out.println("📋 Service: Fetching UNREAD notifications for user: " + userId);
+
+        // Get only unread notifications
+        List<Notification> notifications = notificationRepository.findByUserIdAndIsReadOrderByCreatedAtDesc(userId, false);
+        System.out.println("   Found " + notifications.size() + " unread notifications");
+
+        return notifications.stream()
+                .map(notification -> {
+                    try {
+                        Map<String, Object> details = getNotificationDetails(notification.getId());
+                        System.out.println("   ✅ Loaded details for notification " + notification.getId() + ": " + notification.getTitle());
+                        return details;
+                    } catch (Exception e) {
+                        System.err.println("⚠️ Error loading details for notification " + notification.getId());
+                        // Return basic notification data if details fail
+                        Map<String, Object> basic = new HashMap<>();
+                        basic.put("id", notification.getId());
+                        basic.put("title", notification.getTitle());
+                        basic.put("message", notification.getMessage());
+                        basic.put("notificationType", notification.getNotificationType());
+                        basic.put("isRead", false); // We know it's unread
+                        basic.put("createdAt", notification.getCreatedAt());
+                        return basic;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }
+
 

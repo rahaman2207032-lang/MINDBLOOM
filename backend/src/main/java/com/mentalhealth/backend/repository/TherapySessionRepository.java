@@ -69,4 +69,14 @@ public interface TherapySessionRepository extends JpaRepository<TherapySession, 
      */
     @Query("SELECT t.instructorId FROM TherapySession t WHERE t.clientId = :userId ORDER BY t.sessionDate DESC LIMIT 1")
     Long findInstructorIdByUserId(@Param("userId") Long userId);
+
+    /**
+     * NEW: Find SCHEDULED sessions for user (with zoom links)
+     */
+    List<TherapySession> findByClientIdAndStatus(Long clientId, SessionStatus status);
+
+    /**
+     * NEW: Find SCHEDULED sessions for instructor (with zoom links)
+     */
+    List<TherapySession> findByInstructorIdAndStatus(Long instructorId, SessionStatus status);
 }

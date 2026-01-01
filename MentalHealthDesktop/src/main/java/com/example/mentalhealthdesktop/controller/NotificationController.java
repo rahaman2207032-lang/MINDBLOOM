@@ -132,6 +132,7 @@ public class NotificationController {
 
     /**
      * Load notifications with details from backend
+     * ✅ FEATURE 2: Now uses /unread endpoint so read notifications disappear after refresh
      */
     private void loadNotifications() {
         new Thread(() -> {
@@ -145,10 +146,10 @@ public class NotificationController {
                     return;
                 }
 
-                System.out.println("🔍 [NotificationController] Fetching notifications for user: " + userId);
+                System.out.println("📬 [NotificationController] Fetching UNREAD notifications for user: " + userId);
 
-                // ✅ Use new endpoint with details
-                allNotificationsWithDetails = notificationService.getUserNotificationsWithDetails(userId);
+                // ✅ FEATURE 2: Use new endpoint that returns ONLY unread notifications
+                allNotificationsWithDetails = notificationService.getUserUnreadNotificationsWithDetails(userId);
 
                 System.out.println("📥 [NotificationController] Received " + allNotificationsWithDetails.size() + " notifications");
 

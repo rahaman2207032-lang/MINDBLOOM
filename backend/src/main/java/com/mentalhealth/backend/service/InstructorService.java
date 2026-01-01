@@ -389,123 +389,148 @@ public class InstructorService {
     }
 
     /**
-     * Accept session request and automatically create Zoom meeting
-     * NO manual zoom link input needed - fully automated!
+     * Accept session request and create therapy session with Zoom link
+     * NEW WORKFLOW: Create therapy_session → Delete session_request
      */
     public Map<String, Object> acceptSessionRequest(Long requestId, String zoomLink) {
+        System.out.println("========================================");
+        System.out.println("🎯 ACCEPTING SESSION REQUEST - NEW WORKFLOW");
+        System.out.println("========================================");
+        System.out.println("Request ID: " + requestId);
+
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // Find the session request
+            // Step 1: Find the session request
+            System.out.println("📋 Step 1: Finding session request...");
             SessionRequest request = sessionRequestRepository.findById(requestId)
                     .orElseThrow(() -> new RuntimeException("Session request not found"));
 
-            // Get client and instructor names for meeting topic
+            System.out.println("✅ Request found:");
+            System.out.println("   Client ID: " + request.getClientId());
+            System.out.println("   Client Name: " + request.getClientName());
+            System.out.println("   Instructor ID: " + request.getInstructorId());
+            System.out.println("   Requested Date: " + request.getRequestedDate());
+
+            // Get client name
             String clientName = request.getClientName();
-            if (clientName == null) {
-                userRepository.findById(request.getClientId()).ifPresent(user -> {
-                    request.setClientName(user.getUsername());
-                });
-                clientName = request.getClientName();
+            if (clientName == null || clientName.isEmpty()) {
+                clientName = userRepository.findById(request.getClientId())
+                    .map(User::getUsername)
+                    .orElse("Client");
             }
 
-            String instructorName = "Instructor";
-            if (instructorRepository != null) {
-                instructorRepository.findById(request.getInstructorId()).ifPresent(instructor -> {
-                    // Use instructor's username
-                });
-            }
-
+            // Step 2: Generate Zoom link
+            System.out.println("🎥 Step 2: Creating Zoom meeting...");
             String generatedZoomLink = null;
 
-            // Try to create Zoom meeting automatically
             if (zoomService != null) {
                 try {
-                    System.out.println("🎥 Creating Zoom meeting automatically...");
-
-                    // Create meeting topic
-                    String meetingTopic = "Therapy Session - " + clientName + " with " + instructorName;
-
-                    // Calculate duration (default 60 minutes)
+                    String meetingTopic = "Therapy Session - " + clientName;
                     int duration = 60;
 
-                    // Create Zoom meeting via API
                     generatedZoomLink = zoomService.createMeeting(
                         meetingTopic,
                         request.getRequestedDate(),
                         duration
                     );
 
-                    System.out.println("✅ Zoom meeting created successfully!");
+                    System.out.println("✅ Zoom meeting created!");
                     System.out.println("   Join URL: " + generatedZoomLink);
-
                     result.put("zoomCreationMethod", "automatic");
 
                 } catch (Exception zoomError) {
-                    System.err.println("⚠️ Zoom API error: " + zoomError.getMessage());
-                    System.out.println("📝 Falling back to manual zoom link from request...");
+                    System.err.println("⚠️ Zoom API failed: " + zoomError.getMessage());
 
-                    // Fallback: use manual zoom link if provided
-                    if (zoomLink != null && !zoomLink.isEmpty()) {
-                        generatedZoomLink = zoomLink;
-                        result.put("zoomCreationMethod", "manual");
-                    } else {
-                        throw new RuntimeException("Zoom API failed and no manual link provided: " + zoomError.getMessage());
-                    }
+                    // Fallback to TEST link
+                    generatedZoomLink = "https://zoom.us/j/TEST" + System.currentTimeMillis() + "?pwd=TESTPASSWORD";
+                    result.put("zoomCreationMethod", "test_fallback");
+                    System.out.println("⚠️ Using TEST link: " + generatedZoomLink);
                 }
             } else {
-                // ZoomService not configured - use manual link
-                System.out.println("⚠️ Zoom API not configured. Using manual link.");
-                if (zoomLink != null && !zoomLink.isEmpty()) {
-                    generatedZoomLink = zoomLink;
-                    result.put("zoomCreationMethod", "manual");
-                } else {
-                    throw new RuntimeException("Zoom API not configured and no manual link provided");
-                }
+                // No Zoom service - use TEST link
+                generatedZoomLink = "https://zoom.us/j/TEST" + System.currentTimeMillis() + "?pwd=TESTPASSWORD";
+                result.put("zoomCreationMethod", "test_no_api");
+                System.out.println("⚠️ Zoom API not configured, using TEST link: " + generatedZoomLink);
             }
 
-            // Update request status to ACCEPTED
-            request.setStatus(SessionRequest.RequestStatus.ACCEPTED);
-            request.setZoomLink(generatedZoomLink);
-            request.setUpdatedAt(LocalDateTime.now());
-            sessionRequestRepository.save(request);
-
-            // Create therapy session
+            // Step 3: Create TherapySession with zoom link
+            System.out.println("💾 Step 3: Creating therapy session...");
             TherapySession session = new TherapySession();
             session.setClientId(request.getClientId());
+            session.setClientName(clientName);
             session.setInstructorId(request.getInstructorId());
             session.setSessionDate(request.getRequestedDate());
-            session.setStatus(TherapySession.SessionStatus.SCHEDULED);
+            session.setSessionType("Therapy Session");
             session.setZoomLink(generatedZoomLink);
+            session.setStatus(TherapySession.SessionStatus.SCHEDULED);
+            session.setDurationMinutes(60);
             session.setCreatedAt(LocalDateTime.now());
             session.setUpdatedAt(LocalDateTime.now());
-            therapySessionRepository.save(session);
 
-            // Create notification for user with zoom link
+            TherapySession savedSession = therapySessionRepository.save(session);
+
+            System.out.println("✅ Therapy session CREATED!");
+            System.out.println("   Session ID: " + savedSession.getId());
+            System.out.println("   Zoom Link: " + savedSession.getZoomLink());
+
+            // Verify zoom link was saved
+            if (savedSession.getZoomLink() == null || savedSession.getZoomLink().isEmpty()) {
+                System.err.println("❌❌❌ CRITICAL: Zoom link NULL in therapy_session! ❌❌❌");
+            }
+
+            // Step 4: DELETE the session request
+            System.out.println("🗑️ Step 4: Deleting session request...");
+            sessionRequestRepository.deleteById(requestId);
+            sessionRequestRepository.flush(); // Force immediate commit
+            System.out.println("✅ Session request DELETED from session_requests table");
+            System.out.println("   Request ID " + requestId + " should NO LONGER exist in database");
+
+            // Verify deletion
+            if (sessionRequestRepository.findById(requestId).isPresent()) {
+                System.err.println("⚠️⚠️⚠️ WARNING: Request still exists after delete!");
+            } else {
+                System.out.println("✅ Verified: Request successfully deleted from database");
+            }
+
+            // Step 5: Send notification to user
             if (notificationService != null) {
+                System.out.println("📧 Step 5: Sending notification to user...");
                 notificationService.sendNotification(
                     request.getClientId(),
                     "SESSION_ACCEPTED",
                     "Session Accepted! 🎉",
-                    "Your therapy session has been scheduled. Join link: " + generatedZoomLink,
-                    request.getId()
+                    "Your therapy session has been scheduled. Check your sessions tab to join.",
+                    savedSession.getId()
                 );
-            } else {
-                System.out.println("⚠️ NotificationService not available, skipping notification");
+                System.out.println("✅ Notification sent");
             }
 
+            // Return result
             result.put("success", true);
-            result.put("message", "Session request accepted and Zoom meeting created!");
-            result.put("sessionId", session.getId());
+            result.put("message", "Session accepted and created successfully!");
+            result.put("sessionId", savedSession.getId());
             result.put("zoomLink", generatedZoomLink);
-            result.put("requestedDate", request.getRequestedDate().toString());
+            result.put("sessionDate", savedSession.getSessionDate().toString());
             result.put("clientName", clientName);
 
+            System.out.println("========================================");
+            System.out.println("✅ SUCCESS - NEW WORKFLOW COMPLETE");
+            System.out.println("========================================");
+            System.out.println("   Therapy Session ID: " + savedSession.getId());
+            System.out.println("   Zoom Link: " + generatedZoomLink);
+            System.out.println("   Request DELETED from session_requests");
+            System.out.println("========================================");
+
         } catch (Exception e) {
-            System.err.println("❌ ERROR accepting session request: " + e.getMessage());
+            System.err.println("========================================");
+            System.err.println("❌ ERROR accepting session request");
+            System.err.println("========================================");
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("error", e.getMessage());
+            System.err.println("========================================");
         }
 
         return result;

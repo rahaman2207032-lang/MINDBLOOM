@@ -18,7 +18,7 @@ public class TherapySessionService {
     @Autowired
     private TherapySessionRepository therapySessionRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private ZoomService zoomService;
 
     /**
@@ -131,5 +131,35 @@ public class TherapySessionService {
     public long getCompletedSessionCount(Long instructorId) {
         return therapySessionRepository
                 .countByInstructorIdAndStatus(instructorId, SessionStatus.COMPLETED);
+    }
+
+    /**
+     * NEW: Get scheduled sessions for user (with zoom links)
+     */
+    public List<TherapySession> getScheduledSessionsForUser(Long userId) {
+        System.out.println("📋 Service: Fetching SCHEDULED sessions for user: " + userId);
+        List<TherapySession> sessions = therapySessionRepository.findByClientIdAndStatus(userId, SessionStatus.SCHEDULED);
+        System.out.println("   Found " + sessions.size() + " scheduled sessions");
+
+        for (TherapySession session : sessions) {
+            System.out.println("   📌 Session ID: " + session.getId() + ", Zoom: " + session.getZoomLink());
+        }
+
+        return sessions;
+    }
+
+    /**
+     * NEW: Get scheduled sessions for instructor (with zoom links)
+     */
+    public List<TherapySession> getScheduledSessionsForInstructor(Long instructorId) {
+        System.out.println("📋 Service: Fetching SCHEDULED sessions for instructor: " + instructorId);
+        List<TherapySession> sessions = therapySessionRepository.findByInstructorIdAndStatus(instructorId, SessionStatus.SCHEDULED);
+        System.out.println("   Found " + sessions.size() + " scheduled sessions");
+
+        for (TherapySession session : sessions) {
+            System.out.println("   📌 Session ID: " + session.getId() + ", Client: " + session.getClientName() + ", Zoom: " + session.getZoomLink());
+        }
+
+        return sessions;
     }
 }

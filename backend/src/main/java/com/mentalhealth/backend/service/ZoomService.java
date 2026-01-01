@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@ConditionalOnProperty(prefix = "zoom.api", name = "account-id")
+@ConditionalOnProperty(prefix = "zoom", name = "account-id")
 public class ZoomService {
 
-    @Value("${zoom.api.account-id}")
+    @Value("${zoom.account-id}")
     private String zoomAccountId;
 
-    @Value("${zoom.api.key}")
+    @Value("${zoom.client-id}")
     private String zoomApiKey;      // Client ID
 
-    @Value("${zoom.api.secret}")
+    @Value("${zoom.client-secret}")
     private String zoomApiSecret;   // Client Secret
 
     @Value("${zoom.api.base-url:https://api.zoom.us/v2}")
@@ -86,6 +86,9 @@ public class ZoomService {
      * Generate OAuth access token (Server-to-Server OAuth)
      */
     private String generateAccessToken() {
+        System.out.println("🔑 Generating Zoom OAuth token...");
+        System.out.println("   Account ID: " + (zoomAccountId != null ? zoomAccountId : "NULL"));
+        System.out.println("   Client ID: " + (zoomApiKey != null ? zoomApiKey.substring(0, Math.min(10, zoomApiKey.length())) + "..." : "NULL"));
 
         String tokenUrl = "https://zoom.us/oauth/token";
 
@@ -93,23 +96,43 @@ public class ZoomService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(zoomApiKey, zoomApiSecret);
 
-        Map<String, String> body = new HashMap<>();
-        body.put("grant_type", "account_credentials");
-        body.put("account_id", zoomAccountId);
+        // IMPORTANT: For Server-to-Server OAuth, use URL-encoded string, not Map!
+        String body = "grant_type=account_credentials&account_id=" + zoomAccountId;
 
-        HttpEntity<Map<String, String>> request =
-                new HttpEntity<>(body, headers);
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Map> response =
-                restTemplate.postForEntity(tokenUrl, request, Map.class);
+        try {
+            System.out.println("📡 Requesting token from: " + tokenUrl);
+            ResponseEntity<Map> response =
+                    restTemplate.postForEntity(tokenUrl, request, Map.class);
 
-        if (response.getStatusCode() == HttpStatus.OK
-                && response.getBody() != null) {
+            System.out.println("📊 Response status: " + response.getStatusCode());
 
-            return response.getBody().get("access_token").toString();
+            if (response.getStatusCode() == HttpStatus.OK
+                    && response.getBody() != null) {
+
+                String token = response.getBody().get("access_token").toString();
+                System.out.println("✅ OAuth token generated successfully");
+                System.out.println("   Token: " + token.substring(0, Math.min(20, token.length())) + "...");
+                return token;
+            }
+
+            System.err.println("❌ Failed to get OAuth token");
+            System.err.println("   Status: " + response.getStatusCode());
+            System.err.println("   Body: " + response.getBody());
+            throw new RuntimeException("Failed to obtain Zoom access token");
+
+        } catch (Exception e) {
+            System.err.println("❌ ERROR generating OAuth token: " + e.getMessage());
+            System.err.println("   Error Type: " + e.getClass().getSimpleName());
+            if (e.getMessage() != null && e.getMessage().contains("401")) {
+                System.err.println("   ⚠️ 401 Unauthorized - Check your Client ID and Client Secret!");
+            } else if (e.getMessage() != null && e.getMessage().contains("400")) {
+                System.err.println("   ⚠️ 400 Bad Request - Check your Account ID!");
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Failed to obtain Zoom access token: " + e.getMessage(), e);
         }
-
-        throw new RuntimeException("Failed to obtain Zoom access token");
     }
 
     /**

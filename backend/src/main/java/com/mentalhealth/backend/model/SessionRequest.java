@@ -30,7 +30,7 @@ public class SessionRequest {
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.PENDING;
 
-    @Column(name = "zoom_link")
+    @Column(name = "zoom_link", length = 1000)
     private String zoomLink;
 
     @Column(name = "created_at")
@@ -39,7 +39,12 @@ public class SessionRequest {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // Relations
+    // Relations - TEMPORARILY COMMENTED OUT TO FIX UPDATE ISSUE
+    // The insertable=false, updatable=false can prevent zoom_link updates
+    // Relations - COMMENTED OUT TO FIX ZOOM LINK NOT SAVING
+    // The insertable=false, updatable=false prevents JPA from updating the row
+    // which blocks zoom_link from being saved
+    /*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", insertable = false, updatable = false)
     private User client;
@@ -47,6 +52,8 @@ public class SessionRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id", insertable = false, updatable = false)
     private Instructor instructor; // Changed from User to Instructor
+    */
+
 
 
     public enum RequestStatus {

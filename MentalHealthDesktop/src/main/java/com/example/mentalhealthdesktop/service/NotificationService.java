@@ -93,6 +93,66 @@ public class NotificationService {
     }
 
     /**
+     * ✅ FEATURE 2: Get ONLY UNREAD notifications with details
+     * Read notifications will NOT appear when using this endpoint
+     */
+    public List<Map<String, Object>> getUserUnreadNotificationsWithDetails(Long userId) throws Exception {
+        String endpoint = BASE_URL + "/user/" + userId + "/unread/with-details";
+        System.out.println("📬 [NotificationService] Calling API: GET " + endpoint);
+
+        URI uri = new URI(endpoint);
+        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+
+                String responseBody = response.toString();
+                System.out.println("📄 [NotificationService] Response: " +
+                    (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
+
+                Type listType = new TypeToken<ArrayList<Map<String, Object>>>(){}.getType();
+                List<Map<String, Object>> notifications = gson.fromJson(responseBody, listType);
+                System.out.println("✅ [NotificationService] Found " + notifications.size() + " UNREAD notifications");
+
+                // Log details
+                for (Map<String, Object> notif : notifications) {
+                    String type = (String) notif.get("notificationType");
+                    String title = (String) notif.get("title");
+                    System.out.println("   📌 " + type + ": " + title);
+                }
+
+                return notifications;
+            }
+        } else {
+            System.err.println("❌ [NotificationService] Failed to fetch unread notifications. Code: " + responseCode);
+
+            // Try to read error response
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                System.err.println("❌ Error: " + errorResponse.toString());
+            } catch (Exception e) {
+                // Ignore
+            }
+
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * Get all notifications for a specific user (OLD METHOD - kept for backward compatibility)
      * DEPRECATED: Use getUserNotificationsWithDetails() instead
      */

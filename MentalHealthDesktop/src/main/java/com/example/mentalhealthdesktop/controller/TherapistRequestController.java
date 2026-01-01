@@ -43,6 +43,10 @@ public class TherapistRequestController {
 
     private final SessionRequestService sessionRequestService = new SessionRequestService();
     private final InstructorService instructorService = new InstructorService();  // ✅ NEW
+    private final com.example.mentalhealthdesktop.service.TherapySessionService therapySessionService = new com.example.mentalhealthdesktop.service.TherapySessionService();  // ✅ NEW WORKFLOW
+
+    // ✅ FIX: Keep Timeline as field to prevent garbage collection
+    private javafx.animation.Timeline autoRefreshTimeline;
 
     @FXML
     public void initialize() {
@@ -51,6 +55,30 @@ public class TherapistRequestController {
         loadInstructors();  // ✅ NEW
         loadUserRequests();
         loadUpcomingSessions();
+
+        // ✅ NEW: Auto-refresh confirmed sessions every 10 seconds (FRONTEND_CHANGES_REQUIRED.md)
+        startAutoRefresh();
+    }
+
+    /**
+     * ✅ NEW: Auto-refresh confirmed sessions to catch newly accepted sessions with zoom links
+     */
+    private void startAutoRefresh() {
+        System.out.println("🚀 [TherapistRequest] Starting auto-refresh timer...");
+
+        autoRefreshTimeline = new javafx.animation.Timeline(
+            new javafx.animation.KeyFrame(javafx.util.Duration.seconds(10), event -> {
+                System.out.println("🔄 [TherapistRequest] Auto-refreshing confirmed sessions...");
+                System.out.println("   Time: " + java.time.LocalDateTime.now());
+                loadUpcomingSessions();
+            })
+        );
+        autoRefreshTimeline.setCycleCount(javafx.animation.Timeline.INDEFINITE);
+        autoRefreshTimeline.play();
+
+        System.out.println("✅ [TherapistRequest] Auto-refresh started (every 10 seconds)");
+        System.out.println("   Timeline status: " + autoRefreshTimeline.getStatus());
+        System.out.println("   Current rate: " + autoRefreshTimeline.getRate());
     }
 
     /**
@@ -262,22 +290,27 @@ public class TherapistRequestController {
     private void loadUpcomingSessions() {
         new Thread(() -> {
             try {
-                Long userId = getCurrentUserId();  // ✅ UPDATED: Use dynamic method
-                System.out.println("📥 [TherapistRequest] Loading upcoming sessions for user: " + userId);
+                Long userId = getCurrentUserId();
+                System.out.println("📅 [TherapistRequest] Loading scheduled sessions for user: " + userId);
+                System.out.println("   🆕 NEW WORKFLOW: Fetching from therapy_sessions table");
 
-                List<SessionRequest> confirmedSessions = sessionRequestService.getConfirmedSessions(userId);
+                // ✅ NEW WORKFLOW: Use TherapySessionService to fetch from therapy_sessions table
+                List<com.example.mentalhealthdesktop.model.TherapySession> scheduledSessions =
+                    therapySessionService.getScheduledSessionsForUser(userId);
 
                 Platform.runLater(() -> {
                     upcomingSessionsContainer.getChildren().clear();
 
-                    if (confirmedSessions.isEmpty()) {
+                    if (scheduledSessions.isEmpty()) {
+                        System.out.println("   ℹ️ No scheduled sessions found");
                         Label emptyLabel = new Label("No upcoming sessions scheduled.");
                         emptyLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14; -fx-padding: 20;");
                         upcomingSessionsContainer.getChildren().add(emptyLabel);
                     } else {
-                        System.out.println("✅ [TherapistRequest] Loaded " + confirmedSessions.size() + " upcoming sessions");
-                        for (SessionRequest session : confirmedSessions) {
-                            upcomingSessionsContainer.getChildren().add(createSessionCard(session));
+                        System.out.println("✅ [TherapistRequest] Loaded " + scheduledSessions.size() + " scheduled sessions");
+                        for (com.example.mentalhealthdesktop.model.TherapySession session : scheduledSessions) {
+                            // Create session card from TherapySession object
+                            upcomingSessionsContainer.getChildren().add(createTherapySessionCard(session));
                         }
                     }
                 });
@@ -285,6 +318,7 @@ public class TherapistRequestController {
             } catch (Exception e) {
                 System.err.println("❌ [TherapistRequest] Error loading sessions: " + e.getMessage());
                 Platform.runLater(() -> {
+                    upcomingSessionsContainer.getChildren().clear();
                     Label errorLabel = new Label("Failed to load sessions: " + e.getMessage());
                     errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 12;");
                     upcomingSessionsContainer.getChildren().add(errorLabel);
@@ -350,32 +384,78 @@ public class TherapistRequestController {
         return card;
     }
 
-    private VBox createSessionCard(SessionRequest session) {
+    /**
+     * ✅ NEW WORKFLOW: Create session card for TherapySession (from therapy_sessions table)
+     * TherapySession objects ALWAYS have zoom links (created in one transaction)
+     */
+    private VBox createTherapySessionCard(com.example.mentalhealthdesktop.model.TherapySession session) {
         VBox card = new VBox(10);
         card.setStyle("-fx-background-color: #e8f8f5; -fx-background-radius: 8; -fx-padding: 15; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
 
-        // Header
-        Label typeLabel = new Label("✅ " + session.getSessionType());
+        // Header - Session Type
+        Label typeLabel = new Label("✅ " + (session.getSessionType() != null ? session.getSessionType() : "Therapy Session"));
         typeLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
 
         // Date/Time
-        Label dateTimeLabel = new Label("📅 " + formatDateTime(session.getRequestedDateTime()));
+        Label dateTimeLabel = new Label("📅 " + formatDateTime(session.getSessionDate()));
         dateTimeLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #34495e;");
 
-        // Zoom Link
-        HBox actionBox = new HBox(10);
-        actionBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        // Status Badge
+        Label statusLabel = new Label(session.getStatus() != null ? session.getStatus() : "SCHEDULED");
+        statusLabel.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; " +
+                "-fx-padding: 5 10; -fx-background-radius: 4; -fx-font-size: 12; -fx-font-weight: bold;");
 
-        Button joinButton = new Button("🎥 Join Zoom Session");
-        joinButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; " +
-                "-fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 20; " +
-                "-fx-background-radius: 5; -fx-cursor: hand;");
-        joinButton.setOnAction(e -> openZoomLink(session.getZoomLink()));
+        card.getChildren().addAll(typeLabel, dateTimeLabel, statusLabel);
 
-        actionBox.getChildren().add(joinButton);
+        // ✅ NEW WORKFLOW: Zoom link should ALWAYS be present
+        String zoomLink = session.getZoomLink();
 
-        card.getChildren().addAll(typeLabel, dateTimeLabel, actionBox);
+        if (zoomLink != null && !zoomLink.isEmpty()) {
+            System.out.println("   ✅ [NEW WORKFLOW] Zoom link present: " + zoomLink);
+
+            HBox actionBox = new HBox(10);
+            actionBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+            Button joinButton = new Button("🎥 Join Meeting");
+            joinButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; " +
+                    "-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 20; " +
+                    "-fx-background-radius: 5; -fx-cursor: hand;");
+
+            joinButton.setOnAction(e -> {
+                try {
+                    System.out.println("✅ [TherapistRequest] Opening Zoom link: " + zoomLink);
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI(zoomLink));
+                } catch (Exception ex) {
+                    System.err.println("❌ [TherapistRequest] Failed to open Zoom: " + ex.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to open Zoom link: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            });
+
+            // Hover effect
+            joinButton.setOnMouseEntered(e ->
+                joinButton.setStyle("-fx-background-color: #229954; -fx-text-fill: white; " +
+                        "-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 20; " +
+                        "-fx-background-radius: 5; -fx-cursor: hand;")
+            );
+            joinButton.setOnMouseExited(e ->
+                joinButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; " +
+                        "-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 20; " +
+                        "-fx-background-radius: 5; -fx-cursor: hand;")
+            );
+
+            actionBox.getChildren().add(joinButton);
+            card.getChildren().add(actionBox);
+        } else {
+            // ⚠️ Should NOT happen with new workflow, but handle gracefully
+            System.err.println("   ⚠️ [NEW WORKFLOW] WARNING: Zoom link missing for therapy session ID: " + session.getId());
+
+            Label errorLabel = new Label("⚠️ Zoom link unavailable - Contact support");
+            errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic; -fx-font-size: 13;");
+            card.getChildren().add(errorLabel);
+        }
+
         return card;
     }
 
@@ -462,4 +542,6 @@ public class TherapistRequestController {
         alert.showAndWait();
     }
 }
+
+
 
