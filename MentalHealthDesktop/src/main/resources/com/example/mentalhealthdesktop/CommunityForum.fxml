@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mentalhealthdesktop.controller.CommunityForumController"
+            prefWidth="1200" prefHeight="800">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #2C3E50; -fx-padding: 15;">
+            <Label text="💬 Community Forum" textFill="white">
+                <font><Font name="System Bold" size="24"/></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="backButton" text="← Back to Dashboard" onAction="#handleBackToDashboard"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Center Content with Tabs -->
+    <center>
+        <TabPane style="-fx-background-color: #ecf0f1;" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Tab 1: Forum Posts -->
+            <Tab text="📝 Forum Posts">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: #ecf0f1;">
+                    <VBox spacing="20" style="-fx-padding: 20;">
+                        <!-- Create Post Section -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <Label text="✍️ Share Your Experience" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+                            <TextField fx:id="postTitleField" promptText="Post Title"
+                                       style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                            <TextArea fx:id="postContentArea" promptText="Share your thoughts, experiences, or ask for support... This is a safe space for everyone."
+                                      wrapText="true" prefRowCount="5"
+                                      style="-fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <CheckBox fx:id="anonymousCheckBox" text="Post Anonymously" style="-fx-font-size: 13px;"/>
+                                <Label text="(Your identity will be hidden)" style="-fx-text-fill: gray; -fx-font-size: 12px;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="createPostButton" text="📤 Post" onAction="#handleCreatePost"
+                                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Filter and Sort -->
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 0 10;">
+                            <Label text="Sort by:" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="sortComboBox" onAction="#handleSortChange"
+                                      style="-fx-font-size: 13px;" prefWidth="150">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Latest"/>
+                                        <String fx:value="Most Liked"/>
+                                        <String fx:value="Most Commented"/>
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <TextField fx:id="searchField" promptText="🔍 Search posts..."
+                                       style="-fx-pref-width: 300; -fx-font-size: 13px; -fx-padding: 8; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                            <Button text="Search" onAction="#handleSearch"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                            <Button text="Clear" onAction="#handleClearSearch"
+                                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                        </HBox>
+
+                        <!-- Posts Container -->
+                        <VBox fx:id="postsContainer" spacing="15" style="-fx-padding: 0 10;"/>
+
+                        <!-- Loading Indicator -->
+                        <ProgressIndicator fx:id="loadingIndicator" visible="false" style="-fx-max-width: 50; -fx-max-height: 50;"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- Tab 2: Group Chat -->
+            <Tab text="💬 Group Chat">
+                <BorderPane style="-fx-background-color: #ecf0f1;">
+                    <!-- Chat Header -->
+                    <top>
+                        <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                            <Label text="🌟 Support Group Chat" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+                            <Label text="Share your feelings in real-time. Everyone here supports each other! ❤️" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 5 0 0 0;">
+                                <Label fx:id="onlineUsersLabel" text="👥 0 users online" style="-fx-font-size: 11px; -fx-text-fill: #27ae60;"/>
+                            </HBox>
+                        </VBox>
+                    </top>
+
+                    <!-- Chat Messages Area -->
+                    <center>
+                        <ScrollPane fx:id="chatScrollPane" fitToWidth="true" style="-fx-background-color: #ecf0f1; -fx-padding: 10;" vbarPolicy="ALWAYS">
+                            <VBox fx:id="chatMessagesContainer" spacing="10" style="-fx-padding: 10;"/>
+                        </ScrollPane>
+                    </center>
+
+                    <!-- Chat Input Area -->
+                    <bottom>
+                        <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-spacing: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, -2);">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <CheckBox fx:id="chatAnonymousCheckBox" text="Send as Anonymous" style="-fx-font-size: 12px;"/>
+                                <Label text="(Hide your identity)" style="-fx-text-fill: gray; -fx-font-size: 11px;"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER">
+                                <TextArea fx:id="chatMessageInput" promptText="Type your message... Share your feelings, ask for support, or console others 💙"
+                                          wrapText="true" prefRowCount="2" HBox.hgrow="ALWAYS"
+                                          style="-fx-font-size: 13px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                                <VBox spacing="5" alignment="CENTER">
+                                    <Button fx:id="sendMessageButton" text="📤 Send" onAction="#handleSendChatMessage"
+                                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 25; -fx-background-radius: 5; -fx-cursor: hand; -fx-min-width: 80;"/>
+                                    <Label text="Ctrl+Enter" style="-fx-font-size: 9px; -fx-text-fill: gray;"/>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </bottom>
+                </BorderPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+</BorderPane>
+
