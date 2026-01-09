@@ -16,6 +16,12 @@ public class ClientProgressService {
     private static final String BASE_URL = "http://localhost:8080/api/client-progress";
     private final Gson gson = new Gson();
 
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        if (Dataholder.userId != null) con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     // Get client's mood logs
     public List<Map<String, Object>> getClientMoodLogs(Long clientId) throws Exception {
         checkLoggedIn();
@@ -23,7 +29,7 @@ public class ClientProgressService {
         URL url = new URL(BASE_URL + "/" + clientId + "/mood-logs");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con);
         return gson.fromJson(response, new TypeToken<List<Map<String, Object>>>(){}.getType());
@@ -36,7 +42,7 @@ public class ClientProgressService {
         URL url = new URL(BASE_URL + "/" + clientId + "/stress-assessments");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con);
         return gson.fromJson(response, new TypeToken<List<Map<String, Object>>>(){}.getType());
@@ -49,7 +55,7 @@ public class ClientProgressService {
         URL url = new URL(BASE_URL + "/" + clientId + "/habits");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con);
         return gson.fromJson(response, new TypeToken<List<Map<String, Object>>>(){}.getType());
@@ -62,7 +68,7 @@ public class ClientProgressService {
         URL url = new URL(BASE_URL + "/" + clientId + "/sleep-data");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con);
         return gson.fromJson(response, new TypeToken<List<Map<String, Object>>>(){}.getType());
@@ -75,7 +81,7 @@ public class ClientProgressService {
         URL url = new URL(BASE_URL + "/" + clientId + "/summary");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con);
         return gson.fromJson(response, new TypeToken<Map<String, Object>>(){}.getType());
@@ -111,4 +117,3 @@ public class ClientProgressService {
         }
     }
 }
-

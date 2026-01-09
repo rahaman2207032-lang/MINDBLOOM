@@ -14,7 +14,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/client-progress")
-@CrossOrigin(originPatterns = "*", allowCredentials = "true")
 public class ClientProgressController {
 
     @Autowired
@@ -88,4 +87,3 @@ public class ClientProgressController {
         return ResponseEntity.ok(sleepData);
     }
 }
-
