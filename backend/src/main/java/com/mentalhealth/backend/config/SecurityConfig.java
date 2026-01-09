@@ -31,6 +31,8 @@ public class SecurityConfig {
                                 "/api/mood/**",
                                 "/api/stress/**",
                                 "/api/progress/**",
+                                // Community Forum endpoints
+                                "/api/forum/**",
                                 // Instructor dashboard endpoints
                                 "/api/sessions/**",
                                 "/api/session-requests/**",

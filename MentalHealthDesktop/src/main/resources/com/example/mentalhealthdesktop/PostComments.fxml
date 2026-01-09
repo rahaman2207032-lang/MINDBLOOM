@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mentalhealthdesktop.controller.PostCommentsController"
+            prefWidth="700" prefHeight="600">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #34495e; -fx-padding: 15;">
+            <Label text="💬 Comments" textFill="white">
+                <font><Font name="System Bold" size="20"/></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="closeButton" text="✕ Close" onAction="#handleClose"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 15; -fx-background-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Center Content -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 15; -fx-background-color: #ecf0f1;">
+            <!-- Post Info -->
+            <VBox fx:id="postInfoBox" spacing="8" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;"/>
+
+            <!-- Add Comment Section -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+                <Label text="✍️ Add a Comment" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                <TextArea fx:id="commentContentArea" promptText="Share your thoughts..."
+                          wrapText="true" prefRowCount="3"
+                          style="-fx-font-size: 13px; -fx-padding: 8;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <CheckBox fx:id="commentAnonymousCheckBox" text="Comment Anonymously" style="-fx-font-size: 12px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="addCommentButton" text="💬 Comment" onAction="#handleAddComment"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Comments List -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="commentsContainer" spacing="10" style="-fx-padding: 5;"/>
+            </ScrollPane>
+
+            <!-- Loading Indicator -->
+            <ProgressIndicator fx:id="loadingIndicator" visible="false" style="-fx-max-width: 40; -fx-max-height: 40;"/>
+        </VBox>
+    </center>
+</BorderPane>
+
