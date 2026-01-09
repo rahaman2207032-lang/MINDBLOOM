@@ -40,6 +40,12 @@ public class TherapyNoteService {
         this.gson = gsonBuilder.create();
     }
 
+    // helper to apply common headers
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        if (Dataholder.userId != null) con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     // Save a new therapy note
     public TherapyNote createNote(TherapyNote note) throws Exception {
         checkLoggedIn();
@@ -59,7 +65,7 @@ public class TherapyNoteService {
         URL url = new URL(BASE_URL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         System.out.println("✅ Therapy note saved successfully!");
@@ -82,7 +88,7 @@ public class TherapyNoteService {
         URL url = new URL(BASE_URL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, TherapyNote.class);
@@ -100,7 +106,7 @@ public class TherapyNoteService {
         URL url = new URL(BASE_URL + "/client/" + clientId + "/instructor/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         return gson.fromJson(response, new TypeToken<List<TherapyNote>>(){}.getType());
@@ -115,7 +121,7 @@ public class TherapyNoteService {
         URL url = new URL(BASE_URL + "/" + noteId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, TherapyNote.class);
@@ -128,7 +134,7 @@ public class TherapyNoteService {
         URL url = new URL(BASE_URL + "/" + noteId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("DELETE");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         int responseCode = con.getResponseCode();
         if (responseCode != 200 && responseCode != 204) {

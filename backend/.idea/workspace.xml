@@ -4,16 +4,74 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de69dfaf-f17d-404b-9d04-7800d8b75d08" name="Changes" comment="fixed the folder,deleted the duplicate">
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/Scene1controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/Scene1controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/Login_Signup.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/Login_Signup.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/css/style.css" beforeDir="false" />
+    <list default="true" id="de69dfaf-f17d-404b-9d04-7800d8b75d08" name="Changes" comment="enhanced and fixed some features">
+      <change afterPath="$PROJECT_DIR$/../BACKEND_COMMUNITY_FORUM_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BACKEND_GROUP_CHAT_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../COMMUNITY_FORUM_GROUP_CHAT_COMPLETE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/CommunityForumController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/PostCommentsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/CommunityForumService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/CommunityForum.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/PostComments.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FORUM_LIKE_COMMENT_COUNT_FIX.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GROUP_CHAT_BACKEND_COMPLETE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ChatController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ForumController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ChatMessageRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ChatMessageResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumCommentRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumCommentResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumPostRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumPostResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/OnlineUsersResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ChatMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumComment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumPost.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumPostLike.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ChatMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumCommentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumPostLikeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumPostRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ChatService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ForumService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/HabitTrackerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/HabitTrackerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/Login_Signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/Login_Signup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/User_dash_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/User_dash_controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/ClientProgressService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/ClientProgressService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/HabitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/HabitService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/JournalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/JournalService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MessageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MoodService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MoodService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SessionRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SessionRequestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SleepService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SleepService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/TherapyNoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/TherapyNoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ClientProgressController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ClientProgressController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/InstructorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/InstructorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TestController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TherapyNoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TherapyNoteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/HabitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/HabitService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mentalhealth/backend/model/MoodEntry.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -37,6 +95,10 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="proportion" value="0.9" />
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -45,32 +107,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.MentalHealthBackendApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.MentalHealthBackendApplication.executor": "Coverage",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Laisha/IdeaProjects/MINDBLOOM/backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.MentalHealthBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.MentalHealthBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Laisha/IdeaProjects/MINDBLOOM/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;,
+      &quot;java.sql.Driver&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Laisha\IdeaProjects\MINDBLOOM\backend\backend\src\main\java\com\mentalhealth" />
@@ -104,7 +174,24 @@
       <workItem from="1765079559464" duration="606000" />
       <workItem from="1765080196364" duration="743000" />
       <workItem from="1765210751855" duration="4808000" />
-      <workItem from="1765247914116" duration="5650000" />
+      <workItem from="1765247914116" duration="6251000" />
+      <workItem from="1765595426379" duration="594000" />
+      <workItem from="1765737422199" duration="3883000" />
+      <workItem from="1765856422835" duration="13118000" />
+      <workItem from="1766413202527" duration="22000" />
+      <workItem from="1766413311501" duration="16870000" />
+      <workItem from="1766728339115" duration="261000" />
+      <workItem from="1766728744175" duration="18549000" />
+      <workItem from="1766908358619" duration="802000" />
+      <workItem from="1766909414583" duration="17744000" />
+      <workItem from="1766992709996" duration="15921000" />
+      <workItem from="1767033950929" duration="2862000" />
+      <workItem from="1767075823096" duration="2312000" />
+      <workItem from="1767079199622" duration="10604000" />
+      <workItem from="1767090902924" duration="52115000" />
+      <workItem from="1767292340764" duration="383000" />
+      <workItem from="1767362762136" duration="15641000" />
+      <workItem from="1767895159138" duration="10270000" />
     </task>
     <task id="LOCAL-00001" summary="fixed the folder,deleted the duplicate">
       <option name="closed" value="true" />
@@ -114,7 +201,23 @@
       <option name="project" value="LOCAL" />
       <updated>1765248601105</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="enhanced and fixed some features">
+      <option name="closed" value="true" />
+      <created>1767291005012</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1767291005013</updated>
+    </task>
+    <task id="LOCAL-00003" summary="enhanced and fixed some features">
+      <option name="closed" value="true" />
+      <created>1767292390400</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1767292390400</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,9 +225,18 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed the folder,deleted the duplicate" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed the folder,deleted the duplicate" />
+    <MESSAGE value="enhanced and fixed some features" />
+    <option name="LAST_COMMIT_MESSAGE" value="enhanced and fixed some features" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backend$MentalHealthBackendApplication.ic" NAME="MentalHealthBackendApplication Coverage Results" MODIFIED="1765248402313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

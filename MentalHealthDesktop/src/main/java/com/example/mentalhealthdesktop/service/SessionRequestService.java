@@ -26,6 +26,12 @@ public class SessionRequestService {
                 .create();
     }
 
+    // helper to apply common headers
+    private void applyCommonHeaders(HttpURLConnection connection) {
+        connection.setRequestProperty("Content-Type", "application/json");
+        if (Dataholder.userId != null) connection.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     /**
      * Create a new session request
      */
@@ -33,7 +39,7 @@ public class SessionRequestService {
         URI uri = new URI(BASE_URL);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(connection);
         connection.setDoOutput(true);
 
         String jsonRequest = gson.toJson(request);
@@ -66,6 +72,7 @@ public class SessionRequestService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -93,6 +100,7 @@ public class SessionRequestService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -121,6 +129,7 @@ public class SessionRequestService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         System.out.println("🌐 [SessionRequestService] Fetching pending requests for instructor: " + Dataholder.userId);
 
@@ -159,6 +168,7 @@ public class SessionRequestService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST"); // ✅ Changed from PUT to POST
         connection.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(connection);
         connection.setDoOutput(true);
 
         // ✅ UPDATED: Send empty body for automatic Zoom creation, or manual link if provided
@@ -228,6 +238,7 @@ public class SessionRequestService {
         URI uri = new URI("http://localhost:8080/api/instructors/session-requests/" + requestId + "/decline");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("POST"); // ✅ Changed from PUT to POST
+        applyCommonHeaders(connection);
 
         System.out.println("🌐 [SessionRequestService] Declining request " + requestId);
 
@@ -268,6 +279,4 @@ public class SessionRequestService {
         }
     }
 }
-
-
 

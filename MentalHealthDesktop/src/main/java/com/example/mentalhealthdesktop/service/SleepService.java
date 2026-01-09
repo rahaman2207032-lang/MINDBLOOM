@@ -33,6 +33,12 @@ public class SleepService {
         this.gson = gsonBuilder.create();
     }
 
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        if (Dataholder.userId != null) con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     /**
      * Save a new sleep entry
      */
@@ -43,7 +49,7 @@ public class SleepService {
         URI uri = new URI(BASE_URL);
         HttpURLConnection con = (HttpURLConnection) uri.toURL().openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
         con.setDoOutput(true);
 
         Map<String, Object> data = new HashMap<>();
@@ -85,6 +91,7 @@ public class SleepService {
         URI uri = new URI(BASE_URL + "/user/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) uri.toURL().openConnection();
         con.setRequestMethod("GET");
+        applyCommonHeaders(con);
 
         int responseCode = con.getResponseCode();
         if (responseCode == 200) {
@@ -117,6 +124,7 @@ public class SleepService {
         URI uri = new URI(BASE_URL + "/user/" + Dataholder.userId + "/weekly");
         HttpURLConnection con = (HttpURLConnection) uri.toURL().openConnection();
         con.setRequestMethod("GET");
+        applyCommonHeaders(con);
 
         int responseCode = con.getResponseCode();
         if (responseCode == 200) {
@@ -149,6 +157,7 @@ public class SleepService {
         URI uri = new URI(BASE_URL + "/" + sleepId);
         HttpURLConnection con = (HttpURLConnection) uri.toURL().openConnection();
         con.setRequestMethod("DELETE");
+        applyCommonHeaders(con);
 
         int responseCode = con.getResponseCode();
         if (responseCode != 200 && responseCode != 204) {
@@ -165,4 +174,3 @@ public class SleepService {
         }
     }
 }
-

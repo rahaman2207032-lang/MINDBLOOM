@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/therapy-notes")
-@CrossOrigin(originPatterns = "*", allowCredentials = "true")
 public class TherapyNoteController {
 
     @Autowired
@@ -108,4 +107,3 @@ public class TherapyNoteController {
         }
     }
 }
-

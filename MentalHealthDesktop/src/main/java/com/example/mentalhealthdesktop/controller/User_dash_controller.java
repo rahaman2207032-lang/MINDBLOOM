@@ -74,7 +74,7 @@ public class User_dash_controller {
 
     @FXML
     private void handleCommunityForum() {
-
+        navigateToScene("CommunityForum.fxml", "Community Forum", 1200, 800);
     }
 
     /**
