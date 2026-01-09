@@ -264,7 +264,14 @@ public class CommunityForumController {
                            "-fx-border-radius: 5; -fx-background-radius: 5;");
         likeButton.setOnAction(e -> handleLikePost(post.get("id").getAsLong(), likeButton));
 
-        int commentCount = post.has("commentCount") ? post.get("commentCount").getAsInt() : 0;
+        // ⭐ Handle both 'commentCount' and 'commentsCount' field names from backend
+        int commentCount = 0;
+        if (post.has("commentCount")) {
+            commentCount = post.get("commentCount").getAsInt();
+        } else if (post.has("commentsCount")) {
+            commentCount = post.get("commentsCount").getAsInt();
+        }
+
         Button commentButton = new Button("💬 " + commentCount + " Comments");
         commentButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #7f8c8d; -fx-font-size: 13px; " +
                               "-fx-cursor: hand; -fx-padding: 5 15; -fx-border-color: #bdc3c7; -fx-border-radius: 5; " +

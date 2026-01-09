@@ -242,7 +242,10 @@ public class CommunityForumService {
 
         if (response.statusCode() == 200 || response.statusCode() == 201) {
             System.out.println("✅ [ForumService] Comment added successfully");
-            JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
+            String responseBody = response.body();
+            System.out.println("📄 [ForumService] Full response: " + responseBody);
+
+            JsonObject responseJson = JsonParser.parseString(responseBody).getAsJsonObject();
 
             // Parse new backend response format: {success: true, commentCount: X, comment: {...}}
             if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
@@ -356,9 +359,11 @@ public class CommunityForumService {
 
         if (response.statusCode() == 200) {
             System.out.println("✅ [ForumService] Comment deleted successfully");
+            String responseBody = response.body();
+            System.out.println("📄 [ForumService] Full response: " + responseBody);
 
             // Parse new backend response format: {success: true, message: "...", commentCount: X, postId: Y}
-            JsonObject responseJson = JsonParser.parseString(response.body()).getAsJsonObject();
+            JsonObject responseJson = JsonParser.parseString(responseBody).getAsJsonObject();
 
             if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
                 Long postId = responseJson.get("postId").getAsLong();

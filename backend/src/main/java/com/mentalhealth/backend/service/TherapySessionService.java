@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.DayOfWeek;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TherapySessionService {
@@ -135,31 +136,75 @@ public class TherapySessionService {
 
     /**
      * NEW: Get scheduled sessions for user (with zoom links)
+     * Only returns upcoming sessions (not expired)
      */
     public List<TherapySession> getScheduledSessionsForUser(Long userId) {
         System.out.println("📋 Service: Fetching SCHEDULED sessions for user: " + userId);
         List<TherapySession> sessions = therapySessionRepository.findByClientIdAndStatus(userId, SessionStatus.SCHEDULED);
         System.out.println("   Found " + sessions.size() + " scheduled sessions");
 
-        for (TherapySession session : sessions) {
-            System.out.println("   📌 Session ID: " + session.getId() + ", Zoom: " + session.getZoomLink());
+        // Filter out expired sessions (where session date/time has passed)
+        LocalDateTime now = LocalDateTime.now();
+        List<TherapySession> upcomingSessions = sessions.stream()
+                .filter(session -> {
+                    // Check if session date/time is in the future
+                    LocalDateTime sessionDateTime = session.getSessionDate();
+                    if (sessionDateTime == null) {
+                        System.out.println("   ⚠️ Session " + session.getId() + " has null date, excluding");
+                        return false;
+                    }
+
+                    boolean isUpcoming = sessionDateTime.isAfter(now);
+                    if (!isUpcoming) {
+                        System.out.println("   ⏰ Session " + session.getId() + " expired (" + sessionDateTime + "), excluding");
+                    }
+                    return isUpcoming;
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("   ✅ Returning " + upcomingSessions.size() + " upcoming (non-expired) sessions");
+
+        for (TherapySession session : upcomingSessions) {
+            System.out.println("   📌 Session ID: " + session.getId() + ", Date: " + session.getSessionDate() + ", Zoom: " + session.getZoomLink());
         }
 
-        return sessions;
+        return upcomingSessions;
     }
 
     /**
      * NEW: Get scheduled sessions for instructor (with zoom links)
+     * Only returns upcoming sessions (not expired)
      */
     public List<TherapySession> getScheduledSessionsForInstructor(Long instructorId) {
         System.out.println("📋 Service: Fetching SCHEDULED sessions for instructor: " + instructorId);
         List<TherapySession> sessions = therapySessionRepository.findByInstructorIdAndStatus(instructorId, SessionStatus.SCHEDULED);
         System.out.println("   Found " + sessions.size() + " scheduled sessions");
 
-        for (TherapySession session : sessions) {
-            System.out.println("   📌 Session ID: " + session.getId() + ", Client: " + session.getClientName() + ", Zoom: " + session.getZoomLink());
+        // Filter out expired sessions (where session date/time has passed)
+        LocalDateTime now = LocalDateTime.now();
+        List<TherapySession> upcomingSessions = sessions.stream()
+                .filter(session -> {
+                    // Check if session date/time is in the future
+                    LocalDateTime sessionDateTime = session.getSessionDate();
+                    if (sessionDateTime == null) {
+                        System.out.println("   ⚠️ Session " + session.getId() + " has null date, excluding");
+                        return false;
+                    }
+
+                    boolean isUpcoming = sessionDateTime.isAfter(now);
+                    if (!isUpcoming) {
+                        System.out.println("   ⏰ Session " + session.getId() + " expired (" + sessionDateTime + "), excluding");
+                    }
+                    return isUpcoming;
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("   ✅ Returning " + upcomingSessions.size() + " upcoming (non-expired) sessions");
+
+        for (TherapySession session : upcomingSessions) {
+            System.out.println("   📌 Session ID: " + session.getId() + ", Client: " + session.getClientName() + ", Date: " + session.getSessionDate() + ", Zoom: " + session.getZoomLink());
         }
 
-        return sessions;
+        return upcomingSessions;
     }
 }

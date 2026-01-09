@@ -8,57 +8,11 @@
       <change afterPath="$PROJECT_DIR$/../BACKEND_COMMUNITY_FORUM_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../BACKEND_GROUP_CHAT_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../COMMUNITY_FORUM_GROUP_CHAT_COMPLETE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/CommunityForumController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/PostCommentsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/CommunityForumService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/CommunityForum.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/resources/com/example/mentalhealthdesktop/PostComments.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/FORUM_LIKE_COMMENT_COUNT_FIX.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/GROUP_CHAT_BACKEND_COMPLETE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ChatController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ForumController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ChatMessageRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ChatMessageResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumCommentRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumCommentResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumPostRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/ForumPostResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/dto/OnlineUsersResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ChatMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumComment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumPost.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/model/ForumPostLike.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ChatMessageRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumCommentRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumPostLikeRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/repository/ForumPostRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ChatService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ForumService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/HabitTrackerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/HabitTrackerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/Login_Signup.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/Login_Signup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/User_dash_controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/User_dash_controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/ClientProgressService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/ClientProgressService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/HabitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/HabitService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/JournalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/JournalService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MessageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MoodService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/MoodService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SessionRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SessionRequestService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SleepService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/SleepService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/TherapyNoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/service/TherapyNoteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ClientProgressController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/ClientProgressController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/InstructorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/InstructorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TestController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TherapyNoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/TherapyNoteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/HabitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/HabitService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/mentalhealth/backend/model/MoodEntry.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -191,7 +145,7 @@
       <workItem from="1767090902924" duration="52115000" />
       <workItem from="1767292340764" duration="383000" />
       <workItem from="1767362762136" duration="15641000" />
-      <workItem from="1767895159138" duration="10270000" />
+      <workItem from="1767895159138" duration="13828000" />
     </task>
     <task id="LOCAL-00001" summary="fixed the folder,deleted the duplicate">
       <option name="closed" value="true" />
