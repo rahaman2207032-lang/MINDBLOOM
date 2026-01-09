@@ -1,6 +1,7 @@
 package com.example.mentalhealthdesktop.controller;
 
 import com.example.mentalhealthdesktop.Dataholder;
+import com.example.mentalhealthdesktop.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -171,6 +172,9 @@ public class Login_Signup implements Initializable {
                             Dataholder.loggedInUsername = user;
                             Dataholder.userId = jsonResponse.get("userId").getAsLong();
 
+                            // Also set session manager so other services can read current user
+                            SessionManager.getInstance().setCurrentUser(Dataholder.userId, Dataholder.loggedInUsername, "USER");
+
                             System.out.println("✅ Logged in successfully!");
                             System.out.println("   Username: " + Dataholder.loggedInUsername);
                             System.out.println("   User ID: " + Dataholder.userId);
@@ -252,6 +256,9 @@ public class Login_Signup implements Initializable {
                             // Store instructor information
                             Dataholder.loggedInUsername = user;
                             Dataholder.userId = jsonResponse.get("userId").getAsLong();
+
+                            // Set session for instructor
+                            SessionManager.getInstance().setCurrentUser(Dataholder.userId, Dataholder.loggedInUsername, "INSTRUCTOR");
 
                             System.out.println("✅ Instructor logged in successfully!");
                             System.out.println("   Username: " + Dataholder.loggedInUsername);

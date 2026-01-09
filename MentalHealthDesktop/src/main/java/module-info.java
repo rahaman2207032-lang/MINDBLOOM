@@ -12,6 +12,7 @@ module com.example.mentalhealthdesktop {
     requires com.almasb.fxgl.all;
     requires java.desktop;
     requires com.google.gson;
+    requires java.net.http;
 
     opens com.example.mentalhealthdesktop.model to com.google.gson, javafx.base;
     opens com.example.mentalhealthdesktop.view to com.google.gson;

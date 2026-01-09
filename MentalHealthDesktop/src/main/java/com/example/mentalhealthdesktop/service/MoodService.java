@@ -36,6 +36,12 @@ public class MoodService {
         this.gson = gsonBuilder.create();
     }
 
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Accept", "application/json");
+        if (Dataholder.userId != null) con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     // Helper method to send HTTP request and get JSON response
     private String sendRequest(HttpURLConnection con, String json) throws Exception {
         if (json != null) {
@@ -74,7 +80,7 @@ public class MoodService {
         URL url = new URL(BASE_URL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, MoodLog.class);
@@ -87,7 +93,7 @@ public class MoodService {
         URL url = new URL(BASE_URL + "/user/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         if (response == null) return List.of();
@@ -104,7 +110,7 @@ public class MoodService {
                          "/range?startDate=" + startDate + "&endDate=" + endDate);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         if (response == null) return List.of();
@@ -120,7 +126,7 @@ public class MoodService {
         URL url = new URL(BASE_URL + "/user/" + Dataholder.userId + "/latest");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         if (response == null) return null;
@@ -146,4 +152,3 @@ public class MoodService {
                 .orElse(0.0);
     }
 }
-

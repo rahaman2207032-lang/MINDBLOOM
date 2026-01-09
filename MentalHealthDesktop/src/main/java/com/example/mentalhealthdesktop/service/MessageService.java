@@ -36,6 +36,14 @@ public class MessageService {
         this.gson = gsonBuilder.create();
     }
 
+    // Helper to set common headers including X-User-Id when available
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        if (Dataholder.userId != null) {
+            con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+        }
+    }
+
     // Send a message
     public Message sendMessage(Long receiverId, String messageText) throws Exception {
         checkLoggedIn();
@@ -50,7 +58,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/send");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, Message.class);
@@ -68,7 +76,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/conversation/" + Dataholder.userId + "/" + otherUserId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         return gson.fromJson(response, new TypeToken<List<Message>>(){}.getType());
@@ -81,7 +89,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/conversations/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         return gson.fromJson(response, new TypeToken<List<ConversationSummary>>(){}.getType());
@@ -94,7 +102,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/" + messageId + "/read");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
@@ -109,7 +117,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/unread/count/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         return gson.fromJson(response, Integer.class);
@@ -122,7 +130,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/available-users/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
         con.setRequestProperty("Accept", "application/json");
 
         System.out.println("📋 Fetching available users from: " + url);
@@ -147,7 +155,7 @@ public class MessageService {
         URL url = new URL(endpoint);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
         con.setRequestProperty("Accept", "application/json");
 
         System.out.println("📥 [MessageService] Fetching instructor conversations from: " + endpoint);
@@ -194,7 +202,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/send");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
 
@@ -212,7 +220,7 @@ public class MessageService {
         URL url = new URL(BASE_URL + "/user/" + userId + "/instructor");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         try {
             String response = sendRequest(con, null);
@@ -241,7 +249,7 @@ public class MessageService {
         URL url = new URL(endpoint);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         System.out.println("📖 [MessageService] Marking messages as read: " + instructorId + " <-> " + clientId);
 

@@ -155,20 +155,48 @@ public class HabitController {
             @PathVariable Long habitId,
             @RequestBody Map<String, Object> request) {
         try {
+            System.out.println("=== API: Complete Habit ===");
+            System.out.println("Habit ID: " + habitId);
+
             Long userId = Long.valueOf(request.get("userId").toString());
             String dateStr = request.get("completionDate").toString();
             LocalDate completionDate = LocalDate.parse(dateStr);
             String notes = request.containsKey("notes") ? request.get("notes").toString() : null;
 
-            HabitCompletion completion = habitService.completeHabit(habitId, userId, completionDate, notes);
-            return ResponseEntity.status(HttpStatus.CREATED).body(completion);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(createErrorResponse(e.getMessage()));
+            System.out.println("User ID: " + userId);
+            System.out.println("Completion Date: " + completionDate);
+
+            // Call service which returns CompletionResult
+            HabitService.CompletionResult result = habitService.completeHabit(habitId, userId, completionDate, notes);
+
+            // Get the updated habit with new streak
+            Habit updatedHabit = habitService.getHabitById(habitId);
+
+            System.out.println("✅ Habit completed. Current Streak: " + updatedHabit.getCurrentStreak());
+
+            // Create response with completion AND updated habit info
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("created", result.created);
+            response.put("completion", result.completion);
+            response.put("currentStreak", updatedHabit.getCurrentStreak());
+            response.put("longestStreak", updatedHabit.getLongestStreak());
+            response.put("habit", updatedHabit);  // Full updated habit
+
+            if (result.created) {
+                response.put("message", "Habit completed successfully");
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                response.put("message", "Habit already completed for this date");
+                return ResponseEntity.ok(response);
+            }
         } catch (RuntimeException e) {
+            System.err.println("❌ ERROR completing habit: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(createErrorResponse(e.getMessage()));
         } catch (Exception e) {
+            System.err.println("❌ ERROR completing habit: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("Failed to complete habit: " + e.getMessage()));
         }

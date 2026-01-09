@@ -35,6 +35,14 @@ public class JournalService {
         this.gson = gsonBuilder.create();
     }
 
+    // helper to apply common headers
+    private void applyCommonHeaders(HttpURLConnection con) {
+        con.setRequestProperty("Content-Type", "application/json");
+        if (Dataholder.userId != null) {
+            con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+        }
+    }
+
     // -------------------------------
     // Helper method to send HTTP request and get JSON response
     private String sendRequest(HttpURLConnection con, String json) throws Exception {
@@ -71,7 +79,7 @@ public class JournalService {
         URL url = new URL(BASE_URL + "/user/" + Dataholder.userId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, null);
         if (response == null) return null;
@@ -95,7 +103,7 @@ public class JournalService {
         URL url = new URL(BASE_URL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, JournalEntry.class);
@@ -116,7 +124,7 @@ public class JournalService {
         URL url = new URL(BASE_URL + "/" + journalId);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("PUT");
-        con.setRequestProperty("Content-Type", "application/json");
+        applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
         return gson.fromJson(response, JournalEntry.class);

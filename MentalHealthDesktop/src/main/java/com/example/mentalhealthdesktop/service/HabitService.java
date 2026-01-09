@@ -120,9 +120,12 @@ public class HabitService {
 
     /**
      * Mark habit as completed for today
+     * Returns a result containing the completion and updated streak information
      */
-    public HabitCompletion completeHabit(Long habitId, String notes) throws Exception {
+    public HabitCompletionResult completeHabit(Long habitId, String notes) throws Exception {
         checkLoggedIn();
+
+        System.out.println("📋 [HabitService] Completing habit " + habitId + " for user " + Dataholder.userId);
 
         URI uri = new URI(BASE_URL + "/" + habitId + "/complete");
         HttpURLConnection con = (HttpURLConnection) uri.toURL().openConnection();
@@ -144,6 +147,8 @@ public class HabitService {
         }
 
         int responseCode = con.getResponseCode();
+        System.out.println("📡 [HabitService] Complete habit response status: " + responseCode);
+
         if (responseCode == 200 || responseCode == 201) {
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(con.getInputStream()))) {
@@ -152,10 +157,81 @@ public class HabitService {
                 while ((line = br.readLine()) != null) {
                     response.append(line);
                 }
-                return gson.fromJson(response.toString(), HabitCompletion.class);
+
+                String responseBody = response.toString();
+                System.out.println("📄 [HabitService] Response: " + responseBody);
+
+                JsonObject responseJson = gson.fromJson(responseBody, JsonObject.class);
+
+                // Check if this is the new response format with success, currentStreak, etc.
+                if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
+                    // New backend response format
+                    int currentStreak = responseJson.get("currentStreak").getAsInt();
+                    int longestStreak = responseJson.get("longestStreak").getAsInt();
+                    boolean created = responseJson.has("created") && responseJson.get("created").getAsBoolean();
+                    String message = responseJson.has("message") ? responseJson.get("message").getAsString() : "Completed";
+
+                    // Parse the completion object
+                    JsonObject completionJson = responseJson.getAsJsonObject("completion");
+                    HabitCompletion completion = gson.fromJson(completionJson, HabitCompletion.class);
+
+                    // Parse the updated habit object if present
+                    Habit updatedHabit = null;
+                    if (responseJson.has("habit")) {
+                        JsonObject habitJson = responseJson.getAsJsonObject("habit");
+                        updatedHabit = gson.fromJson(habitJson, Habit.class);
+                    }
+
+                    System.out.println("✅ [HabitService] Habit completed! Current Streak: " + currentStreak + ", Longest: " + longestStreak);
+
+                    return new HabitCompletionResult(true, created, message, currentStreak, longestStreak, completion, updatedHabit);
+                } else {
+                    // Old backend response format (just the completion object)
+                    System.out.println("⚠️ [HabitService] Old response format detected");
+                    HabitCompletion completion = gson.fromJson(responseBody, HabitCompletion.class);
+                    return new HabitCompletionResult(true, true, "Completed", -1, -1, completion, null);
+                }
             }
         } else {
+            // Read error response
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getErrorStream()))) {
+                StringBuilder errorResponse = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    errorResponse.append(line);
+                }
+                System.err.println("❌ [HabitService] Error: " + errorResponse.toString());
+            } catch (Exception e) {
+                // Ignore if can't read error
+            }
+
             throw new RuntimeException("Failed to complete habit. Response code: " + responseCode);
+        }
+    }
+
+    /**
+     * Result object for habit completion containing streak information and the updated habit
+     */
+    public static class HabitCompletionResult {
+        public final boolean success;
+        public final boolean created;
+        public final String message;
+        public final int currentStreak;
+        public final int longestStreak;
+        public final HabitCompletion completion;
+        public final Habit updatedHabit;
+
+        public HabitCompletionResult(boolean success, boolean created, String message,
+                                     int currentStreak, int longestStreak,
+                                     HabitCompletion completion, Habit updatedHabit) {
+            this.success = success;
+            this.created = created;
+            this.message = message;
+            this.currentStreak = currentStreak;
+            this.longestStreak = longestStreak;
+            this.completion = completion;
+            this.updatedHabit = updatedHabit;
         }
     }
 

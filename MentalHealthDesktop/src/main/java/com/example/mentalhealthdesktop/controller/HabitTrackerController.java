@@ -241,11 +241,35 @@ public class HabitTrackerController {
         result.ifPresent(notes -> {
             new Thread(() -> {
                 try {
-                    habitService.completeHabit(habit.getId(), notes);
+                    System.out.println("📋 [HabitTracker] Completing habit: " + habit.getName());
+
+                    // ⭐ Use the new HabitCompletionResult
+                    HabitService.HabitCompletionResult completionResult = habitService.completeHabit(habit.getId(), notes);
 
                     Platform.runLater(() -> {
-                        showAlert(Alert.AlertType.INFORMATION, "Success",
-                                "Habit marked as complete! Keep up the great work! 🎉");
+                        // Update the habit's streak information if available
+                        if (completionResult.currentStreak >= 0) {
+                            habit.setCurrentStreak(completionResult.currentStreak);
+                            habit.setLongestStreak(completionResult.longestStreak);
+
+                            System.out.println("✅ [HabitTracker] Updated streak - Current: " +
+                                             completionResult.currentStreak + ", Longest: " + completionResult.longestStreak);
+
+                            // If we have the full updated habit, use it
+                            if (completionResult.updatedHabit != null) {
+                                // Update all fields from the backend
+                                habit.setCurrentStreak(completionResult.updatedHabit.getCurrentStreak());
+                                habit.setLongestStreak(completionResult.updatedHabit.getLongestStreak());
+                            }
+                        }
+
+                        String message = completionResult.created
+                            ? "Habit marked as complete! 🎉\nCurrent Streak: " + completionResult.currentStreak + " day(s)"
+                            : "You already completed this habit today! Current Streak: " + completionResult.currentStreak + " day(s)";
+
+                        showAlert(Alert.AlertType.INFORMATION, "Success", message);
+
+                        // Reload habits to refresh the UI with updated streaks
                         loadHabits();
                     });
                 } catch (Exception e) {

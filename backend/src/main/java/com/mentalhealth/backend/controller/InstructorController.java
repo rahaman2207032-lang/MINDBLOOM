@@ -19,7 +19,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/instructors")  // Changed to plural to match frontend
-@CrossOrigin(originPatterns = "*", allowCredentials = "true")
 public class InstructorController {
 
     @Autowired

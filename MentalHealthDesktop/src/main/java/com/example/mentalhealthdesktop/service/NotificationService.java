@@ -1,5 +1,6 @@
 package com.example.mentalhealthdesktop.service;
 
+import com.example.mentalhealthdesktop.Dataholder;
 import com.example.mentalhealthdesktop.model.Notification;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +27,11 @@ public class NotificationService {
                 .create();
     }
 
+    private void applyCommonHeaders(HttpURLConnection connection) {
+        connection.setRequestProperty("Accept", "application/json");
+        if (Dataholder.userId != null) connection.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
+    }
+
     /**
      * ✅ NEW: Get notifications with action details (zoom links, sender info, etc.)
      * This is the RECOMMENDED method to use for notifications
@@ -36,7 +42,7 @@ public class NotificationService {
         URI uri = new URI(BASE_URL + "/user/" + userId + "/with-details");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
@@ -103,7 +109,7 @@ public class NotificationService {
         URI uri = new URI(endpoint);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
@@ -163,6 +169,7 @@ public class NotificationService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
@@ -211,6 +218,7 @@ public class NotificationService {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -264,6 +272,7 @@ public class NotificationService {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
+        applyCommonHeaders(connection);
 
         String jsonRequest = gson.toJson(notification);
 

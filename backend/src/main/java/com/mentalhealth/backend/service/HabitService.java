@@ -7,11 +7,13 @@ import com.mentalhealth.backend.model.HabitCompletion;
 import com.mentalhealth.backend.repository.HabitCompletionRepository;
 import com.mentalhealth.backend.repository.HabitRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,19 @@ public class HabitService {
 
     private final HabitRepository habitRepository;
     private final HabitCompletionRepository habitCompletionRepository;
+
+    /**
+     * Result wrapper for completion operation
+     */
+    public static class CompletionResult {
+        public final boolean created;
+        public final HabitCompletion completion;
+
+        public CompletionResult(boolean created, HabitCompletion completion) {
+            this.created = created;
+            this.completion = completion;
+        }
+    }
 
     /**
      * Create a new habit
@@ -123,16 +138,18 @@ public class HabitService {
     }
 
     /**
-     * Mark habit as complete for a specific date
+     * Mark habit as complete for a specific date (idempotent)
      */
     @Transactional
-    public HabitCompletion completeHabit(Long habitId, Long userId, LocalDate completionDate, String notes) {
+    public CompletionResult completeHabit(Long habitId, Long userId, LocalDate completionDate, String notes) {
         // Check if habit exists
         Habit habit = getHabitById(habitId);
 
         // Check if already completed for this date
-        if (habitCompletionRepository.existsByHabitIdAndCompletionDate(habitId, completionDate)) {
-            throw new IllegalStateException("Habit already completed for this date");
+        Optional<HabitCompletion> existing = habitCompletionRepository.findByHabitIdAndCompletionDate(habitId, completionDate);
+        if (existing.isPresent()) {
+            System.out.println("SERVICE: Habit already completed for date " + completionDate + " - returning existing completion");
+            return new CompletionResult(false, existing.get());
         }
 
         // Create completion record
@@ -142,12 +159,23 @@ public class HabitService {
         completion.setCompletionDate(completionDate);
         completion.setNotes(notes);
 
-        HabitCompletion savedCompletion = habitCompletionRepository.save(completion);
+        HabitCompletion savedCompletion;
+        try {
+            savedCompletion = habitCompletionRepository.save(completion);
+        } catch (DataIntegrityViolationException dive) {
+            // Possibly a race caused the unique constraint to be hit; fetch existing and return
+            Optional<HabitCompletion> raced = habitCompletionRepository.findByHabitIdAndCompletionDate(habitId, completionDate);
+            if (raced.isPresent()) {
+                System.out.println("SERVICE: Caught DataIntegrityViolationException - returning existing completion created by race");
+                return new CompletionResult(false, raced.get());
+            }
+            throw dive;
+        }
 
         // Update streak
         updateStreak(habit);
 
-        return savedCompletion;
+        return new CompletionResult(true, savedCompletion);
     }
 
     /**
