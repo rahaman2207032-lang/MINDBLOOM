@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/therapy-sessions")
-// CORS handled globally in WebConfig.java
+
 public class TherapySessionController {
 
     @Autowired
@@ -69,34 +69,30 @@ public class TherapySessionController {
         }
     }
 
-    /**
-     * NEW: Get scheduled sessions for user (with zoom links)
-     */
+
     @GetMapping("/user/{userId}/scheduled")
     public ResponseEntity<List<TherapySession>> getUserScheduledSessions(@PathVariable Long userId) {
         try {
-            System.out.println("📅 Fetching scheduled sessions for user: " + userId);
+            System.out.println(" Fetching scheduled sessions for user: " + userId);
             List<TherapySession> sessions = therapySessionService.getScheduledSessionsForUser(userId);
-            System.out.println("✅ Found " + sessions.size() + " scheduled sessions");
+            System.out.println(" Found " + sessions.size() + " scheduled sessions");
             return ResponseEntity.ok(sessions);
         } catch (Exception e) {
-            System.err.println("❌ Error fetching user sessions: " + e.getMessage());
+            System.err.println(" Error fetching user sessions: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * NEW: Get scheduled sessions for instructor (with zoom links)
-     */
+
     @GetMapping("/instructor/{instructorId}/scheduled")
     public ResponseEntity<List<TherapySession>> getInstructorScheduledSessions(@PathVariable Long instructorId) {
         try {
-            System.out.println("📅 Fetching scheduled sessions for instructor: " + instructorId);
+            System.out.println(" Fetching scheduled sessions for instructor: " + instructorId);
             List<TherapySession> sessions = therapySessionService.getScheduledSessionsForInstructor(instructorId);
-            System.out.println("✅ Found " + sessions.size() + " scheduled sessions");
+            System.out.println(" Found " + sessions.size() + " scheduled sessions");
             return ResponseEntity.ok(sessions);
         } catch (Exception e) {
-            System.err.println("❌ Error fetching instructor sessions: " + e.getMessage());
+            System.err.println(" Error fetching instructor sessions: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

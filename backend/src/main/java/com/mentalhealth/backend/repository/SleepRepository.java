@@ -15,14 +15,10 @@ import java.util.List;
 @Repository
 public interface SleepRepository extends JpaRepository<SleepEntry, Long> {
 
-    /**
-     * Find all sleep entries for a specific user, ordered by most recent first
-     */
+
     List<SleepEntry> findByUserIdOrderBySleepStartTimeDesc(Long userId);
 
-    /**
-     * Find sleep entries for a user within a date range
-     */
+
     @Query("SELECT s FROM SleepEntry s WHERE s.userId = :userId " +
             "AND s.sleepStartTime >= :startDate " +
             "ORDER BY s.sleepStartTime DESC")
@@ -31,9 +27,6 @@ public interface SleepRepository extends JpaRepository<SleepEntry, Long> {
             @Param("startDate") LocalDateTime startDate
     );
 
-    /**
-     * Find sleep entries for the last N days
-     */
     @Query("SELECT s FROM SleepEntry s WHERE s.userId = :userId " +
             "AND s.sleepStartTime >= :startDate " +
             "ORDER BY s.sleepStartTime ASC")
@@ -42,15 +35,10 @@ public interface SleepRepository extends JpaRepository<SleepEntry, Long> {
             @Param("startDate") LocalDateTime startDate
     );
 
-    /**
-     * Count total sleep entries for a user
-     */
+
     long countByUserId(Long userId);
 
-    /**
-     * Calculate average sleep hours for a user within a date range
-     * Using native query because HQL doesn't support EXTRACT with duration calculations
-     */
+
     @Query(value = "SELECT AVG(EXTRACT(EPOCH FROM (sleep_end_time - sleep_start_time))/3600.0) " +
             "FROM sleep_entries WHERE user_id = :userId " +
             "AND DATE(sleep_start_time) >= :startDate " +
@@ -60,9 +48,7 @@ public interface SleepRepository extends JpaRepository<SleepEntry, Long> {
                                 @Param("startDate") LocalDate startDate,
                                 @Param("endDate") LocalDate endDate);
 
-    /**
-     * Find sleep entries for instructor dashboard
-     */
+
     List<SleepEntry> findByUserIdAndSleepStartTimeAfterOrderBySleepStartTimeDesc(Long userId, LocalDateTime startDate);
 }
 

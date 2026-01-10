@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/progress")
-// CORS handled globally in WebConfig.java
+
 public class ProgressController {
 
     @Autowired

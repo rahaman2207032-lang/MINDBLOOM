@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/messages")
-// CORS handled globally in WebConfig.java
+
 public class MessageController {
 
     @Autowired
@@ -27,26 +27,23 @@ public class MessageController {
         try {
             System.out.println("📨 Sending message from " + message.getSenderId() + " to " + message.getReceiverId());
             Message sent = messageService.sendMessage(message);
-            System.out.println("✅ Message sent successfully with ID: " + sent.getId());
+            System.out.println(" Message sent successfully with ID: " + sent.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(sent);
         } catch (Exception e) {
-            System.err.println("❌ ERROR sending message: " + e.getMessage());
+            System.err.println(" ERROR sending message: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get available users for messaging (for current user)
-     * Returns all users except the current user
-     */
+
     @GetMapping("/available-users/{userId}")
     public ResponseEntity<List<Map<String, Object>>> getAvailableUsers(@PathVariable Long userId) {
         try {
             List<Map<String, Object>> users = messageService.getAvailableUsers(userId);
             return ResponseEntity.ok(users);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting available users: " + e.getMessage());
+            System.err.println(" ERROR getting available users: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -70,16 +67,16 @@ public class MessageController {
             System.out.println("📡 MessageController conversations endpoint called with userId: " + userId);
 
             if (userId == null || userId <= 0) {
-                System.err.println("❌ Invalid user ID: " + userId);
+                System.err.println(" Invalid user ID: " + userId);
                 return ResponseEntity.badRequest().build();
             }
 
             List<ConversationSummaryDTO> conversations = messageService.getConversations(userId);
-            System.out.println("✅ MessageController returning " + conversations.size() + " conversations");
+            System.out.println(" MessageController returning " + conversations.size() + " conversations");
 
             return ResponseEntity.ok(conversations);
         } catch (Exception e) {
-            System.err.println("❌ ERROR in MessageController.getConversations: " + e.getMessage());
+            System.err.println(" ERROR in MessageController.getConversations: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -95,10 +92,7 @@ public class MessageController {
         }
     }
 
-    /**
-     * Mark all messages in a conversation as read
-     * This is called when instructor opens a conversation
-     */
+
     @PutMapping("/conversation/{userId1}/{userId2}/mark-read")
     public ResponseEntity<Map<String, Object>> markConversationAsRead(
             @PathVariable Long userId1,
@@ -108,7 +102,7 @@ public class MessageController {
 
             int markedCount = messageService.markConversationAsRead(userId1, userId2);
 
-            System.out.println("✅ Marked " + markedCount + " messages as read");
+            System.out.println(" Marked " + markedCount + " messages as read");
 
             Map<String, Object> response = new HashMap<>();
             response.put("markedCount", markedCount);
@@ -116,7 +110,7 @@ public class MessageController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.err.println("❌ ERROR marking conversation as read: " + e.getMessage());
+            System.err.println(" ERROR marking conversation as read: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -131,7 +125,7 @@ public class MessageController {
             response.put("userId", userId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting instructor for user: " + e.getMessage());
+            System.err.println(" ERROR getting instructor for user: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

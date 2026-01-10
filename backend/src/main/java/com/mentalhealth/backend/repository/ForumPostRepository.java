@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ForumPostRepository extends JpaRepository<ForumPost, Long> {
 
-    // Find all posts ordered by creation date (latest first)
+
     List<ForumPost> findAllByOrderByCreatedAtDesc();
 
     // Find all posts ordered by likes (most liked first)

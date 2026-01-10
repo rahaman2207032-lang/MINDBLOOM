@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST Controller for Client Progress Tracking
- * Handles aggregated client mental health data for instructors
- */
+
 @RestController
 @RequestMapping("/api/client-progress")
 public class ClientProgressController {
@@ -19,10 +16,7 @@ public class ClientProgressController {
     @Autowired
     private ClientProgressService clientProgressService;
 
-    /**
-     * GET /api/client-progress/{clientId}/summary
-     * Returns aggregated summary of client's mental health data
-     */
+
     @GetMapping("/{clientId}/summary")
     public ResponseEntity<Map<String, Object>> getClientSummary(
             @PathVariable Long clientId,
@@ -32,10 +26,7 @@ public class ClientProgressController {
         return ResponseEntity.ok(summary);
     }
 
-    /**
-     * GET /api/client-progress/{clientId}/mood-logs
-     * Returns mood log history for client
-     */
+
     @GetMapping("/{clientId}/mood-logs")
     public ResponseEntity<List<Map<String, Object>>> getMoodLogs(
             @PathVariable Long clientId,
@@ -46,10 +37,7 @@ public class ClientProgressController {
         return ResponseEntity.ok(moodLogs);
     }
 
-    /**
-     * GET /api/client-progress/{clientId}/stress-assessments
-     * Returns stress assessment history for client
-     */
+
     @GetMapping("/{clientId}/stress-assessments")
     public ResponseEntity<List<Map<String, Object>>> getStressAssessments(
             @PathVariable Long clientId,
@@ -60,10 +48,7 @@ public class ClientProgressController {
         return ResponseEntity.ok(assessments);
     }
 
-    /**
-     * GET /api/client-progress/{clientId}/habits
-     * Returns habit tracking data for client
-     */
+
     @GetMapping("/{clientId}/habits")
     public ResponseEntity<List<Map<String, Object>>> getHabits(
             @PathVariable Long clientId,
@@ -73,10 +58,7 @@ public class ClientProgressController {
         return ResponseEntity.ok(habits);
     }
 
-    /**
-     * GET /api/client-progress/{clientId}/sleep-data
-     * Returns sleep tracking data for client
-     */
+
     @GetMapping("/{clientId}/sleep-data")
     public ResponseEntity<List<Map<String, Object>>> getSleepData(
             @PathVariable Long clientId,

@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/mood")
-// CORS handled globally in WebConfig.java
+
 public class MoodLogController {
 
     @Autowired

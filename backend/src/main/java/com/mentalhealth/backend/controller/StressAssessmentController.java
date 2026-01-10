@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/stress")
-// CORS handled globally in WebConfig.java
+
 public class StressAssessmentController {
 
     @Autowired

@@ -10,10 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * Service for Client Progress Tracking
- * Aggregates and provides client mental health data to instructors
- */
+
 @Service
 public class ClientProgressService {
 
@@ -38,28 +35,24 @@ public class ClientProgressService {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-    /**
-     * Get aggregated summary of client's mental health data
-     * NO CONSENT CHECKING - Instructors can access all client data
-     */
     public Map<String, Object> getClientSummary(Long clientId, Long instructorId) {
 
         Map<String, Object> summary = new HashMap<>();
 
         try {
-            // Calculate average mood (last 30 days)
+
             Double avgMood = calculateAverageMood(clientId, 30);
             summary.put("averageMood", avgMood != null ? Math.round(avgMood * 10.0) / 10.0 : null);
 
-            // Get current stress level
+
             String stressLevel = getCurrentStressLevel(clientId);
             summary.put("currentStressLevel", stressLevel);
 
-            // Calculate habit completion rate
+
             Double habitRate = calculateHabitCompletionRate(clientId);
             summary.put("habitCompletionRate", habitRate != null ? Math.round(habitRate * 10.0) / 10.0 : null);
 
-            // Calculate average sleep hours (last 30 days)
+
             Double avgSleep = calculateAverageSleep(clientId, 30);
             summary.put("averageSleepHours", avgSleep != null ? Math.round(avgSleep * 10.0) / 10.0 : null);
 
@@ -75,10 +68,7 @@ public class ClientProgressService {
         return summary;
     }
 
-    /**
-     * Get mood log history
-     * NO CONSENT CHECKING - Instructors can access all client data
-     */
+
     public List<Map<String, Object>> getMoodLogs(Long clientId, Long instructorId, Integer days) {
 
         List<Map<String, Object>> moodLogs = new ArrayList<>();
@@ -102,10 +92,6 @@ public class ClientProgressService {
         return moodLogs;
     }
 
-    /**
-     * Get stress assessment history
-     * NO CONSENT CHECKING - Instructors can access all client data
-     */
     public List<Map<String, Object>> getStressAssessments(Long clientId, Long instructorId, Integer days) {
 
         List<Map<String, Object>> assessments = new ArrayList<>();
@@ -130,10 +116,7 @@ public class ClientProgressService {
         return assessments;
     }
 
-    /**
-     * Get habits tracking data
-     * NO CONSENT CHECKING - Instructors can access all client data
-     */
+
     public List<Map<String, Object>> getHabits(Long clientId, Long instructorId) {
         List<Map<String, Object>> habitsList = new ArrayList<>();
 
@@ -159,10 +142,7 @@ public class ClientProgressService {
         return habitsList;
     }
 
-    /**
-     * Get sleep tracking data
-     * NO CONSENT CHECKING - Instructors can access all client data
-     */
+
     public List<Map<String, Object>> getSleepData(Long clientId, Long instructorId, Integer days) {
 
         List<Map<String, Object>> sleepData = new ArrayList<>();
@@ -195,12 +175,7 @@ public class ClientProgressService {
         return sleepData;
     }
 
-    // ========== Helper Methods ==========
 
-
-    /**
-     * Calculate average mood over specified days
-     */
     private Double calculateAverageMood(Long clientId, int days) {
         try {
             LocalDateTime startDate = LocalDateTime.now().minusDays(days);
@@ -219,9 +194,7 @@ public class ClientProgressService {
         }
     }
 
-    /**
-     * Get current (most recent) stress level
-     */
+
     private String getCurrentStressLevel(Long clientId) {
         try {
             List<StressAssessment> assessments = stressAssessmentRepository
@@ -237,9 +210,7 @@ public class ClientProgressService {
         }
     }
 
-    /**
-     * Calculate overall habit completion rate
-     */
+
     private Double calculateHabitCompletionRate(Long clientId) {
         try {
             List<Habit> habits = habitRepository.findByUserId(clientId);
@@ -248,12 +219,12 @@ public class ClientProgressService {
                 return null;
             }
 
-            // Get completion rate for last 30 days
+
             LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
             List<HabitCompletion> completions = habitCompletionRepository
                     .findByUserIdAndCompletionDateAfter(clientId, thirtyDaysAgo);
 
-            // Calculate expected completions (30 days * number of habits)
+
             int expectedCompletions = habits.size() * 30;
             int actualCompletions = completions.size();
 
@@ -267,16 +238,14 @@ public class ClientProgressService {
         }
     }
 
-    /**
-     * Calculate completion rate for specific habit
-     */
+
     private Double calculateHabitCompletionRateForHabit(Long habitId) {
         try {
             LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
             List<HabitCompletion> completions = habitCompletionRepository
                     .findByHabitIdAndCompletionDateAfter(habitId, thirtyDaysAgo);
 
-            // Expected: 30 days
+
             int actualCompletions = completions.size();
             return (actualCompletions * 100.0) / 30.0;
         } catch (Exception e) {
@@ -284,9 +253,7 @@ public class ClientProgressService {
         }
     }
 
-    /**
-     * Calculate average sleep hours over specified days
-     */
+
     private Double calculateAverageSleep(Long clientId, int days) {
         try {
             LocalDateTime startDate = LocalDateTime.now().minusDays(days);

@@ -22,9 +22,7 @@ public class HabitService {
     private final HabitRepository habitRepository;
     private final HabitCompletionRepository habitCompletionRepository;
 
-    /**
-     * Result wrapper for completion operation
-     */
+
     public static class CompletionResult {
         public final boolean created;
         public final HabitCompletion completion;
@@ -35,9 +33,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Create a new habit
-     */
+
     @Transactional
     public Habit createHabit(Habit habit) {
         System.out.println("SERVICE: Creating habit...");
@@ -47,35 +43,31 @@ public class HabitService {
 
         // Validate frequency
         if (!habit.getFrequency().equals("DAILY") && !habit.getFrequency().equals("WEEKLY")) {
-            System.err.println("SERVICE: ❌ Invalid frequency: " + habit.getFrequency());
+            System.err.println("SERVICE:  Invalid frequency: " + habit.getFrequency());
             throw new IllegalArgumentException("Frequency must be either DAILY or WEEKLY");
         }
 
         try {
             Habit saved = habitRepository.save(habit);
 
-            System.out.println("SERVICE: ✅ Habit saved to database!");
+            System.out.println("SERVICE:  Habit saved to database!");
             System.out.println("  - Generated ID: " + saved.getId());
             System.out.println("  - Created at: " + saved.getCreatedAt());
 
             return saved;
         } catch (Exception e) {
-            System.err.println("SERVICE: ❌ ERROR saving habit: " + e.getMessage());
+            System.err.println("SERVICE:  ERROR saving habit: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Failed to save habit: " + e.getMessage(), e);
         }
     }
 
-    /**
-     * Get all habits for a user
-     */
+
     public List<Habit> getAllHabits(Long userId) {
         return habitRepository.findByUserId(userId);
     }
 
-    /**
-     * Get all active habits for a user
-     */
+
     public List<Habit> getActiveHabits(Long userId) {
         System.out.println("SERVICE: Fetching active habits for user: " + userId);
         List<Habit> habits = habitRepository.findByUserIdAndIsActiveTrue(userId);
@@ -83,22 +75,18 @@ public class HabitService {
         return habits;
     }
 
-    /**
-     * Get a specific habit
-     */
+
     public Habit getHabitById(Long id) {
         return habitRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Habit not found with id: " + id));
     }
 
-    /**
-     * Update a habit
-     */
+
     @Transactional
     public Habit updateHabit(Long id, Habit updatedHabit) {
         Habit existingHabit = getHabitById(id);
 
-        // Update fields
+
         if (updatedHabit.getName() != null) {
             existingHabit.setName(updatedHabit.getName());
         }
@@ -121,9 +109,7 @@ public class HabitService {
         return habitRepository.save(existingHabit);
     }
 
-    /**
-     * Delete a habit (also deletes all completions via cascade)
-     */
+
     @Transactional
     public void deleteHabit(Long id) {
         if (!habitRepository.existsById(id)) {
@@ -137,9 +123,7 @@ public class HabitService {
         habitRepository.deleteById(id);
     }
 
-    /**
-     * Mark habit as complete for a specific date (idempotent)
-     */
+
     @Transactional
     public CompletionResult completeHabit(Long habitId, Long userId, LocalDate completionDate, String notes) {
         // Check if habit exists
@@ -178,9 +162,7 @@ public class HabitService {
         return new CompletionResult(true, savedCompletion);
     }
 
-    /**
-     * Update habit streak after completion
-     */
+
     @Transactional
     public void updateStreak(Habit habit) {
         LocalDate today = LocalDate.now();
@@ -211,30 +193,22 @@ public class HabitService {
         }
     }
 
-    /**
-     * Get completion history for a habit
-     */
+
     public List<HabitCompletion> getHabitCompletions(Long habitId) {
         return habitCompletionRepository.findByHabitIdOrderByCompletionDateDesc(habitId);
     }
 
-    /**
-     * Get habits with active streaks
-     */
+
     public List<Habit> getHabitsWithStreaks(Long userId) {
         return habitRepository.findByUserIdAndCurrentStreakGreaterThan(userId, 0);
     }
 
-    /**
-     * Check if habit is completed for today
-     */
+
     public boolean isCompletedToday(Long habitId) {
         return habitCompletionRepository.existsByHabitIdAndCompletionDate(habitId, LocalDate.now());
     }
 
-    /**
-     * Get statistics for user habits
-     */
+
     public HabitStats getUserHabitStats(Long userId) {
         long totalHabits = habitRepository.countByUserIdAndIsActiveTrue(userId);
         List<Habit> habitsWithStreaks = getHabitsWithStreaks(userId);

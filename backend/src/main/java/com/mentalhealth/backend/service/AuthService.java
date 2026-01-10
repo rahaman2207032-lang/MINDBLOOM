@@ -45,11 +45,11 @@ public class AuthService {
         System.out.println("Invalid role provided: " + role);
         return false;
     }
-    // New method to get User with ID
+
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
     }
-    // New method to get Instructor with ID
+
     public Instructor getInstructorByUsername(String username) {
         return instructorRepository.findByUsername(username).orElse(null);
     }

@@ -15,15 +15,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/sleep")
 @RequiredArgsConstructor
-// CORS handled globally in WebConfig.java
+
 public class SleepController {
 
     private final SleepService sleepService;
 
-    /**
-     * Create a new sleep entry
-     * POST /api/sleep
-     */
+
     @PostMapping
     public ResponseEntity<?> createSleepEntry(@RequestBody SleepEntry sleepEntry) {
         try {
@@ -37,10 +34,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Get all sleep entries for a user
-     * GET /api/sleep/user/{userId}
-     */
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getAllSleepEntries(@PathVariable Long userId) {
         try {
@@ -52,10 +46,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Get sleep entries for the last 7 days
-     * GET /api/sleep/user/{userId}/weekly
-     */
+
     @GetMapping("/user/{userId}/weekly")
     public ResponseEntity<?> getWeeklySleepEntries(@PathVariable Long userId) {
         try {
@@ -67,10 +58,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Get a specific sleep entry
-     * GET /api/sleep/{id}
-     */
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getSleepEntry(@PathVariable Long id) {
         try {
@@ -85,10 +73,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Update a sleep entry
-     * PUT /api/sleep/{id}
-     */
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateSleepEntry(
             @PathVariable Long id,
@@ -107,10 +92,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Delete a sleep entry
-     * DELETE /api/sleep/{id}
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSleepEntry(@PathVariable Long id) {
         try {
@@ -125,10 +107,7 @@ public class SleepController {
         }
     }
 
-    /**
-     * Get sleep statistics for a user
-     * GET /api/sleep/user/{userId}/stats
-     */
+
     @GetMapping("/user/{userId}/stats")
     public ResponseEntity<?> getSleepStats(@PathVariable Long userId) {
         try {
@@ -142,18 +121,14 @@ public class SleepController {
         }
     }
 
-    /**
-     * Helper method to create error response
-     */
+
     private Map<String, String> createErrorResponse(String message) {
         Map<String, String> error = new HashMap<>();
         error.put("error", message);
         return error;
     }
 
-    /**
-     * Helper method to create success response
-     */
+
     private Map<String, String> createSuccessResponse(String message) {
         Map<String, String> response = new HashMap<>();
         response.put("message", message);

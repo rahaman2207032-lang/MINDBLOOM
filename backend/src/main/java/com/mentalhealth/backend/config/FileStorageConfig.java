@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
-/**
- * File Storage Configuration
- * Creates necessary directories for file uploads
- */
+
 @Component
 public class FileStorageConfig {
 

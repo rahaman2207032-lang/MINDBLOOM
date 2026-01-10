@@ -33,9 +33,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("UPDATE Message m SET m.read = true WHERE m.id = :messageId")
     void markAsRead(@Param("messageId") Long messageId);
 
-    /**
-     * Find messages between instructor and client, ordered by date
-     */
+
     @Query("SELECT m FROM Message m WHERE " +
             "(m.senderId = :instructorId AND m.receiverId = :clientId) OR " +
             "(m.senderId = :clientId AND m.receiverId = :instructorId) " +

@@ -18,15 +18,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/habits")
 @RequiredArgsConstructor
-// CORS handled globally in WebConfig.java
+
 public class HabitController {
 
     private final HabitService habitService;
 
-    /**
-     * Create a new habit
-     * POST /api/habits
-     */
+
     @PostMapping
     public ResponseEntity<?> createHabit(@RequestBody Habit habit) {
         try {
@@ -36,62 +33,56 @@ public class HabitController {
             System.out.println("Frequency: " + habit.getFrequency());
 
             if (habit.getUserId() == null) {
-                System.err.println("❌ ERROR: userId is NULL");
+                System.err.println(" ERROR: userId is NULL");
                 return ResponseEntity.badRequest().body(createErrorResponse("userId is required"));
             }
 
             if (habit.getName() == null || habit.getName().trim().isEmpty()) {
-                System.err.println("❌ ERROR: habit name is empty");
+                System.err.println(" ERROR: habit name is empty");
                 return ResponseEntity.badRequest().body(createErrorResponse("habit name is required"));
             }
 
             System.out.println("Calling service to save habit...");
             Habit created = habitService.createHabit(habit);
 
-            System.out.println("✅ Habit created successfully! ID: " + created.getId());
+            System.out.println(" Habit created successfully! ID: " + created.getId());
             System.out.println("Created at: " + created.getCreatedAt());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (IllegalArgumentException e) {
-            System.err.println("❌ Validation error: " + e.getMessage());
+            System.err.println(" Validation error: " + e.getMessage());
             return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            System.err.println("❌ ERROR creating habit: " + e.getMessage());
+            System.err.println(" ERROR creating habit: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("Failed to create habit: " + e.getMessage()));
         }
     }
 
-    /**
-     * Get all habits for a user
-     * GET /api/habits/user/{userId}
-     */
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getAllHabits(@PathVariable Long userId) {
         try {
             System.out.println("=== API: Get habits for user: " + userId + " ===");
             List<Habit> habits = habitService.getActiveHabits(userId);
 
-            System.out.println("✅ Found " + habits.size() + " active habits for user " + userId);
+            System.out.println(" Found " + habits.size() + " active habits for user " + userId);
 
             if (habits.isEmpty()) {
-                System.out.println("⚠️ No habits found - returning empty list");
+                System.out.println(" No habits found - returning empty list");
             }
 
             return ResponseEntity.ok(habits);
         } catch (Exception e) {
-            System.err.println("❌ ERROR loading habits for user " + userId + ": " + e.getMessage());
+            System.err.println(" ERROR loading habits for user " + userId + ": " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("Failed to fetch habits: " + e.getMessage()));
         }
     }
 
-    /**
-     * Get a specific habit
-     * GET /api/habits/{id}
-     */
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getHabit(@PathVariable Long id) {
         try {
@@ -106,10 +97,7 @@ public class HabitController {
         }
     }
 
-    /**
-     * Update a habit
-     * PUT /api/habits/{id}
-     */
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateHabit(
             @PathVariable Long id,
@@ -128,10 +116,7 @@ public class HabitController {
         }
     }
 
-    /**
-     * Delete a habit
-     * DELETE /api/habits/{id}
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteHabit(@PathVariable Long id) {
         try {
@@ -146,10 +131,6 @@ public class HabitController {
         }
     }
 
-    /**
-     * Mark habit as complete for a specific date
-     * POST /api/habits/{habitId}/complete
-     */
     @PostMapping("/{habitId}/complete")
     public ResponseEntity<?> completeHabit(
             @PathVariable Long habitId,
@@ -172,7 +153,7 @@ public class HabitController {
             // Get the updated habit with new streak
             Habit updatedHabit = habitService.getHabitById(habitId);
 
-            System.out.println("✅ Habit completed. Current Streak: " + updatedHabit.getCurrentStreak());
+            System.out.println(" Habit completed. Current Streak: " + updatedHabit.getCurrentStreak());
 
             // Create response with completion AND updated habit info
             Map<String, Object> response = new HashMap<>();
@@ -191,11 +172,11 @@ public class HabitController {
                 return ResponseEntity.ok(response);
             }
         } catch (RuntimeException e) {
-            System.err.println("❌ ERROR completing habit: " + e.getMessage());
+            System.err.println(" ERROR completing habit: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(createErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            System.err.println("❌ ERROR completing habit: " + e.getMessage());
+            System.err.println(" ERROR completing habit: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(createErrorResponse("Failed to complete habit: " + e.getMessage()));

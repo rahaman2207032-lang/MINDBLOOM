@@ -25,9 +25,7 @@ public class ForumService {
     @Autowired
     private UserRepository userRepository;
 
-    /**
-     * Get all posts with sorting and user context
-     */
+
     public List<ForumPostResponse> getPosts(String sortType, Long currentUserId) {
         List<ForumPost> posts;
 
@@ -36,7 +34,7 @@ public class ForumService {
                 posts = forumPostRepository.findAllByOrderByLikesDesc();
                 break;
             case "most_commented":
-                // Get all posts and sort by comment count
+
                 posts = forumPostRepository.findAllByOrderByCreatedAtDesc();
                 posts = posts.stream()
                     .sorted((p1, p2) -> Long.compare(
@@ -51,15 +49,13 @@ public class ForumService {
                 break;
         }
 
-        // Convert to response DTOs with like status and comment count
+
         return posts.stream()
             .map(post -> convertToResponse(post, currentUserId))
             .collect(Collectors.toList());
     }
 
-    /**
-     * Get all forum posts (sorted by latest)
-     */
+
     public List<ForumPostResponse> getAllPosts(Long currentUserId) {
         List<ForumPost> posts = forumPostRepository.findAllByOrderByCreatedAtDesc();
         return posts.stream()
@@ -67,9 +63,6 @@ public class ForumService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get posts sorted by popularity (likes)
-     */
     public List<ForumPostResponse> getPopularPosts(Long currentUserId) {
         List<ForumPost> posts = forumPostRepository.findAllByOrderByLikesDesc();
         return posts.stream()
@@ -77,9 +70,7 @@ public class ForumService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Search posts by keyword
-     */
+
     public List<ForumPostResponse> searchPosts(String query, Long currentUserId) {
         List<ForumPost> posts = forumPostRepository.searchPosts(query);
         return posts.stream()
@@ -87,18 +78,13 @@ public class ForumService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get a single post by ID
-     */
+
     public ForumPostResponse getPostById(Long postId, Long currentUserId) {
         ForumPost post = forumPostRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
         return convertToResponse(post, currentUserId);
     }
 
-    /**
-     * Get posts created by a specific user
-     */
     public List<ForumPostResponse> getUserPosts(Long userId, Long currentUserId) {
         List<ForumPost> posts = forumPostRepository.findByAuthorIdOrderByCreatedAtDesc(userId);
         return posts.stream()
@@ -106,23 +92,21 @@ public class ForumService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Create a new forum post
-     */
+
     @Transactional
     public ForumPostResponse createPost(Long userId, ForumPostRequest request) {
         try {
             System.out.println("=== SERVICE CREATE POST ===");
-            System.out.println("📝 [ForumService] Creating post for user ID: " + userId);
+            System.out.println(" [ForumService] Creating post for user ID: " + userId);
             System.out.println("   Looking for user in users table...");
 
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> {
-                        System.err.println("❌ [ForumService] USER NOT FOUND with ID: " + userId);
+                        System.err.println(" [ForumService] USER NOT FOUND with ID: " + userId);
                         return new RuntimeException("User not found with id: " + userId);
                     });
 
-            System.out.println("✅ [ForumService] Found user: " + user.getUsername() + " (ID: " + userId + ")");
+            System.out.println(" [ForumService] Found user: " + user.getUsername() + " (ID: " + userId + ")");
 
             ForumPost post = new ForumPost(
                     request.getTitle(),
@@ -132,28 +116,26 @@ public class ForumService {
                     request.isAnonymous()
             );
 
-            System.out.println("💾 [ForumService] Saving post to database...");
+            System.out.println("[ForumService] Saving post to database...");
             ForumPost savedPost = forumPostRepository.save(post);
-            System.out.println("✅ [ForumService] Post saved successfully with ID: " + savedPost.getId());
+            System.out.println("[ForumService] Post saved successfully with ID: " + savedPost.getId());
             System.out.println("===========================");
 
             return convertToResponse(savedPost, userId);
         } catch (Exception e) {
-            System.err.println("❌ [ForumService] Error creating post: " + e.getMessage());
+            System.err.println(" [ForumService] Error creating post: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Failed to create post: " + e.getMessage(), e);
         }
     }
 
-    /**
-     * Update a forum post
-     */
+
     @Transactional
     public ForumPostResponse updatePost(Long postId, Long userId, ForumPostRequest request) {
         ForumPost post = forumPostRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
-        // Check if user is the author
+
         if (!post.getAuthorId().equals(userId)) {
             throw new RuntimeException("You can only edit your own posts");
         }
@@ -166,15 +148,13 @@ public class ForumService {
         return convertToResponse(updatedPost, userId);
     }
 
-    /**
-     * Delete a forum post
-     */
+
     @Transactional
     public void deletePost(Long postId, Long userId) {
         ForumPost post = forumPostRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
-        // Check if user is the author
+
         if (!post.getAuthorId().equals(userId)) {
             throw new RuntimeException("You can only delete your own posts");
         }
@@ -182,16 +162,12 @@ public class ForumService {
         forumPostRepository.delete(post);
     }
 
-    /**
-     * Check if a post is liked by a user
-     */
+
     public boolean isPostLikedByUser(Long postId, Long userId) {
         return forumPostLikeRepository.existsByPostIdAndUserId(postId, userId);
     }
 
-    /**
-     * Like a post
-     */
+
     @Transactional
     public void likePost(Long postId, Long userId) {
         try {
@@ -201,39 +177,39 @@ public class ForumService {
 
             ForumPost post = forumPostRepository.findById(postId)
                     .orElseThrow(() -> {
-                        System.err.println("❌ Post not found with ID: " + postId);
+                        System.err.println(" Post not found with ID: " + postId);
                         return new RuntimeException("Post not found with id: " + postId);
                     });
-            System.out.println("✅ Found post: " + post.getTitle());
+            System.out.println(" Found post: " + post.getTitle());
 
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> {
-                        System.err.println("❌ User not found with ID: " + userId);
+                        System.err.println(" User not found with ID: " + userId);
                         return new RuntimeException("User not found with id: " + userId);
                     });
-            System.out.println("✅ Found user: " + user.getUsername());
+            System.out.println("Found user: " + user.getUsername());
 
-            // Check if already liked
+
             boolean alreadyLiked = forumPostLikeRepository.existsByPostIdAndUserId(postId, userId);
-            System.out.println("📊 Already liked: " + alreadyLiked);
+            System.out.println(" Already liked: " + alreadyLiked);
 
             if (alreadyLiked) {
-                System.err.println("⚠️ User already liked this post");
+                System.err.println(" User already liked this post");
                 throw new RuntimeException("You have already liked this post");
             }
 
-            // Create like
+
             ForumPostLike like = new ForumPostLike(post, user);
             forumPostLikeRepository.save(like);
-            System.out.println("✅ Like saved to database");
+            System.out.println(" Like saved to database");
 
-            // Increment likes count
+
             post.setLikes(post.getLikes() + 1);
             forumPostRepository.save(post);
-            System.out.println("✅ Post likes count updated to: " + post.getLikes());
+            System.out.println(" Post likes count updated to: " + post.getLikes());
             System.out.println("======================");
         } catch (Exception e) {
-            System.err.println("❌ ERROR in likePost: " + e.getMessage());
+            System.err.println(" ERROR in likePost: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }

@@ -23,15 +23,15 @@ public class AuthController {
         System.out.println("==============================");
         // Validate input
         if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-            System.out.println("❌ Login FAILED - Username is null or empty");
+            System.out.println(" Login FAILED - Username is null or empty");
             return ResponseEntity.badRequest().body("Username is required");
         }
         if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-            System.out.println("❌ Login FAILED - Password is null or empty");
+            System.out.println("Login FAILED - Password is null or empty");
             return ResponseEntity.badRequest().body("Password is required");
         }
         if (request.getRole() == null || request.getRole().trim().isEmpty()) {
-            System.out.println("❌ Login FAILED - Role is null or empty");
+            System.out.println(" Login FAILED - Role is null or empty");
             return ResponseEntity.badRequest().body("Role is required");
         }
         boolean success = authService.login(
@@ -40,8 +40,8 @@ public class AuthController {
                 request.getRole()
         );
         if (success) {
-            System.out.println("✅ Login SUCCESSFUL for user: " + request.getUsername());
-            // Get user/instructor details to return userId
+            System.out.println(" Login SUCCESSFUL for user: " + request.getUsername());
+
             if ("USER".equalsIgnoreCase(request.getRole())) {
                 User user = authService.getUserByUsername(request.getUsername());
                 if (user != null) {
@@ -65,10 +65,10 @@ public class AuthController {
                     return ResponseEntity.ok(response);
                 }
             }
-            // Fallback if user/instructor not found after successful login
+
             return ResponseEntity.ok("Login successful");
         } else {
-            System.out.println("❌ Login FAILED for user: " + request.getUsername());
+            System.out.println(" Login FAILED for user: " + request.getUsername());
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }

@@ -28,27 +28,27 @@ public class TherapyNoteController {
 
             // Validation
             if (note.getClientId() == null) {
-                System.err.println("❌ ERROR: Client ID is null");
+                System.err.println(" ERROR: Client ID is null");
                 return ResponseEntity.badRequest().build();
             }
             if (note.getInstructorId() == null) {
-                System.err.println("❌ ERROR: Instructor ID is null");
+                System.err.println(" ERROR: Instructor ID is null");
                 return ResponseEntity.badRequest().build();
             }
             if (note.getNotes() == null || note.getNotes().trim().isEmpty()) {
-                System.err.println("❌ ERROR: Notes text is empty");
+                System.err.println(" ERROR: Notes text is empty");
                 return ResponseEntity.badRequest().build();
             }
             if (note.getSessionDate() == null) {
-                System.err.println("❌ ERROR: Session date is null");
+                System.err.println(" ERROR: Session date is null");
                 return ResponseEntity.badRequest().build();
             }
 
             TherapyNote created = therapyNoteService.createNote(note);
-            System.out.println("✅ Therapy note saved successfully with ID: " + created.getId());
+            System.out.println(" Therapy note saved successfully with ID: " + created.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (Exception e) {
-            System.err.println("❌ ERROR saving therapy note: " + e.getMessage());
+            System.err.println(" ERROR saving therapy note: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -62,7 +62,7 @@ public class TherapyNoteController {
             List<TherapyNote> notes = therapyNoteService.getNotesForClient(clientId, instructorId);
             return ResponseEntity.ok(notes);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting client notes: " + e.getMessage());
+            System.err.println(" ERROR getting client notes: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -74,7 +74,7 @@ public class TherapyNoteController {
             List<TherapyNote> notes = therapyNoteService.getAllNotesForInstructor(instructorId);
             return ResponseEntity.ok(notes);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting instructor notes: " + e.getMessage());
+            System.err.println(" ERROR getting instructor notes: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -89,7 +89,7 @@ public class TherapyNoteController {
             TherapyNote updated = therapyNoteService.updateNote(noteId, notes);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
-            System.err.println("❌ ERROR updating note: " + e.getMessage());
+            System.err.println(" ERROR updating note: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -101,7 +101,7 @@ public class TherapyNoteController {
             therapyNoteService.deleteNote(noteId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            System.err.println("❌ ERROR deleting note: " + e.getMessage());
+            System.err.println(" ERROR deleting note: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

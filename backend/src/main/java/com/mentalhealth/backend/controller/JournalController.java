@@ -20,7 +20,7 @@ import java.util.Optional;
 public class JournalController {
 
     private final JournalEntryService journalEntryService;
-    private final UserService userService; // ✅ Add this
+    private final UserService userService;
     public JournalController(JournalEntryService journalEntryService, UserService userService) {
         this.journalEntryService = journalEntryService;
         this.userService = userService;
@@ -46,12 +46,7 @@ public class JournalController {
 
     }
 
-//    @GetMapping("/user/{userId}")
-//    public ResponseEntity<List<JournalEntry>> getEntriesByUser(@PathVariable Long userId) {
-//        System.out.println("API: Get journal entries for user: " + userId);
-//        List<JournalEntry> entries = journalEntryService.getEntriesByUser(userId);
-//        return ResponseEntity.ok(entries);
-//    }
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<JournalEntry> getEntryByUser(@PathVariable Long userId) {

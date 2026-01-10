@@ -37,15 +37,10 @@ public interface TherapySessionRepository extends JpaRepository<TherapySession, 
     List<TherapySession> findByInstructorIdAndSessionDateAfter(Long instructorId, LocalDateTime startDate);
 
 
-    /**
-     * Count sessions for instructor and client
-     */
+
     int countByInstructorIdAndClientId(Long instructorId, Long clientId);
 
-    /**
-     * Get weekly sessions for instructor
-     * Usage: findWeeklySessions(instructorId, startOfWeek, endOfWeek)
-     */
+
     @Query("SELECT t FROM TherapySession t WHERE t.instructorId = :instructorId " +
             "AND t.sessionDate >= :startOfWeek AND t.sessionDate < :endOfWeek " +
             "ORDER BY t.sessionDate ASC")
@@ -56,27 +51,16 @@ public interface TherapySessionRepository extends JpaRepository<TherapySession, 
     );
 
 
-    /**
-     * Count distinct clients for instructor (if you need this)
-     * Note: This can also be done in the service layer
-     */
+
     @Query("SELECT COUNT(DISTINCT t.clientId) FROM TherapySession t WHERE t.instructorId = :instructorId")
     long countDistinctClientsByInstructorId(@Param("instructorId") Long instructorId);
 
-    /**
-     * Find instructor ID for a user/client (for reply functionality)
-     * Returns the most recent instructor who had a session with this user
-     */
     @Query("SELECT t.instructorId FROM TherapySession t WHERE t.clientId = :userId ORDER BY t.sessionDate DESC LIMIT 1")
     Long findInstructorIdByUserId(@Param("userId") Long userId);
 
-    /**
-     * NEW: Find SCHEDULED sessions for user (with zoom links)
-     */
+
     List<TherapySession> findByClientIdAndStatus(Long clientId, SessionStatus status);
 
-    /**
-     * NEW: Find SCHEDULED sessions for instructor (with zoom links)
-     */
+
     List<TherapySession> findByInstructorIdAndStatus(Long instructorId, SessionStatus status);
 }

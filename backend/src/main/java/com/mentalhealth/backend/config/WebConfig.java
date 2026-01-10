@@ -6,10 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * Web MVC Configuration
- * Handles CORS, file uploads, and resource serving
- */
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 

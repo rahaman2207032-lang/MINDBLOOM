@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/session-requests")
-// CORS handled globally in WebConfig.java
+
 public class SessionRequestController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class SessionRequestController {
     @PostMapping
     public ResponseEntity<SessionRequest> createRequest(@RequestBody SessionRequest request) {
         try {
-            System.out.println("📝 Received session request from frontend:");
+            System.out.println(" Received session request from frontend:");
             System.out.println("   Raw request object: " + request);
             System.out.println("   userId (from getUserId): " + request.getUserId());
             System.out.println("   clientId (from getClientId): " + request.getClientId());
@@ -34,20 +34,20 @@ public class SessionRequestController {
 
             // Validate required fields
             if (request.getInstructorId() == null) {
-                System.err.println("❌ ERROR: instructorId is NULL! Frontend must send instructorId.");
+                System.err.println(" ERROR: instructorId is NULL! Frontend must send instructorId.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
             if (request.getClientId() == null && request.getUserId() == null) {
-                System.err.println("❌ ERROR: Both clientId and userId are NULL! Frontend must send userId or clientId.");
+                System.err.println(" ERROR: Both clientId and userId are NULL! Frontend must send userId or clientId.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
             SessionRequest created = sessionRequestService.createRequest(request);
-            System.out.println("✅ Session request created successfully with ID: " + created.getId());
+            System.out.println(" Session request created successfully with ID: " + created.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (Exception e) {
-            System.err.println("❌ ERROR in SessionRequestController: " + e.getMessage());
+            System.err.println(" ERROR in SessionRequestController: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -97,52 +97,46 @@ public class SessionRequestController {
         }
     }
 
-    /**
-     * Get all session requests for a user (client)
-     */
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<SessionRequest>> getUserSessionRequests(@PathVariable Long userId) {
         try {
-            System.out.println("📋 Getting session requests for user ID: " + userId);
+            System.out.println(" Getting session requests for user ID: " + userId);
             List<SessionRequest> requests = sessionRequestService.getRequestsForUser(userId);
-            System.out.println("✅ Found " + requests.size() + " session requests for user");
+            System.out.println(" Found " + requests.size() + " session requests for user");
             return ResponseEntity.ok(requests);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting user session requests: " + e.getMessage());
+            System.err.println(" ERROR getting user session requests: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get confirmed/accepted sessions for a user
-     */
+
     @GetMapping("/user/{userId}/confirmed")
     public ResponseEntity<List<SessionRequest>> getUserConfirmedSessions(@PathVariable Long userId) {
         try {
-            System.out.println("📋 Getting confirmed sessions for user ID: " + userId);
+            System.out.println(" Getting confirmed sessions for user ID: " + userId);
             List<SessionRequest> confirmed = sessionRequestService.getConfirmedSessionsForUser(userId);
-            System.out.println("✅ Found " + confirmed.size() + " confirmed sessions for user");
+            System.out.println(" Found " + confirmed.size() + " confirmed sessions for user");
             return ResponseEntity.ok(confirmed);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting confirmed sessions: " + e.getMessage());
+            System.err.println(" ERROR getting confirmed sessions: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get pending session requests for a user
-     */
+
     @GetMapping("/user/{userId}/pending")
     public ResponseEntity<List<SessionRequest>> getUserPendingRequests(@PathVariable Long userId) {
         try {
-            System.out.println("📋 Getting pending requests for user ID: " + userId);
+            System.out.println(" Getting pending requests for user ID: " + userId);
             List<SessionRequest> pending = sessionRequestService.getPendingRequestsForUser(userId);
-            System.out.println("✅ Found " + pending.size() + " pending requests for user");
+            System.out.println(" Found " + pending.size() + " pending requests for user");
             return ResponseEntity.ok(pending);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting pending requests: " + e.getMessage());
+            System.err.println(" ERROR getting pending requests: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

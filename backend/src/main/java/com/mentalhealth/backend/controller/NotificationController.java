@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Notification Controller
- * Handles in-app notification requests for notification button in dashboard
- */
+
 @RestController
 @RequestMapping("/api/notifications")
 // CORS handled globally in WebConfig.java
@@ -23,10 +20,7 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    /**
-     * Get all notifications for a user (for notification button dropdown)
-     * GET /api/notifications/user/{userId}
-     */
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
         try {
@@ -37,10 +31,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get only unread notifications (for notification badge count)
-     * GET /api/notifications/user/{userId}/unread
-     */
+
     @GetMapping("/user/{userId}/unread")
     public ResponseEntity<List<Notification>> getUnreadNotifications(@PathVariable Long userId) {
         try {
@@ -51,10 +42,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get unread notification count (for notification badge number)
-     * GET /api/notifications/user/{userId}/unread/count
-     */
     @GetMapping("/user/{userId}/unread/count")
     public ResponseEntity<Map<String, Long>> getUnreadCount(@PathVariable Long userId) {
         try {
@@ -67,10 +54,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Mark notification as read
-     * PUT /api/notifications/{notificationId}/read
-     */
+
     @PutMapping("/{notificationId}/read")
     public ResponseEntity<Map<String, String>> markAsRead(@PathVariable Long notificationId) {
         try {
@@ -85,10 +69,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Mark all notifications as read for a user
-     * PUT /api/notifications/user/{userId}/read-all
-     */
+
     @PutMapping("/user/{userId}/read-all")
     public ResponseEntity<Map<String, String>> markAllAsRead(@PathVariable Long userId) {
         try {
@@ -101,10 +82,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Delete a notification
-     * DELETE /api/notifications/{notificationId}
-     */
+
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<Map<String, String>> deleteNotification(@PathVariable Long notificationId) {
         try {
@@ -119,10 +97,6 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Delete all notifications for a user
-     * DELETE /api/notifications/user/{userId}
-     */
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<Map<String, String>> deleteAllNotifications(@PathVariable Long userId) {
         try {
@@ -135,10 +109,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get notification by ID
-     * GET /api/notifications/{notificationId}
-     */
+
     @GetMapping("/{notificationId}")
     public ResponseEntity<Notification> getNotification(@PathVariable Long notificationId) {
         try {
@@ -151,54 +122,45 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get notification details with action data (zoom link, sender info for reply, etc.)
-     * GET /api/notifications/{notificationId}/details
-     */
+
     @GetMapping("/{notificationId}/details")
     public ResponseEntity<Map<String, Object>> getNotificationDetails(@PathVariable Long notificationId) {
         try {
             Map<String, Object> details = notificationService.getNotificationDetails(notificationId);
             return ResponseEntity.ok(details);
         } catch (RuntimeException e) {
-            System.err.println("❌ ERROR getting notification details: " + e.getMessage());
+            System.err.println(" ERROR getting notification details: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (Exception e) {
-            System.err.println("❌ ERROR: " + e.getMessage());
+            System.err.println(" ERROR: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get all notifications with details (includes zoom links, sender info, etc.)
-     * GET /api/notifications/user/{userId}/with-details
-     */
+
     @GetMapping("/user/{userId}/with-details")
     public ResponseEntity<List<Map<String, Object>>> getUserNotificationsWithDetails(@PathVariable Long userId) {
         try {
             List<Map<String, Object>> notifications = notificationService.getUserNotificationsWithDetails(userId);
             return ResponseEntity.ok(notifications);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting notifications with details: " + e.getMessage());
+            System.err.println(" ERROR getting notifications with details: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * Get ONLY UNREAD notifications with details (for user dashboard - excludes read notifications)
-     * GET /api/notifications/user/{userId}/unread/with-details
-     */
+
     @GetMapping("/user/{userId}/unread/with-details")
     public ResponseEntity<List<Map<String, Object>>> getUnreadNotificationsWithDetails(@PathVariable Long userId) {
         try {
-            System.out.println("📬 Fetching UNREAD notifications with details for user: " + userId);
+            System.out.println(" Fetching UNREAD notifications with details for user: " + userId);
             List<Map<String, Object>> notifications = notificationService.getUnreadNotificationsWithDetails(userId);
-            System.out.println("✅ Found " + notifications.size() + " unread notifications");
+            System.out.println(" Found " + notifications.size() + " unread notifications");
             return ResponseEntity.ok(notifications);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting unread notifications with details: " + e.getMessage());
+            System.err.println(" ERROR getting unread notifications with details: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
