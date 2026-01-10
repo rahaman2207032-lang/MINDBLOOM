@@ -2,7 +2,10 @@ package com.mentalhealth.backend.service;
 
 import com.mentalhealth.backend.model.Instructor;
 import com.mentalhealth.backend.model.Message;
+import com.mentalhealth.backend.model.MoodLog;
+import com.mentalhealth.backend.model.Notification;
 import com.mentalhealth.backend.model.SessionRequest;
+import com.mentalhealth.backend.model.StressAssessment;
 import com.mentalhealth.backend.model.TherapySession;
 import com.mentalhealth.backend.model.User;
 import com.mentalhealth.backend.model.UserRole;
@@ -16,10 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Service for Instructor Dashboard functionality
- * Handles dashboard stats, client management, analytics, etc.
- */
+
 @Service
 public class InstructorService {
 
@@ -50,9 +50,10 @@ public class InstructorService {
     @Autowired(required = false)
     private NotificationService notificationService;
 
-    /**
-     * Get all instructors for session request selection dropdown
-     */
+    @Autowired(required = false)
+    private NotificationRepository notificationRepository;
+
+
     public List<Instructor> getAllInstructorsForSelection() {
         if (instructorRepository != null) {
             return instructorRepository.findAll();
@@ -60,32 +61,30 @@ public class InstructorService {
         return new ArrayList<>();
     }
 
-    /**
-     * Get dashboard statistics for instructor
-     */
+
     public Map<String, Integer> getDashboardStats(Long instructorId) {
         Map<String, Integer> stats = new HashMap<>();
 
         try {
-            // Count pending session requests
+
             int pendingRequests = (int) sessionRequestRepository
                     .findByInstructorIdAndStatusOrderByCreatedAtDesc(instructorId, SessionRequest.RequestStatus.PENDING)
                     .size();
 
-            // Count today's sessions
+
             LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
             LocalDateTime endOfDay = startOfDay.plusDays(1);
             List<TherapySession> todaySessions = therapySessionRepository
                     .findByInstructorIdAndSessionDateBetween(instructorId, startOfDay, endOfDay);
 
-            // Count total unique clients
+
             List<TherapySession> allSessions = therapySessionRepository
                     .findByInstructorId(instructorId);
             Set<Long> uniqueClients = allSessions.stream()
                     .map(TherapySession::getClientId)
                     .collect(Collectors.toSet());
 
-            // Available slots (customize this based on your availability logic)
+
             int availableSlots = 8; // Default value
 
             stats.put("pendingRequests", pendingRequests);
@@ -104,15 +103,12 @@ public class InstructorService {
         return stats;
     }
 
-    /**
-     * Get all clients (ALL users with role='USER') with their overview
-     * NO CONSENT CHECKING - Instructors can see all clients
-     */
+
     public List<Map<String, Object>> getAllClients(Long instructorId) {
         List<Map<String, Object>> clients = new ArrayList<>();
 
         try {
-            // Get ALL users with role=USER (all clients in the system)
+
             List<User> allUsers = userRepository.findByRole(UserRole.USER);
 
             for (User user : allUsers) {
@@ -120,20 +116,20 @@ public class InstructorService {
                 clientOverview.put("clientId", user.getId());
                 clientOverview.put("clientName", user.getUsername());
 
-                // Calculate average mood from mood logs (if available)
+
                 Double avgMood = calculateAverageMood(user.getId());
                 clientOverview.put("averageMood", avgMood);
 
-                // Get latest stress level (if available)
+
                 String stressLevel = getLatestStressLevel(user.getId());
                 clientOverview.put("stressLevel", stressLevel);
 
-                // Get session count for this client
+
                 List<TherapySession> clientSessions = therapySessionRepository
                         .findByClientIdOrderBySessionDateDesc(user.getId());
                 clientOverview.put("totalSessions", clientSessions.size());
 
-                // Get last session date
+
                 String lastSession = null;
                 if (!clientSessions.isEmpty()) {
                     lastSession = clientSessions.get(0).getSessionDate()
@@ -141,7 +137,7 @@ public class InstructorService {
                 }
                 clientOverview.put("lastSessionDate", lastSession);
 
-                // No consent needed - removed consent system
+
                 clientOverview.put("consentGranted", true);
 
                 clients.add(clientOverview);
@@ -154,9 +150,7 @@ public class InstructorService {
         return clients;
     }
 
-    /**
-     * Search clients by name
-     */
+
     public List<Map<String, Object>> searchClients(Long instructorId, String searchTerm) {
         List<Map<String, Object>> allClients = getAllClients(instructorId);
 
@@ -173,29 +167,27 @@ public class InstructorService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get analytics data for specified time range
-     */
+
     public Map<String, Object> getAnalytics(Long instructorId, String timeRange) {
         Map<String, Object> analytics = new HashMap<>();
 
         try {
             LocalDateTime startDate = calculateStartDate(timeRange);
 
-            // Get sessions in time range
+
             List<TherapySession> sessions = therapySessionRepository
                     .findByInstructorIdAndSessionDateAfter(instructorId, startDate);
 
-            // Total sessions
+
             analytics.put("totalSessions", sessions.size());
 
-            // Completed sessions
+
             long completedSessions = sessions.stream()
                     .filter(s -> s.getStatus() == TherapySession.SessionStatus.COMPLETED)
                     .count();
             analytics.put("completedSessions", (int) completedSessions);
 
-            // Average rating (implement if you have session feedback)
+
             Double avgRating = calculateAverageRating(instructorId, startDate);
             analytics.put("avgRating", avgRating);
 
@@ -208,20 +200,18 @@ public class InstructorService {
         return analytics;
     }
 
-    /**
-     * Get conversations list - Returns ALL clients (users) so instructor can message anyone
-     */
+
     public List<Map<String, Object>> getConversations(Long instructorId) {
-        System.out.println("📋 Getting conversations for instructor ID: " + instructorId);
+        System.out.println(" Getting conversations for instructor ID: " + instructorId);
         List<Map<String, Object>> conversations = new ArrayList<>();
 
         try {
             // Get ALL users with role=USER (all potential clients)
             List<User> allClients = userRepository.findByRole(UserRole.USER);
-            System.out.println("✅ Found " + allClients.size() + " users with role=USER");
+            System.out.println(" Found " + allClients.size() + " users with role=USER");
 
             if (allClients.isEmpty()) {
-                System.out.println("⚠️ WARNING: No users found with role=USER!");
+                System.out.println(" WARNING: No users found with role=USER!");
                 System.out.println("   Check your users table - make sure users have role='USER'");
             }
 
@@ -232,17 +222,17 @@ public class InstructorService {
 
                 System.out.println("   Processing client: " + client.getUsername() + " (ID: " + client.getId() + ")");
 
-                // Get message history between instructor and this client
+
                 List<Message> conversationMessages = messageRepository
                         .findConversationByInstructorAndClient(instructorId, client.getId());
 
-                // Add last message info if exists
+
                 if (!conversationMessages.isEmpty()) {
                     Message lastMessage = conversationMessages.get(0);
                     conv.put("lastMessage", lastMessage.getMessageText());
                     conv.put("lastMessageTime", lastMessage.getSentAt().toString());
 
-                    // Count unread messages from this client
+
                     long unreadCount = conversationMessages.stream()
                             .filter(m -> m.getReceiverId().equals(instructorId) && m.getReadAt() == null)
                             .count();
@@ -260,54 +250,74 @@ public class InstructorService {
                 conversations.add(conv);
             }
 
-            System.out.println("✅ Returning " + conversations.size() + " conversations");
+            System.out.println(" Returning " + conversations.size() + " conversations");
 
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting conversations: " + e.getMessage());
+            System.err.println(" ERROR getting conversations: " + e.getMessage());
             e.printStackTrace();
         }
 
         return conversations;
     }
 
-    // ========== Helper Methods ==========
 
-    /**
-     * Calculate average mood for client (customize based on your mood_logs table)
-     */
     private Double calculateAverageMood(Long clientId) {
-        // TODO: Implement actual mood calculation from mood_logs table
-        // Example:
-        // List<MoodLog> moods = moodLogRepository.findTop30ByUserIdOrderByCreatedAtDesc(clientId);
-        // if (moods.isEmpty()) return null;
-        // return moods.stream().mapToDouble(MoodLog::getMoodValue).average().orElse(0.0);
+        try {
+            if (moodLogRepository == null) {
+                return null;
+            }
 
-        return 3.5; // Placeholder
+
+            LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+            List<MoodLog> recentMoods = moodLogRepository
+                    .findByUserIdAndCreatedAtAfterOrderByCreatedAtDesc(clientId, thirtyDaysAgo);
+
+            if (recentMoods.isEmpty()) {
+                return null;
+            }
+
+
+            return recentMoods.stream()
+                    .mapToInt(MoodLog::getMoodRating)
+                    .average()
+                    .orElse(0.0);
+
+        } catch (Exception e) {
+            System.err.println("️ Error calculating average mood for client " + clientId + ": " + e.getMessage());
+            return null;
+        }
     }
 
-    /**
-     * Get latest stress level for client (customize based on your stress_assessments table)
-     */
     private String getLatestStressLevel(Long clientId) {
-        // TODO: Implement actual stress level lookup
-        // Example:
-        // StressAssessment latest = stressAssessmentRepository
-        //     .findTopByUserIdOrderByCreatedAtDesc(clientId);
-        // if (latest == null) return "N/A";
-        // return latest.getStressLevel();
+        try {
+            if (stressAssessmentRepository == null) {
+                return "N/A";
+            }
 
-        return "Moderate"; // Placeholder
+            // Get most recent stress assessment
+            List<StressAssessment> latestAssessments = stressAssessmentRepository
+                    .findTop1ByUserIdOrderByCreatedAtDesc(clientId);
+
+            if (latestAssessments.isEmpty()) {
+                return "N/A";
+            }
+
+            StressAssessment latest = latestAssessments.get(0);
+            return latest.getStressLevel(); // Returns "Low", "Moderate", "High", etc.
+
+        } catch (Exception e) {
+            System.err.println("️ Error getting stress level for client " + clientId + ": " + e.getMessage());
+            return "N/A";
+        }
     }
 
-    /**
-     * Get formatted last session date
-     */
+
     private String getLastSessionDate(List<TherapySession> sessions) {
         if (sessions.isEmpty()) {
             return "N/A";
         }
 
-        // Get most recent session
+
         TherapySession lastSession = sessions.stream()
                 .max(Comparator.comparing(TherapySession::getSessionDate))
                 .orElse(null);
@@ -320,23 +330,39 @@ public class InstructorService {
         return lastSession.getSessionDate().format(formatter);
     }
 
-    /**
-     * Calculate average rating (customize based on your session_feedback table)
-     */
-    private Double calculateAverageRating(Long instructorId, LocalDateTime startDate) {
-        // TODO: Implement actual rating calculation from session_feedback table
-        // Example:
-        // List<SessionFeedback> feedback = sessionFeedbackRepository
-        //     .findByInstructorIdAndCreatedAtAfter(instructorId, startDate);
-        // if (feedback.isEmpty()) return null;
-        // return feedback.stream().mapToDouble(SessionFeedback::getRating).average().orElse(0.0);
 
-        return 4.5; // Placeholder
+    private Double calculateAverageRating(Long instructorId, LocalDateTime startDate) {
+        try {
+
+            List<TherapySession> sessions = therapySessionRepository
+                    .findByInstructorIdAndSessionDateAfter(instructorId, startDate);
+
+            if (sessions.isEmpty()) {
+                return null;
+            }
+
+
+            List<Integer> ratings = sessions.stream()
+                    .map(TherapySession::getRating)
+                    .filter(rating -> rating != null && rating > 0)
+                    .collect(Collectors.toList());
+
+            if (ratings.isEmpty()) {
+                return null;
+            }
+
+            return ratings.stream()
+                    .mapToInt(Integer::intValue)
+                    .average()
+                    .orElse(0.0);
+
+        } catch (Exception e) {
+            System.err.println("️ Error calculating average rating for instructor " + instructorId + ": " + e.getMessage());
+            return null;
+        }
     }
 
-    /**
-     * Calculate start date based on time range string
-     */
+
     private LocalDateTime calculateStartDate(String timeRange) {
         if (timeRange == null) {
             return LocalDateTime.now().minusDays(30);
@@ -381,38 +407,35 @@ public class InstructorService {
                 requests.add(requestInfo);
             }
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting pending session requests: " + e.getMessage());
+            System.err.println(" ERROR getting pending session requests: " + e.getMessage());
             e.printStackTrace();
         }
 
         return requests;
     }
 
-    /**
-     * Accept session request and create therapy session with Zoom link
-     * NEW WORKFLOW: Create therapy_session → Delete session_request
-     */
+
     public Map<String, Object> acceptSessionRequest(Long requestId, String zoomLink) {
         System.out.println("========================================");
-        System.out.println("🎯 ACCEPTING SESSION REQUEST - NEW WORKFLOW");
+        System.out.println(" ACCEPTING SESSION REQUEST - NEW WORKFLOW");
         System.out.println("========================================");
         System.out.println("Request ID: " + requestId);
 
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // Step 1: Find the session request
-            System.out.println("📋 Step 1: Finding session request...");
+
+            System.out.println(" Step 1: Finding session request...");
             SessionRequest request = sessionRequestRepository.findById(requestId)
                     .orElseThrow(() -> new RuntimeException("Session request not found"));
 
-            System.out.println("✅ Request found:");
+            System.out.println(" Request found:");
             System.out.println("   Client ID: " + request.getClientId());
             System.out.println("   Client Name: " + request.getClientName());
             System.out.println("   Instructor ID: " + request.getInstructorId());
             System.out.println("   Requested Date: " + request.getRequestedDate());
 
-            // Get client name
+
             String clientName = request.getClientName();
             if (clientName == null || clientName.isEmpty()) {
                 clientName = userRepository.findById(request.getClientId())
@@ -420,7 +443,7 @@ public class InstructorService {
                     .orElse("Client");
             }
 
-            // Step 2: Generate Zoom link
+
             System.out.println("🎥 Step 2: Creating Zoom meeting...");
             String generatedZoomLink = null;
 
@@ -435,27 +458,27 @@ public class InstructorService {
                         duration
                     );
 
-                    System.out.println("✅ Zoom meeting created!");
+                    System.out.println(" Zoom meeting created!");
                     System.out.println("   Join URL: " + generatedZoomLink);
                     result.put("zoomCreationMethod", "automatic");
 
                 } catch (Exception zoomError) {
-                    System.err.println("⚠️ Zoom API failed: " + zoomError.getMessage());
+                    System.err.println(" Zoom API failed: " + zoomError.getMessage());
 
-                    // Fallback to TEST link
+
                     generatedZoomLink = "https://zoom.us/j/TEST" + System.currentTimeMillis() + "?pwd=TESTPASSWORD";
                     result.put("zoomCreationMethod", "test_fallback");
-                    System.out.println("⚠️ Using TEST link: " + generatedZoomLink);
+                    System.out.println(" Using TEST link: " + generatedZoomLink);
                 }
             } else {
-                // No Zoom service - use TEST link
+
                 generatedZoomLink = "https://zoom.us/j/TEST" + System.currentTimeMillis() + "?pwd=TESTPASSWORD";
                 result.put("zoomCreationMethod", "test_no_api");
-                System.out.println("⚠️ Zoom API not configured, using TEST link: " + generatedZoomLink);
+                System.out.println(" Zoom API not configured, using TEST link: " + generatedZoomLink);
             }
 
-            // Step 3: Create TherapySession with zoom link
-            System.out.println("💾 Step 3: Creating therapy session...");
+
+            System.out.println(" Step 3: Creating therapy session...");
             TherapySession session = new TherapySession();
             session.setClientId(request.getClientId());
             session.setClientName(clientName);
@@ -470,32 +493,32 @@ public class InstructorService {
 
             TherapySession savedSession = therapySessionRepository.save(session);
 
-            System.out.println("✅ Therapy session CREATED!");
+            System.out.println(" Therapy session CREATED!");
             System.out.println("   Session ID: " + savedSession.getId());
             System.out.println("   Zoom Link: " + savedSession.getZoomLink());
 
-            // Verify zoom link was saved
+
             if (savedSession.getZoomLink() == null || savedSession.getZoomLink().isEmpty()) {
-                System.err.println("❌❌❌ CRITICAL: Zoom link NULL in therapy_session! ❌❌❌");
+                System.err.println(" CRITICAL: Zoom link NULL in therapy_session!");
             }
 
-            // Step 4: DELETE the session request
+
             System.out.println("🗑️ Step 4: Deleting session request...");
             sessionRequestRepository.deleteById(requestId);
             sessionRequestRepository.flush(); // Force immediate commit
-            System.out.println("✅ Session request DELETED from session_requests table");
+            System.out.println(" Session request DELETED from session_requests table");
             System.out.println("   Request ID " + requestId + " should NO LONGER exist in database");
 
-            // Verify deletion
+
             if (sessionRequestRepository.findById(requestId).isPresent()) {
-                System.err.println("⚠️⚠️⚠️ WARNING: Request still exists after delete!");
+                System.err.println(" WARNING: Request still exists after delete!");
             } else {
-                System.out.println("✅ Verified: Request successfully deleted from database");
+                System.out.println(" Verified: Request successfully deleted from database");
             }
 
-            // Step 5: Send notification to user
+
             if (notificationService != null) {
-                System.out.println("📧 Step 5: Sending notification to user...");
+                System.out.println(" Step 5: Sending notification to user...");
                 notificationService.sendNotification(
                     request.getClientId(),
                     "SESSION_ACCEPTED",
@@ -503,7 +526,7 @@ public class InstructorService {
                     "Your therapy session has been scheduled. Check your sessions tab to join.",
                     savedSession.getId()
                 );
-                System.out.println("✅ Notification sent");
+                System.out.println(" Notification sent");
             }
 
             // Return result
@@ -515,7 +538,7 @@ public class InstructorService {
             result.put("clientName", clientName);
 
             System.out.println("========================================");
-            System.out.println("✅ SUCCESS - NEW WORKFLOW COMPLETE");
+            System.out.println(" SUCCESS - NEW WORKFLOW COMPLETE");
             System.out.println("========================================");
             System.out.println("   Therapy Session ID: " + savedSession.getId());
             System.out.println("   Zoom Link: " + generatedZoomLink);
@@ -524,7 +547,7 @@ public class InstructorService {
 
         } catch (Exception e) {
             System.err.println("========================================");
-            System.err.println("❌ ERROR accepting session request");
+            System.err.println(" ERROR accepting session request");
             System.err.println("========================================");
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
@@ -536,23 +559,21 @@ public class InstructorService {
         return result;
     }
 
-    /**
-     * Decline session request
-     */
+
     public Map<String, Object> declineSessionRequest(Long requestId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // Find the session request
+
             SessionRequest request = sessionRequestRepository.findById(requestId)
                     .orElseThrow(() -> new RuntimeException("Session request not found"));
 
-            // Update request status to DECLINED
+
             request.setStatus(SessionRequest.RequestStatus.DECLINED);
             request.setUpdatedAt(LocalDateTime.now());
             sessionRequestRepository.save(request);
 
-            // Create notification for user
+
             createNotificationForUser(request.getClientId(),
                 "Session Declined",
                 "Your session request has been declined. Please try another time or contact your instructor.",
@@ -563,7 +584,7 @@ public class InstructorService {
             result.put("message", "Session request declined");
 
         } catch (Exception e) {
-            System.err.println("❌ ERROR declining session request: " + e.getMessage());
+            System.err.println(" ERROR declining session request: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("error", e.getMessage());
@@ -572,32 +593,44 @@ public class InstructorService {
         return result;
     }
 
-    /**
-     * Create notification for user
-     */
+
     private void createNotificationForUser(Long userId, String title, String message, String type, Long relatedId) {
         try {
-            // Note: You'll need to inject NotificationRepository and create a Notification entity
-            // This is a placeholder - implement according to your Notification model
-            System.out.println("📢 Creating notification for user " + userId + ": " + title);
-            // TODO: Implement actual notification creation
-            // Notification notification = new Notification();
-            // notification.setUserId(userId);
-            // notification.setTitle(title);
-            // notification.setMessage(message);
-            // notification.setNotificationType(type);
-            // notification.setRelatedId(relatedId);
-            // notification.setIsRead(false);
-            // notification.setCreatedAt(LocalDateTime.now());
-            // notificationRepository.save(notification);
+            System.out.println(" Creating notification for user " + userId);
+            System.out.println("   Title: " + title);
+            System.out.println("   Message: " + message);
+            System.out.println("   Type: " + type);
+            System.out.println("   Related ID: " + relatedId);
+
+            if (notificationRepository == null) {
+                System.err.println("⚠️ WARNING: NotificationRepository is null - cannot create notification");
+                return;
+            }
+
+
+            Notification notification = new Notification();
+            notification.setUserId(userId);
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setNotificationType(type);
+            notification.setRelatedId(relatedId);
+            notification.setIsRead(false);
+            notification.setCreatedAt(LocalDateTime.now());
+
+            // Save to database
+            Notification savedNotification = notificationRepository.save(notification);
+
+            System.out.println(" Notification created successfully!");
+            System.out.println("   Notification ID: " + savedNotification.getId());
+            System.out.println("   User will see this in their notification dashboard");
+
         } catch (Exception e) {
-            System.err.println("⚠️ Warning: Could not create notification: " + e.getMessage());
+            System.err.println(" ERROR creating notification: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Get upcoming accepted sessions for instructor
-     */
+
     public List<Map<String, Object>> getUpcomingSessions(Long instructorId) {
         List<Map<String, Object>> sessions = new ArrayList<>();
 
@@ -618,9 +651,9 @@ public class InstructorService {
                 sessions.add(sessionInfo);
             }
 
-            System.out.println("✅ Found " + sessions.size() + " upcoming sessions for instructor " + instructorId);
+            System.out.println(" Found " + sessions.size() + " upcoming sessions for instructor " + instructorId);
         } catch (Exception e) {
-            System.err.println("❌ ERROR getting upcoming sessions: " + e.getMessage());
+            System.err.println(" ERROR getting upcoming sessions: " + e.getMessage());
             e.printStackTrace();
         }
 

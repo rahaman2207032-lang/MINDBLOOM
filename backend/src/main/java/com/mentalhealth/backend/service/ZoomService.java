@@ -30,14 +30,7 @@ public class ZoomService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    /**
-     * Create a Zoom meeting
-     *
-     * @param topic      Meeting topic/title
-     * @param startTime  Meeting start time
-     * @param duration  Duration in minutes
-     * @return Zoom meeting join URL
-     */
+
     public String createMeeting(String topic, LocalDateTime startTime, int duration) {
 
         String accessToken = generateAccessToken();
@@ -82,9 +75,6 @@ public class ZoomService {
         throw new RuntimeException("Failed to create Zoom meeting");
     }
 
-    /**
-     * Generate OAuth access token (Server-to-Server OAuth)
-     */
     private String generateAccessToken() {
         System.out.println("🔑 Generating Zoom OAuth token...");
         System.out.println("   Account ID: " + (zoomAccountId != null ? zoomAccountId : "NULL"));
@@ -96,50 +86,46 @@ public class ZoomService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(zoomApiKey, zoomApiSecret);
 
-        // IMPORTANT: For Server-to-Server OAuth, use URL-encoded string, not Map!
+
         String body = "grant_type=account_credentials&account_id=" + zoomAccountId;
 
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         try {
-            System.out.println("📡 Requesting token from: " + tokenUrl);
+            System.out.println(" Requesting token from: " + tokenUrl);
             ResponseEntity<Map> response =
                     restTemplate.postForEntity(tokenUrl, request, Map.class);
 
-            System.out.println("📊 Response status: " + response.getStatusCode());
+            System.out.println(" Response status: " + response.getStatusCode());
 
             if (response.getStatusCode() == HttpStatus.OK
                     && response.getBody() != null) {
 
                 String token = response.getBody().get("access_token").toString();
-                System.out.println("✅ OAuth token generated successfully");
+                System.out.println(" OAuth token generated successfully");
                 System.out.println("   Token: " + token.substring(0, Math.min(20, token.length())) + "...");
                 return token;
             }
 
-            System.err.println("❌ Failed to get OAuth token");
+            System.err.println(" Failed to get OAuth token");
             System.err.println("   Status: " + response.getStatusCode());
             System.err.println("   Body: " + response.getBody());
             throw new RuntimeException("Failed to obtain Zoom access token");
 
         } catch (Exception e) {
-            System.err.println("❌ ERROR generating OAuth token: " + e.getMessage());
+            System.err.println(" ERROR generating OAuth token: " + e.getMessage());
             System.err.println("   Error Type: " + e.getClass().getSimpleName());
             if (e.getMessage() != null && e.getMessage().contains("401")) {
-                System.err.println("   ⚠️ 401 Unauthorized - Check your Client ID and Client Secret!");
+                System.err.println("    401 Unauthorized - Check your Client ID and Client Secret!");
             } else if (e.getMessage() != null && e.getMessage().contains("400")) {
-                System.err.println("   ⚠️ 400 Bad Request - Check your Account ID!");
+                System.err.println("    400 Bad Request - Check your Account ID!");
             }
             e.printStackTrace();
             throw new RuntimeException("Failed to obtain Zoom access token: " + e.getMessage(), e);
         }
     }
 
-    /**
-     * Delete a Zoom meeting
-     *
-     * @param meetingId Zoom meeting ID
-     */
+
     public void deleteMeeting(String meetingId) {
 
         String accessToken = generateAccessToken();

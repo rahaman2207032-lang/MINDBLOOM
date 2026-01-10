@@ -55,7 +55,7 @@ public class NotificationService {
             notification.setCreatedAt(LocalDateTime.now());
 
             Notification saved = notificationRepository.save(notification);
-            System.out.println("✅ Notification saved with ID: " + saved.getId());
+            System.out.println(" Notification saved with ID: " + saved.getId());
 
             // Send real-time notification via WebSocket
             try {
@@ -64,14 +64,14 @@ public class NotificationService {
                         "/queue/notifications",
                         saved
                 );
-                System.out.println("✅ WebSocket notification sent to user: " + userId);
+                System.out.println(" WebSocket notification sent to user: " + userId);
             } catch (Exception e) {
-                System.err.println("⚠️ WebSocket error: " + e.getMessage());
+                System.err.println(" WebSocket error: " + e.getMessage());
             }
 
             return saved;
         } catch (Exception e) {
-            System.err.println("❌ ERROR creating notification: " + e.getMessage());
+            System.err.println(" ERROR creating notification: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
@@ -129,11 +129,7 @@ public class NotificationService {
         notificationRepository.deleteByUserId(userId);
     }
 
-    /**
-     * Get notification details with action data
-     * For SESSION_ACCEPTED: includes zoom link, session date/time
-     * For MESSAGE: includes sender ID, sender name for reply
-     */
+
     public Map<String, Object> getNotificationDetails(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
@@ -149,7 +145,6 @@ public class NotificationService {
         details.put("createdAt", notification.getCreatedAt());
         details.put("readAt", notification.getReadAt());
 
-        // Add action-specific data based on notification type
         if (notification.getNotificationType() != null) {
             switch (notification.getNotificationType().toUpperCase()) {
                 case "SESSION_ACCEPTED":
@@ -166,9 +161,7 @@ public class NotificationService {
         return details;
     }
 
-    /**
-     * Add session details (zoom link, session date) to notification
-     */
+
     private void addSessionDetails(Map<String, Object> details, Notification notification) {
         if (sessionRequestRepository != null && notification.getRelatedId() != null) {
             try {
@@ -189,25 +182,23 @@ public class NotificationService {
                                 .ifPresent(instructor -> details.put("instructorName", instructor.getUsername()));
                     }
 
-                    System.out.println("✅ Added session details: zoom=" + sessionRequest.getZoomLink());
+                    System.out.println(" Added session details: zoom=" + sessionRequest.getZoomLink());
                 }
             } catch (Exception e) {
-                System.err.println("⚠️ Error loading session details: " + e.getMessage());
+                System.err.println("️ Error loading session details: " + e.getMessage());
             }
         }
     }
 
-    /**
-     * Add sender details for message notifications (for reply functionality)
-     */
+
     private void addMessageSenderDetails(Map<String, Object> details, Notification notification) {
         if (notification.getRelatedId() != null) {
             try {
-                // relatedId contains sender's user ID
+
                 Long senderId = notification.getRelatedId();
                 details.put("senderId", senderId);
 
-                // Try to get sender's name from User table first
+
                 boolean found = false;
                 if (userRepository != null) {
                     Optional<User> userOpt = userRepository.findById(senderId);
@@ -216,31 +207,29 @@ public class NotificationService {
                         details.put("senderName", sender.getUsername());
                         details.put("senderRole", sender.getRole().toString());
                         found = true;
-                        System.out.println("✅ Found sender in User table: " + sender.getUsername());
+                        System.out.println(" Found sender in User table: " + sender.getUsername());
                     }
                 }
 
-                // If not found in User table, try Instructor table
+
                 if (!found && instructorRepository != null) {
                     instructorRepository.findById(senderId).ifPresent(sender -> {
                         details.put("senderName", sender.getUsername());
                         details.put("senderRole", "INSTRUCTOR");
-                        System.out.println("✅ Found sender in Instructor table: " + sender.getUsername());
+                        System.out.println(" Found sender in Instructor table: " + sender.getUsername());
                     });
                 }
 
                 details.put("canReply", true);
-                System.out.println("✅ Added sender details: senderId=" + senderId);
+                System.out.println(" Added sender details: senderId=" + senderId);
             } catch (Exception e) {
-                System.err.println("⚠️ Error loading sender details: " + e.getMessage());
+                System.err.println(" Error loading sender details: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    /**
-     * Get all notifications with details for a user
-     */
+
     public List<Map<String, Object>> getUserNotificationsWithDetails(Long userId) {
         List<Notification> notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
@@ -249,8 +238,8 @@ public class NotificationService {
                     try {
                         return getNotificationDetails(notification.getId());
                     } catch (Exception e) {
-                        System.err.println("⚠️ Error loading details for notification " + notification.getId());
-                        // Return basic notification data if details fail
+                        System.err.println(" Error loading details for notification " + notification.getId());
+
                         Map<String, Object> basic = new HashMap<>();
                         basic.put("id", notification.getId());
                         basic.put("title", notification.getTitle());
@@ -264,10 +253,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get ONLY UNREAD notifications with details for a user
-     * (Used in user dashboard to show only unread after refresh)
-     */
+
     public List<Map<String, Object>> getUnreadNotificationsWithDetails(Long userId) {
         System.out.println("📋 Service: Fetching UNREAD notifications for user: " + userId);
 
@@ -279,11 +265,11 @@ public class NotificationService {
                 .map(notification -> {
                     try {
                         Map<String, Object> details = getNotificationDetails(notification.getId());
-                        System.out.println("   ✅ Loaded details for notification " + notification.getId() + ": " + notification.getTitle());
+                        System.out.println("    Loaded details for notification " + notification.getId() + ": " + notification.getTitle());
                         return details;
                     } catch (Exception e) {
-                        System.err.println("⚠️ Error loading details for notification " + notification.getId());
-                        // Return basic notification data if details fail
+                        System.err.println(" Error loading details for notification " + notification.getId());
+
                         Map<String, Object> basic = new HashMap<>();
                         basic.put("id", notification.getId());
                         basic.put("title", notification.getTitle());

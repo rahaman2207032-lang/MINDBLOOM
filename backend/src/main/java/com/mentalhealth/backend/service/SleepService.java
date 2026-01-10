@@ -17,9 +17,7 @@ public class SleepService {
 
     private final SleepRepository sleepRepository;
 
-    /**
-     * Create a new sleep entry
-     */
+
     @Transactional
     public SleepEntry createSleepEntry(SleepEntry sleepEntry) {
         // Validate sleep quality is between 1-5
@@ -37,32 +35,23 @@ public class SleepService {
         return sleepRepository.save(sleepEntry);
     }
 
-    /**
-     * Get all sleep entries for a user
-     */
+
     public List<SleepEntry> getAllSleepEntries(Long userId) {
         return sleepRepository.findByUserIdOrderBySleepStartTimeDesc(userId);
     }
 
-    /**
-     * Get sleep entries for the last 7 days
-     */
+
     public List<SleepEntry> getWeeklySleepEntries(Long userId) {
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
         return sleepRepository.findWeeklySleepEntries(userId, sevenDaysAgo);
     }
 
-    /**
-     * Get a specific sleep entry
-     */
+
     public SleepEntry getSleepEntryById(Long id) {
         return sleepRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sleep entry not found with id: " + id));
     }
 
-    /**
-     * Update a sleep entry
-     */
     @Transactional
     public SleepEntry updateSleepEntry(Long id, SleepEntry updatedEntry) {
         SleepEntry existingEntry = getSleepEntryById(id);
@@ -92,9 +81,7 @@ public class SleepService {
         return sleepRepository.save(existingEntry);
     }
 
-    /**
-     * Delete a sleep entry
-     */
+
     @Transactional
     public void deleteSleepEntry(Long id) {
         if (!sleepRepository.existsById(id)) {
@@ -103,9 +90,7 @@ public class SleepService {
         sleepRepository.deleteById(id);
     }
 
-    /**
-     * Calculate average sleep duration for a user
-     */
+
     public double calculateAverageSleepHours(Long userId) {
         List<SleepEntry> entries = getAllSleepEntries(userId);
         if (entries.isEmpty()) {
@@ -119,9 +104,7 @@ public class SleepService {
         return totalHours / entries.size();
     }
 
-    /**
-     * Get total count of sleep entries for a user
-     */
+
     public long getTotalEntriesCount(Long userId) {
         return sleepRepository.countByUserId(userId);
     }

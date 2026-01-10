@@ -43,14 +43,14 @@ public class MessageService {
 
         message.setSentAt(LocalDateTime.now());
 
-        // Get sender name - check both User and Instructor tables
+
         String senderName = getUserOrInstructorName(message.getSenderId());
         if (senderName != null) {
             message.setSenderName(senderName);
             System.out.println("   Sender Name: " + senderName);
         }
 
-        // Get receiver name - check both User and Instructor tables
+
         String receiverName = getUserOrInstructorName(message.getReceiverId());
         if (receiverName != null) {
             message.setReceiverName(receiverName);
@@ -58,18 +58,17 @@ public class MessageService {
         }
 
         Message saved = messageRepository.save(message);
-        System.out.println("✅ Message saved with ID: " + saved.getId());
+        System.out.println(" Message saved with ID: " + saved.getId());
 
-        // Send real-time message via WebSocket
         try {
             messagingTemplate.convertAndSendToUser(
                     message.getReceiverId().toString(),
                     "/queue/messages",
                     saved
             );
-            System.out.println("✅ WebSocket notification sent");
+            System.out.println(" WebSocket notification sent");
         } catch (Exception e) {
-            System.err.println("⚠️ WebSocket error: " + e.getMessage());
+            System.err.println(" WebSocket error: " + e.getMessage());
         }
 
         // Create notification for receiver with sender ID in relatedEntityId
@@ -81,26 +80,24 @@ public class MessageService {
                     message.getMessageText(),
                     message.getSenderId() // Store sender ID for reply functionality
             );
-            System.out.println("✅ Notification created for user: " + message.getReceiverId());
+            System.out.println(" Notification created for user: " + message.getReceiverId());
         } catch (Exception e) {
-            System.err.println("❌ ERROR creating notification: " + e.getMessage());
+            System.err.println("ERROR creating notification: " + e.getMessage());
             e.printStackTrace();
         }
 
         return saved;
     }
 
-    /**
-     * Get username from either User or Instructor table
-     */
+
     private String getUserOrInstructorName(Long userId) {
-        // Try User table first
+
         Optional<com.mentalhealth.backend.model.User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             return user.get().getUsername();
         }
 
-        // Try Instructor table
+
         if (instructorRepository != null) {
             Optional<com.mentalhealth.backend.model.Instructor> instructor = instructorRepository.findById(userId);
             if (instructor.isPresent()) {
@@ -118,7 +115,7 @@ public class MessageService {
     public List<ConversationSummaryDTO> getConversations(Long userId) {
         List<Message> allMessages = messageRepository.findAll();
 
-        // Group messages by conversation partner
+
         Map<Long, List<Message>> conversations = new HashMap<>();
 
         for (Message msg : allMessages) {
@@ -129,14 +126,14 @@ public class MessageService {
             }
         }
 
-        // Create summary for each conversation
+
         List<ConversationSummaryDTO> summaries = new ArrayList<>();
 
         for (Map.Entry<Long, List<Message>> entry : conversations.entrySet()) {
             Long partnerId = entry.getKey();
             List<Message> msgs = entry.getValue();
 
-            // Get last message
+
             Message lastMsg = msgs.stream()
                     .max(Comparator.comparing(Message::getSentAt))
                     .orElse(null);
@@ -145,7 +142,7 @@ public class MessageService {
                 ConversationSummaryDTO summary = new ConversationSummaryDTO();
                 summary.setUserId(partnerId);
 
-                // Get partner name
+
                 userRepository.findById(partnerId).ifPresent(user -> {
                     summary.setUserName(user.getUsername());
                 });
@@ -153,7 +150,7 @@ public class MessageService {
                 summary.setLastMessage(lastMsg.getMessageText());
                 summary.setLastMessageTime(lastMsg.getSentAt());
 
-                // Count unread messages
+
                 long unread = msgs.stream()
                         .filter(m -> m.getReceiverId().equals(userId) && m.getReadAt() == null)
                         .count();
@@ -163,7 +160,7 @@ public class MessageService {
             }
         }
 
-        // Sort by last message time
+
         summaries.sort(Comparator.comparing(ConversationSummaryDTO::getLastMessageTime).reversed());
 
         return summaries;
@@ -174,17 +171,14 @@ public class MessageService {
         messageRepository.markAsRead(messageId);
     }
 
-    /**
-     * Mark all messages in a conversation as read
-     * Called when instructor opens a conversation
-     */
+
     @Transactional
     public int markConversationAsRead(Long receiverId, Long senderId) {
-        System.out.println("📖 Marking messages as read:");
+        System.out.println(" Marking messages as read:");
         System.out.println("   Receiver (who is reading): " + receiverId);
         System.out.println("   Sender (messages from): " + senderId);
 
-        // Get all unread messages in this conversation
+
         List<Message> messages = messageRepository.findConversation(receiverId, senderId);
 
         int markedCount = 0;
@@ -194,11 +188,11 @@ public class MessageService {
                 message.setReadAt(LocalDateTime.now());
                 messageRepository.save(message);
                 markedCount++;
-                System.out.println("   ✅ Marked message " + message.getId() + " as read");
+                System.out.println("    Marked message " + message.getId() + " as read");
             }
         }
 
-        System.out.println("✅ Total marked as read: " + markedCount);
+        System.out.println(" Total marked as read: " + markedCount);
         return markedCount;
     }
 
@@ -206,18 +200,12 @@ public class MessageService {
         return messageRepository.countUnreadMessages(userId);
     }
 
-    /**
-     * Get instructor ID for a user (for reply functionality)
-     * Finds the most recent instructor who had a session with this user
-     */
+
     public Long getInstructorIdForUser(Long userId) {
         return therapySessionRepository.findInstructorIdByUserId(userId);
     }
 
-    /**
-     * Get available users for messaging
-     * Returns all users except the current user
-     */
+
     public List<Map<String, Object>> getAvailableUsers(Long currentUserId) {
         List<Map<String, Object>> availableUsers = new ArrayList<>();
 
@@ -225,7 +213,7 @@ public class MessageService {
         List<com.mentalhealth.backend.model.User> allUsers = userRepository.findAll();
 
         for (com.mentalhealth.backend.model.User user : allUsers) {
-            // Skip the current user
+
             if (!user.getId().equals(currentUserId)) {
                 Map<String, Object> userInfo = new HashMap<>();
                 userInfo.put("id", user.getId());

@@ -23,7 +23,7 @@ public class TherapyNoteService {
         note.setCreatedAt(LocalDateTime.now());
         note.setUpdatedAt(LocalDateTime.now());
 
-        // Get client name
+
         userRepository.findById(note.getClientId()).ifPresent(user -> {
             note.setClientName(user.getUsername());
         });

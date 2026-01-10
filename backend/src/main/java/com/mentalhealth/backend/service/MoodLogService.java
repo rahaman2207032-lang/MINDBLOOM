@@ -55,7 +55,7 @@ public class MoodLogService {
 
         if (logs.size() < 2) return "STABLE";
 
-        // Compare recent average with older average
+
         int midPoint = logs.size() / 2;
         double recentAvg = logs.subList(0, midPoint).stream()
                 .mapToInt(MoodLog::getMoodRating)
