@@ -14,12 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ✅ NEW: Service for fetching therapy sessions (NEW WORKFLOW)
- * - Fetches from therapy_sessions table (not session_requests)
- * - Used after instructor accepts session request
- * - Zoom links are ALWAYS present in this table
- */
+
 public class TherapySessionService {
     private static final String BASE_URL = "http://localhost:8080/api/therapy-sessions";
     private final Gson gson;
@@ -30,14 +25,10 @@ public class TherapySessionService {
                 .create();
     }
 
-    /**
-     * ✅ NEW: Get scheduled sessions for a user (NEW WORKFLOW)
-     * Endpoint: GET /api/therapy-sessions/user/{userId}/scheduled
-     * Returns sessions from therapy_sessions table with zoom links
-     */
+
     public List<TherapySession> getScheduledSessionsForUser(Long userId) throws Exception {
         String endpoint = BASE_URL + "/user/" + userId + "/scheduled";
-        System.out.println("📅 [TherapySessionService] Fetching scheduled sessions for user: " + userId);
+        System.out.println(" [TherapySessionService] Fetching scheduled sessions for user: " + userId);
         System.out.println("   Endpoint: " + endpoint);
 
         URI uri = new URI(endpoint);
@@ -46,7 +37,7 @@ public class TherapySessionService {
         connection.setRequestProperty("Accept", "application/json");
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [TherapySessionService] Response code: " + responseCode);
+        System.out.println(" [TherapySessionService] Response code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -57,14 +48,14 @@ public class TherapySessionService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [TherapySessionService] Response: " +
+                System.out.println(" [TherapySessionService] Response: " +
                         (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<TherapySession>>(){}.getType();
                 List<TherapySession> sessions = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions");
+                System.out.println(" [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions");
 
-                // Log zoom link status for each session
+
                 for (TherapySession session : sessions) {
                     String zoomStatus = (session.getZoomLink() != null && !session.getZoomLink().isEmpty())
                             ? "✅ Zoom link: " + session.getZoomLink()
@@ -75,7 +66,7 @@ public class TherapySessionService {
                 return sessions;
             }
         } else {
-            System.err.println("❌ [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
+            System.err.println(" [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
                 StringBuilder errorResponse = new StringBuilder();
                 String responseLine;
@@ -90,13 +81,10 @@ public class TherapySessionService {
         }
     }
 
-    /**
-     * ✅ NEW: Get scheduled sessions for an instructor (NEW WORKFLOW)
-     * Endpoint: GET /api/therapy-sessions/instructor/{instructorId}/scheduled
-     */
+
     public List<TherapySession> getScheduledSessionsForInstructor(Long instructorId) throws Exception {
         String endpoint = BASE_URL + "/instructor/" + instructorId + "/scheduled";
-        System.out.println("📅 [TherapySessionService] Fetching scheduled sessions for instructor: " + instructorId);
+        System.out.println(" [TherapySessionService] Fetching scheduled sessions for instructor: " + instructorId);
         System.out.println("   Endpoint: " + endpoint);
 
         URI uri = new URI(endpoint);
@@ -105,7 +93,7 @@ public class TherapySessionService {
         connection.setRequestProperty("Accept", "application/json");
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [TherapySessionService] Response code: " + responseCode);
+        System.out.println(" [TherapySessionService] Response code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -117,28 +105,25 @@ public class TherapySessionService {
 
                 Type listType = new TypeToken<ArrayList<TherapySession>>(){}.getType();
                 List<TherapySession> sessions = gson.fromJson(response.toString(), listType);
-                System.out.println("✅ [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions");
+                System.out.println(" [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions");
                 return sessions;
             }
         } else {
-            System.err.println("❌ [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
+            System.err.println(" [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
             return new ArrayList<>();
         }
     }
 
-    /**
-     * Get weekly sessions for calendar display
-     * ✅ FIXED: Now uses dynamic instructor ID and /scheduled endpoint
-     */
+
     public List<TherapySession> getWeeklySessions() throws Exception {
-        // ✅ FIX: Get dynamic instructor ID from SessionManager with Dataholder fallback
+
         Long instructorId = com.example.mentalhealthdesktop.SessionManager.getInstance().getCurrentUserId();
         if (instructorId == null) {
             instructorId = com.example.mentalhealthdesktop.Dataholder.userId;
             System.out.println("⚠️ [TherapySessionService] Using Dataholder fallback");
         }
 
-        // ✅ FIX: Use /scheduled endpoint instead of /weekly to get all scheduled sessions
+
         String endpoint = BASE_URL + "/instructor/" + instructorId + "/scheduled";
         System.out.println("📅 [TherapySessionService] Fetching sessions from: " + endpoint);
 
@@ -159,14 +144,14 @@ public class TherapySessionService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [TherapySessionService] Response: " +
+                System.out.println(" [TherapySessionService] Response: " +
                     (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<TherapySession>>(){}.getType();
                 List<TherapySession> sessions = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions for instructor: " + instructorId);
+                System.out.println(" [TherapySessionService] Loaded " + sessions.size() + " scheduled sessions for instructor: " + instructorId);
 
-                // Log each session for debugging
+
                 for (TherapySession session : sessions) {
                     System.out.println("   📌 Session ID: " + session.getId() +
                         ", Client: " + session.getClientName() +
@@ -177,9 +162,9 @@ public class TherapySessionService {
                 return sessions;
             }
         } else {
-            System.err.println("❌ [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
+            System.err.println(" [TherapySessionService] Failed to fetch sessions. Response code: " + responseCode);
 
-            // Try to read error response
+
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
                 StringBuilder errorResponse = new StringBuilder();
                 String line;

@@ -24,7 +24,7 @@ public class HabitService {
     private final Gson gson;
 
     public HabitService() {
-        // Gson with LocalDateTime and LocalDate support
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class,
                 (JsonDeserializer<LocalDateTime>) (jsonElement, type, context) ->
@@ -41,9 +41,7 @@ public class HabitService {
         this.gson = gsonBuilder.create();
     }
 
-    /**
-     * Create a new habit
-     */
+
     public Habit createHabit(String name, String description, String frequency, String targetDays) throws Exception {
         checkLoggedIn();
 
@@ -86,9 +84,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Get all active habits for the logged-in user
-     */
+
     public List<Habit> getAllHabits() throws Exception {
         checkLoggedIn();
 
@@ -118,10 +114,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Mark habit as completed for today
-     * Returns a result containing the completion and updated streak information
-     */
+
     public HabitCompletionResult completeHabit(Long habitId, String notes) throws Exception {
         checkLoggedIn();
 
@@ -159,34 +152,34 @@ public class HabitService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [HabitService] Response: " + responseBody);
+                System.out.println(" [HabitService] Response: " + responseBody);
 
                 JsonObject responseJson = gson.fromJson(responseBody, JsonObject.class);
 
-                // Check if this is the new response format with success, currentStreak, etc.
+
                 if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
-                    // New backend response format
+
                     int currentStreak = responseJson.get("currentStreak").getAsInt();
                     int longestStreak = responseJson.get("longestStreak").getAsInt();
                     boolean created = responseJson.has("created") && responseJson.get("created").getAsBoolean();
                     String message = responseJson.has("message") ? responseJson.get("message").getAsString() : "Completed";
 
-                    // Parse the completion object
+
                     JsonObject completionJson = responseJson.getAsJsonObject("completion");
                     HabitCompletion completion = gson.fromJson(completionJson, HabitCompletion.class);
 
-                    // Parse the updated habit object if present
+
                     Habit updatedHabit = null;
                     if (responseJson.has("habit")) {
                         JsonObject habitJson = responseJson.getAsJsonObject("habit");
                         updatedHabit = gson.fromJson(habitJson, Habit.class);
                     }
 
-                    System.out.println("✅ [HabitService] Habit completed! Current Streak: " + currentStreak + ", Longest: " + longestStreak);
+                    System.out.println(" [HabitService] Habit completed! Current Streak: " + currentStreak + ", Longest: " + longestStreak);
 
                     return new HabitCompletionResult(true, created, message, currentStreak, longestStreak, completion, updatedHabit);
                 } else {
-                    // Old backend response format (just the completion object)
+
                     System.out.println("⚠️ [HabitService] Old response format detected");
                     HabitCompletion completion = gson.fromJson(responseBody, HabitCompletion.class);
                     return new HabitCompletionResult(true, true, "Completed", -1, -1, completion, null);
@@ -201,7 +194,7 @@ public class HabitService {
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ [HabitService] Error: " + errorResponse.toString());
+                System.err.println(" [HabitService] Error: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore if can't read error
             }
@@ -210,9 +203,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Result object for habit completion containing streak information and the updated habit
-     */
+
     public static class HabitCompletionResult {
         public final boolean success;
         public final boolean created;
@@ -235,9 +226,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Get completion history for a specific habit
-     */
+
     public List<HabitCompletion> getHabitCompletions(Long habitId) throws Exception {
         checkLoggedIn();
 
@@ -267,9 +256,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Update habit
-     */
+
     public Habit updateHabit(Habit habit) throws Exception {
         checkLoggedIn();
 
@@ -302,9 +289,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Delete habit
-     */
+
     public void deleteHabit(Long habitId) throws Exception {
         checkLoggedIn();
 
@@ -318,9 +303,7 @@ public class HabitService {
         }
     }
 
-    /**
-     * Check if user is logged in
-     */
+
     private void checkLoggedIn() {
         if (Dataholder.userId == null) {
             throw new IllegalStateException("User not logged in");

@@ -21,9 +21,7 @@ public class CommunityForumService {
         this.gson = new Gson();
     }
 
-    /**
-     * Create a new forum post
-     */
+
     public JsonObject createPost(String title, String content, Long userId, boolean anonymous) throws Exception {
         JsonObject postData = new JsonObject();
         postData.addProperty("title", title);
@@ -32,8 +30,8 @@ public class CommunityForumService {
         postData.addProperty("anonymous", anonymous);
 
         String requestBody = gson.toJson(postData);
-        System.out.println("📤 [ForumService] Creating post with data: " + requestBody);
-        System.out.println("📤 [ForumService] Sending to: " + BASE_URL + "/posts");
+        System.out.println(" [ForumService] Creating post with data: " + requestBody);
+        System.out.println("[ForumService] Sending to: " + BASE_URL + "/posts");
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/posts"))
@@ -50,20 +48,20 @@ public class CommunityForumService {
         System.out.println("📡 [ForumService] Response status: " + response.statusCode());
 
         if (response.statusCode() == 200 || response.statusCode() == 201) {
-            System.out.println("✅ [ForumService] Post created successfully");
-            System.out.println("📄 [ForumService] Response body: " + response.body());
+            System.out.println(" [ForumService] Post created successfully");
+            System.out.println(" [ForumService] Response body: " + response.body());
             return JsonParser.parseString(response.body()).getAsJsonObject();
         } else {
             // Log the error response body for debugging
             String errorBody = response.body();
-            System.err.println("❌ [ForumService] Failed to create post!");
-            System.err.println("❌ Status code: " + response.statusCode());
-            System.err.println("❌ Error response: " + errorBody);
+            System.err.println(" [ForumService] Failed to create post!");
+            System.err.println(" Status code: " + response.statusCode());
+            System.err.println(" Error response: " + errorBody);
 
             // Try to extract meaningful error message
             String errorMessage = "Failed to create post. Status: " + response.statusCode();
             if (errorBody != null && !errorBody.isEmpty()) {
-                System.err.println("❌ Backend says: " + errorBody);
+                System.err.println(" Backend says: " + errorBody);
                 errorMessage += ". Backend error: " + (errorBody.length() > 200 ? errorBody.substring(0, 200) + "..." : errorBody);
             }
 
@@ -71,9 +69,7 @@ public class CommunityForumService {
         }
     }
 
-    /**
-     * Get all posts with sorting and user context
-     */
+
     public JsonArray getPosts(String sortType, Long userId) throws Exception {
         String sortParam = sortType.toLowerCase().replace(" ", "_");
         String url = BASE_URL + "/posts?sort=" + sortParam;
@@ -83,7 +79,7 @@ public class CommunityForumService {
             url += "&userId=" + userId;
         }
 
-        System.out.println("📥 [ForumService] Fetching posts from: " + url);
+        System.out.println(" [ForumService] Fetching posts from: " + url);
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -97,33 +93,31 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Posts retrieved successfully");
+            System.out.println(" [ForumService] Posts retrieved successfully");
             String responseBody = response.body();
 
             // Handle empty response
             if (responseBody == null || responseBody.trim().isEmpty() || responseBody.equals("[]")) {
-                System.out.println("ℹ️ [ForumService] No posts found");
+                System.out.println(" [ForumService] No posts found");
                 return new JsonArray();
             }
 
             return JsonParser.parseString(responseBody).getAsJsonArray();
         } else if (response.statusCode() == 404) {
-            System.out.println("ℹ️ [ForumService] No posts endpoint found yet");
+            System.out.println(" [ForumService] No posts endpoint found yet");
             return new JsonArray();
         } else {
-            System.err.println("❌ [ForumService] Failed to fetch posts. Status: " + response.statusCode());
+            System.err.println(" [ForumService] Failed to fetch posts. Status: " + response.statusCode());
             System.err.println("Response: " + response.body());
             return new JsonArray(); // Return empty array instead of throwing exception
         }
     }
 
-    /**
-     * Get a single post by ID
-     */
+
     public JsonObject getPost(Long postId) throws Exception {
         String url = BASE_URL + "/posts/" + postId;
 
-        System.out.println("📥 [ForumService] Fetching post from: " + url);
+        System.out.println(" [ForumService] Fetching post from: " + url);
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -136,16 +130,14 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Post retrieved successfully");
+            System.out.println(" [ForumService] Post retrieved successfully");
             return JsonParser.parseString(response.body()).getAsJsonObject();
         } else {
             throw new Exception("Failed to fetch post. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Toggle like on a post
-     */
+
     public JsonObject toggleLike(Long postId, Long userId) throws Exception {
         JsonObject likeData = new JsonObject();
         likeData.addProperty("userId", userId);
@@ -169,14 +161,14 @@ public class CommunityForumService {
         System.out.println("📡 [ForumService] Like response status: " + response.statusCode());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Like toggled successfully");
+            System.out.println(" [ForumService] Like toggled successfully");
             return JsonParser.parseString(response.body()).getAsJsonObject();
         } else {
             // Log the error response
             String errorBody = response.body();
-            System.err.println("❌ [ForumService] Failed to toggle like!");
-            System.err.println("❌ Status code: " + response.statusCode());
-            System.err.println("❌ Error response: " + errorBody);
+            System.err.println(" [ForumService] Failed to toggle like!");
+            System.err.println(" Status code: " + response.statusCode());
+            System.err.println(" Error response: " + errorBody);
 
             String errorMessage = "Failed to toggle like. Status: " + response.statusCode();
             if (errorBody != null && !errorBody.isEmpty()) {
@@ -187,13 +179,11 @@ public class CommunityForumService {
         }
     }
 
-    /**
-     * Get comments for a post
-     */
+
     public JsonArray getComments(Long postId) throws Exception {
         String url = BASE_URL + "/posts/" + postId + "/comments";
 
-        System.out.println("📥 [ForumService] Fetching comments from: " + url);
+        System.out.println(" [ForumService] Fetching comments from: " + url);
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -205,17 +195,14 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Comments retrieved successfully");
+            System.out.println(" [ForumService] Comments retrieved successfully");
             return JsonParser.parseString(response.body()).getAsJsonArray();
         } else {
             throw new Exception("Failed to fetch comments. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Add a comment to a post
-     * Returns the full response including commentCount from backend
-     */
+
     public CommentResult addComment(Long postId, String content, Long userId, boolean anonymous) throws Exception {
         JsonObject commentData = new JsonObject();
         commentData.addProperty("content", content);
@@ -223,9 +210,9 @@ public class CommunityForumService {
         commentData.addProperty("anonymous", anonymous);
 
         String requestBody = gson.toJson(commentData);
-        System.out.println("💬 [ForumService] Adding comment to post " + postId);
-        System.out.println("💬 [ForumService] Request URL: " + BASE_URL + "/posts/" + postId + "/comments");
-        System.out.println("💬 [ForumService] Request body: " + requestBody);
+        System.out.println(" [ForumService] Adding comment to post " + postId);
+        System.out.println(" [ForumService] Request URL: " + BASE_URL + "/posts/" + postId + "/comments");
+        System.out.println(" [ForumService] Request body: " + requestBody);
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/posts/" + postId + "/comments"))
@@ -241,13 +228,13 @@ public class CommunityForumService {
         System.out.println("📡 [ForumService] Comment response status: " + response.statusCode());
 
         if (response.statusCode() == 200 || response.statusCode() == 201) {
-            System.out.println("✅ [ForumService] Comment added successfully");
+            System.out.println(" [ForumService] Comment added successfully");
             String responseBody = response.body();
-            System.out.println("📄 [ForumService] Full response: " + responseBody);
+            System.out.println(" [ForumService] Full response: " + responseBody);
 
             JsonObject responseJson = JsonParser.parseString(responseBody).getAsJsonObject();
 
-            // Parse new backend response format: {success: true, commentCount: X, comment: {...}}
+
             if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
                 int commentCount = responseJson.get("commentCount").getAsInt();
                 JsonObject commentJson = responseJson.getAsJsonObject("comment");
@@ -262,9 +249,9 @@ public class CommunityForumService {
         } else {
             // Log the error response
             String errorBody = response.body();
-            System.err.println("❌ [ForumService] Failed to add comment!");
-            System.err.println("❌ Status code: " + response.statusCode());
-            System.err.println("❌ Error response: " + errorBody);
+            System.err.println(" [ForumService] Failed to add comment!");
+            System.err.println(" Status code: " + response.statusCode());
+            System.err.println(" Error response: " + errorBody);
 
             String errorMessage = "Failed to add comment. Status: " + response.statusCode();
             if (errorBody != null && !errorBody.isEmpty()) {
@@ -275,9 +262,7 @@ public class CommunityForumService {
         }
     }
 
-    /**
-     * Result object for addComment method containing the comment and updated count
-     */
+
     public static class CommentResult {
         public final JsonObject comment;
         public final int updatedCommentCount;
@@ -288,9 +273,7 @@ public class CommunityForumService {
         }
     }
 
-    /**
-     * Search posts
-     */
+
     public JsonArray searchPosts(String query) throws Exception {
         String url = BASE_URL + "/posts/search?q=" + query;
 
@@ -306,7 +289,7 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Search completed successfully");
+            System.out.println(" [ForumService] Search completed successfully");
             return JsonParser.parseString(response.body()).getAsJsonArray();
         } else {
             throw new Exception("Failed to search posts. Status: " + response.statusCode());
@@ -328,27 +311,24 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200 || response.statusCode() == 204) {
-            System.out.println("✅ [ForumService] Post deleted successfully");
+            System.out.println(" [ForumService] Post deleted successfully");
         } else {
             throw new Exception("Failed to delete post. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Delete a comment (only by author)
-     * Returns the updated comment count and post ID from backend
-     */
+
     public DeleteResult deleteComment(Long commentId, Long userId) throws Exception {
         System.out.println("🗑️ [ForumService] Deleting comment: " + commentId + " by user: " + userId);
 
-        // ⭐ Add userId as query parameter as required by backend
+
         String url = BASE_URL + "/comments/" + commentId + "?userId=" + userId;
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .DELETE();
 
-        // Also set X-User-Id header for consistency
+
         if (userId != null) rb.header("X-User-Id", String.valueOf(userId));
 
         HttpRequest request = rb.build();
@@ -358,11 +338,11 @@ public class CommunityForumService {
         System.out.println("📡 [ForumService] Delete response status: " + response.statusCode());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Comment deleted successfully");
+            System.out.println(" [ForumService] Comment deleted successfully");
             String responseBody = response.body();
-            System.out.println("📄 [ForumService] Full response: " + responseBody);
+            System.out.println(" [ForumService] Full response: " + responseBody);
 
-            // Parse new backend response format: {success: true, message: "...", commentCount: X, postId: Y}
+
             JsonObject responseJson = JsonParser.parseString(responseBody).getAsJsonObject();
 
             if (responseJson.has("success") && responseJson.get("success").getAsBoolean()) {
@@ -370,7 +350,7 @@ public class CommunityForumService {
                 int commentCount = responseJson.get("commentCount").getAsInt();
                 String message = responseJson.has("message") ? responseJson.get("message").getAsString() : "Deleted";
 
-                System.out.println("📊 [ForumService] Post " + postId + " now has " + commentCount + " comments");
+                System.out.println(" [ForumService] Post " + postId + " now has " + commentCount + " comments");
                 return new DeleteResult(postId, commentCount, message);
             } else {
                 throw new Exception("Backend returned success=false");
@@ -381,16 +361,14 @@ public class CommunityForumService {
             return new DeleteResult(null, -1, "Deleted (count unavailable)");
         } else {
             String errorBody = response.body();
-            System.err.println("❌ [ForumService] Failed to delete comment!");
-            System.err.println("❌ Status code: " + response.statusCode());
-            System.err.println("❌ Error response: " + errorBody);
+            System.err.println(" [ForumService] Failed to delete comment!");
+            System.err.println(" Status code: " + response.statusCode());
+            System.err.println(" Error response: " + errorBody);
             throw new Exception("Failed to delete comment. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Result object for deleteComment method containing post ID, updated count, and message
-     */
+
     public static class DeleteResult {
         public final Long postId;
         public final int updatedCommentCount;
@@ -415,7 +393,7 @@ public class CommunityForumService {
         messageData.addProperty("anonymous", anonymous);
 
         String requestBody = gson.toJson(messageData);
-        System.out.println("💬 [ForumService] Sending chat message");
+        System.out.println(" [ForumService] Sending chat message");
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/chat/messages"))
@@ -429,20 +407,18 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200 || response.statusCode() == 201) {
-            System.out.println("✅ [ForumService] Chat message sent successfully");
+            System.out.println(" [ForumService] Chat message sent successfully");
             return JsonParser.parseString(response.body()).getAsJsonObject();
         } else {
             throw new Exception("Failed to send chat message. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Get all chat messages (recent first)
-     */
+
     public JsonArray getChatMessages() throws Exception {
         String url = BASE_URL + "/chat/messages?limit=100";
 
-        System.out.println("📥 [ForumService] Fetching chat messages from: " + url);
+        System.out.println(" [ForumService] Fetching chat messages from: " + url);
 
         HttpRequest.Builder rb = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -454,16 +430,14 @@ public class CommunityForumService {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            System.out.println("✅ [ForumService] Chat messages retrieved successfully");
+            System.out.println(" [ForumService] Chat messages retrieved successfully");
             return JsonParser.parseString(response.body()).getAsJsonArray();
         } else {
             throw new Exception("Failed to fetch chat messages. Status: " + response.statusCode());
         }
     }
 
-    /**
-     * Get count of online users
-     */
+
     public int getOnlineUsersCount() throws Exception {
         String url = BASE_URL + "/chat/online-count";
 

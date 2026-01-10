@@ -32,9 +32,7 @@ public class SessionRequestService {
         if (Dataholder.userId != null) connection.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
     }
 
-    /**
-     * Create a new session request
-     */
+
     public SessionRequest createSessionRequest(SessionRequest request) throws Exception {
         URI uri = new URI(BASE_URL);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -64,9 +62,7 @@ public class SessionRequestService {
         }
     }
 
-    /**
-     * Get all session requests for a specific user
-     */
+
     public List<SessionRequest> getUserSessionRequests(Long userId) throws Exception {
         URI uri = new URI(BASE_URL + "/user/" + userId);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -92,9 +88,7 @@ public class SessionRequestService {
         }
     }
 
-    /**
-     * Get confirmed sessions for a user
-     */
+
     public List<SessionRequest> getConfirmedSessions(Long userId) throws Exception {
         URI uri = new URI(BASE_URL + "/user/" + userId + "/confirmed");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -120,21 +114,19 @@ public class SessionRequestService {
         }
     }
 
-    /**
-     * Get all pending session requests (for instructors)
-     */
+
     public List<SessionRequest> getPendingRequests() throws Exception {
-        // ✅ UPDATED: Using instructor-specific endpoint
+
         URI uri = new URI("http://localhost:8080/api/instructors/" + Dataholder.userId + "/session-requests");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
         applyCommonHeaders(connection);
 
-        System.out.println("🌐 [SessionRequestService] Fetching pending requests for instructor: " + Dataholder.userId);
+        System.out.println(" [SessionRequestService] Fetching pending requests for instructor: " + Dataholder.userId);
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [SessionRequestService] Response Code: " + responseCode);
+        System.out.println(" [SessionRequestService] Response Code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -145,40 +137,38 @@ public class SessionRequestService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [SessionRequestService] Response: " +
+                System.out.println(" [SessionRequestService] Response: " +
                     (responseBody.length() > 100 ? responseBody.substring(0, 100) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<SessionRequest>>(){}.getType();
                 List<SessionRequest> requests = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [SessionRequestService] Loaded " + requests.size() + " pending requests");
+                System.out.println(" [SessionRequestService] Loaded " + requests.size() + " pending requests");
                 return requests;
             }
         } else {
-            System.err.println("❌ [SessionRequestService] Failed to fetch pending requests. Response code: " + responseCode);
+            System.err.println(" [SessionRequestService] Failed to fetch pending requests. Response code: " + responseCode);
             return new ArrayList<>();
         }
     }
 
-    /**
-     * Confirm a session request (instructor action)
-     */
+
     public SessionRequest confirmRequest(Long requestId, Long instructorId, String zoomLink) throws Exception {
-        // ✅ UPDATED: Using instructor-specific accept endpoint with POST
+
         URI uri = new URI("http://localhost:8080/api/instructors/session-requests/" + requestId + "/accept");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setRequestMethod("POST"); // ✅ Changed from PUT to POST
+        connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         applyCommonHeaders(connection);
         connection.setDoOutput(true);
 
-        // ✅ UPDATED: Send empty body for automatic Zoom creation, or manual link if provided
+
         String jsonRequest;
         if (zoomLink == null || zoomLink.isEmpty()) {
-            jsonRequest = "{}";  // Empty body - backend creates Zoom automatically!
-            System.out.println("🎥 [SessionRequestService] Accepting request " + requestId + " - Zoom will be created automatically");
+            jsonRequest = "{}";
+            System.out.println(" [SessionRequestService] Accepting request " + requestId + " - Zoom will be created automatically");
         } else {
             jsonRequest = "{\"zoomLink\":\"" + zoomLink + "\"}";
-            System.out.println("🌐 [SessionRequestService] Accepting request " + requestId + " with manual zoom link");
+            System.out.println(" [SessionRequestService] Accepting request " + requestId + " with manual zoom link");
         }
 
         try (OutputStream os = connection.getOutputStream()) {
@@ -198,9 +188,9 @@ public class SessionRequestService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [SessionRequestService] Response: " +
+                System.out.println(" [SessionRequestService] Response: " +
                     (responseBody.length() > 100 ? responseBody.substring(0, 100) + "..." : responseBody));
-                System.out.println("✅ [SessionRequestService] Session request accepted successfully");
+                System.out.println(" [SessionRequestService] Session request accepted successfully");
 
                 return gson.fromJson(responseBody, SessionRequest.class);
             }
@@ -212,50 +202,44 @@ public class SessionRequestService {
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ [SessionRequestService] Error response: " + errorResponse.toString());
+                System.err.println(" [SessionRequestService] Error response: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore if can't read error
             }
 
-            System.err.println("❌ [SessionRequestService] Failed to accept. Response code: " + responseCode);
+            System.err.println(" [SessionRequestService] Failed to accept. Response code: " + responseCode);
             throw new Exception("Failed to confirm session request. Response code: " + responseCode);
         }
     }
 
-    /**
-     * Accept a session request - Alias for confirmRequest (used by instructor dashboard)
-     */
+
     public SessionRequest acceptRequest(Long requestId, String zoomLink) throws Exception {
         Long instructorId = Dataholder.userId;
         return confirmRequest(requestId, instructorId, zoomLink);
     }
 
-    /**
-     * Reject a session request (instructor action)
-     */
+
     public void rejectRequest(Long requestId) throws Exception {
-        // ✅ UPDATED: Using instructor-specific decline endpoint with POST
+
         URI uri = new URI("http://localhost:8080/api/instructors/session-requests/" + requestId + "/decline");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setRequestMethod("POST"); // ✅ Changed from PUT to POST
+        connection.setRequestMethod("POST");
         applyCommonHeaders(connection);
 
-        System.out.println("🌐 [SessionRequestService] Declining request " + requestId);
+        System.out.println(" [SessionRequestService] Declining request " + requestId);
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [SessionRequestService] Response Code: " + responseCode);
+        System.out.println(" [SessionRequestService] Response Code: " + responseCode);
 
         if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
-            System.err.println("❌ [SessionRequestService] Failed to decline. Response code: " + responseCode);
+            System.err.println(" [SessionRequestService] Failed to decline. Response code: " + responseCode);
             throw new Exception("Failed to reject session request. Response code: " + responseCode);
         }
 
-        System.out.println("✅ [SessionRequestService] Session request declined successfully");
+        System.out.println("[SessionRequestService] Session request declined successfully");
     }
 
-    /**
-     * Decline a session request - Alias for rejectRequest (used by instructor dashboard)
-     */
+
     public void declineRequest(Long requestId) throws Exception {
         rejectRequest(requestId);
     }

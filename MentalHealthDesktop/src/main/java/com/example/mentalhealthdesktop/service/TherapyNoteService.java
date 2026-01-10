@@ -52,8 +52,8 @@ public class TherapyNoteService {
 
         note.setInstructorId(Dataholder.userId);
 
-        // Log what we're sending
-        System.out.println("📝 Sending therapy note to backend:");
+
+        System.out.println(" Sending therapy note to backend:");
         System.out.println("   Client ID: " + note.getClientId());
         System.out.println("   Instructor ID: " + note.getInstructorId());
         System.out.println("   Note Text: " + note.getNoteText());
@@ -68,11 +68,11 @@ public class TherapyNoteService {
         applyCommonHeaders(con);
 
         String response = sendRequest(con, json);
-        System.out.println("✅ Therapy note saved successfully!");
+        System.out.println(" Therapy note saved successfully!");
         return gson.fromJson(response, TherapyNote.class);
     }
 
-    // Save a new therapy note (legacy method)
+
     public TherapyNote saveNote(Long clientId, LocalDate sessionDate, String sessionType, String notes) throws Exception {
         checkLoggedIn();
 

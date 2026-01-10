@@ -23,11 +23,9 @@ public class InstructorService {
         this.gson = new Gson();
     }
 
-    /**
-     * Get all available instructors from backend
-     */
+
     public List<Instructor> getAllInstructors() throws Exception {
-        System.out.println("🌐 [InstructorService] Fetching all instructors from: " + BASE_URL + "/instructors");
+        System.out.println(" [InstructorService] Fetching all instructors from: " + BASE_URL + "/instructors");
 
         URI uri = new URI(BASE_URL + "/instructors" +
                 "");
@@ -37,7 +35,7 @@ public class InstructorService {
         connection.setRequestProperty("Accept", "application/json");
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [InstructorService] Response Code: " + responseCode);
+        System.out.println(" [InstructorService] Response Code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
@@ -48,26 +46,26 @@ public class InstructorService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [InstructorService] Response: " +
+                System.out.println(" [InstructorService] Response: " +
                     (responseBody.length() > 100 ? responseBody.substring(0, 100) + "..." : responseBody));
 
                 List<Instructor> instructors = gson.fromJson(responseBody,
                     new TypeToken<List<Instructor>>(){}.getType());
 
-                System.out.println("✅ [InstructorService] Parsed " + instructors.size() + " instructors");
+                System.out.println(" [InstructorService] Parsed " + instructors.size() + " instructors");
                 return instructors;
             }
         } else {
-            System.err.println("❌ [InstructorService] Failed to fetch instructors. Response code: " + responseCode);
+            System.err.println(" [InstructorService] Failed to fetch instructors. Response code: " + responseCode);
 
-            // Try to read error response
+
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
                 StringBuilder errorResponse = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ Error response: " + errorResponse.toString());
+                System.err.println(" Error response: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore if can't read error
             }
@@ -76,11 +74,9 @@ public class InstructorService {
         }
     }
 
-    /**
-     * Get user's assigned instructor (if applicable)
-     */
+
     public Instructor getAssignedInstructor(Long userId) throws Exception {
-        System.out.println("🌐 [InstructorService] Fetching assigned instructor for user: " + userId);
+        System.out.println(" [InstructorService] Fetching assigned instructor for user: " + userId);
 
         URI uri = new URI(BASE_URL + "/users/" + userId + "/assigned-instructor");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -98,23 +94,21 @@ public class InstructorService {
                 }
 
                 Instructor instructor = gson.fromJson(response.toString(), Instructor.class);
-                System.out.println("✅ [InstructorService] Found assigned instructor: " + instructor.getUsername());
+                System.out.println(" [InstructorService] Found assigned instructor: " + instructor.getUsername());
                 return instructor;
             }
         } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-            System.out.println("ℹ️ [InstructorService] No assigned instructor for user " + userId);
+            System.out.println(" [InstructorService] No assigned instructor for user " + userId);
             return null; // No assigned instructor
         } else {
-            System.err.println("❌ [InstructorService] Failed to fetch assigned instructor. Response code: " + responseCode);
+            System.err.println(" [InstructorService] Failed to fetch assigned instructor. Response code: " + responseCode);
             return null;
         }
     }
 
-    /**
-     * Get dashboard statistics for instructor
-     */
+
     public Map<String, Integer> getDashboardStats() throws Exception {
-        System.out.println("🌐 [InstructorService] Fetching dashboard stats for instructor: " + Dataholder.userId);
+        System.out.println(" [InstructorService] Fetching dashboard stats for instructor: " + Dataholder.userId);
 
         URI uri = new URI(BASE_URL + "/instructors/" + Dataholder.userId + "/dashboard-stats");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -133,12 +127,12 @@ public class InstructorService {
 
                 Map<String, Integer> stats = gson.fromJson(response.toString(),
                     new TypeToken<Map<String, Integer>>(){}.getType());
-                System.out.println("✅ [InstructorService] Dashboard stats loaded");
+                System.out.println(" [InstructorService] Dashboard stats loaded");
                 return stats;
             }
         } else {
-            System.err.println("❌ [InstructorService] Failed to fetch dashboard stats. Response code: " + responseCode);
-            // Return default values
+            System.err.println(" [InstructorService] Failed to fetch dashboard stats. Response code: " + responseCode);
+
             Map<String, Integer> defaultStats = new HashMap<>();
             defaultStats.put("pendingRequests", 0);
             defaultStats.put("todaySessions", 0);
@@ -148,11 +142,9 @@ public class InstructorService {
         }
     }
 
-    /**
-     * Get all clients for instructor
-     */
+
     public List<ClientOverview> getAllClients() throws Exception {
-        System.out.println("🌐 [InstructorService] Fetching all clients for instructor: " + Dataholder.userId);
+        System.out.println(" [InstructorService] Fetching all clients for instructor: " + Dataholder.userId);
 
         URI uri = new URI(BASE_URL + "/instructors/" + Dataholder.userId + "/clients");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -170,26 +162,23 @@ public class InstructorService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [InstructorService] Clients response: " +
+                System.out.println(" [InstructorService] Clients response: " +
                     (responseBody.length() > 100 ? responseBody.substring(0, 100) + "..." : responseBody));
 
                 List<ClientOverview> clients = gson.fromJson(responseBody,
                     new TypeToken<List<ClientOverview>>(){}.getType());
 
-                System.out.println("✅ [InstructorService] Loaded " + clients.size() + " clients");
+                System.out.println(" [InstructorService] Loaded " + clients.size() + " clients");
                 return clients;
             }
         } else {
-            System.err.println("❌ [InstructorService] Failed to fetch clients. Response code: " + responseCode);
+            System.err.println(" [InstructorService] Failed to fetch clients. Response code: " + responseCode);
             return new ArrayList<>();
         }
     }
 
-    /**
-     * Get analytics for instructor
-     */
     public Map<String, Object> getAnalytics(String timeRange) throws Exception {
-        System.out.println("🌐 [InstructorService] Fetching analytics for: " + timeRange);
+        System.out.println(" [InstructorService] Fetching analytics for: " + timeRange);
 
         URI uri = new URI(BASE_URL + "/instructors/" + Dataholder.userId + "/analytics?timeRange=" + timeRange);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -208,11 +197,11 @@ public class InstructorService {
 
                 Map<String, Object> analytics = gson.fromJson(response.toString(),
                     new TypeToken<Map<String, Object>>(){}.getType());
-                System.out.println("✅ [InstructorService] Analytics loaded");
+                System.out.println(" [InstructorService] Analytics loaded");
                 return analytics;
             }
         } else {
-            System.err.println("❌ [InstructorService] Failed to fetch analytics. Response code: " + responseCode);
+            System.err.println(" [InstructorService] Failed to fetch analytics. Response code: " + responseCode);
             // Return default values
             Map<String, Object> defaultAnalytics = new HashMap<>();
             defaultAnalytics.put("totalSessions", 0);

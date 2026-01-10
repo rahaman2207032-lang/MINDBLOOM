@@ -36,7 +36,7 @@ public class MessageService {
         this.gson = gsonBuilder.create();
     }
 
-    // Helper to set common headers including X-User-Id when available
+
     private void applyCommonHeaders(HttpURLConnection con) {
         con.setRequestProperty("Content-Type", "application/json");
         if (Dataholder.userId != null) {
@@ -141,16 +141,13 @@ public class MessageService {
         List<Map<String, Object>> users = gson.fromJson(response,
             new TypeToken<List<Map<String, Object>>>(){}.getType());
 
-        System.out.println("✅ Found " + users.size() + " available users");
+        System.out.println(" Found " + users.size() + " available users");
         return users;
     }
 
-    /**
-     * ✅ FIX #2: Get instructor conversations with last message and unread count
-     * Endpoint: GET /api/instructors/{instructorId}/conversations
-     */
+
     public List<Map<String, Object>> getInstructorConversations(Long instructorId) throws Exception {
-        // ✅ FIXED: Use correct endpoint /api/instructors/{id}/conversations
+
         String endpoint = "http://localhost:8080/api/instructors/" + instructorId + "/conversations";
         URL url = new URL(endpoint);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -158,37 +155,35 @@ public class MessageService {
         applyCommonHeaders(con);
         con.setRequestProperty("Accept", "application/json");
 
-        System.out.println("📥 [MessageService] Fetching instructor conversations from: " + endpoint);
+        System.out.println(" [MessageService] Fetching instructor conversations from: " + endpoint);
 
         int responseCode = con.getResponseCode();
-        System.out.println("📡 [MessageService] Response code: " + responseCode);
+        System.out.println(" [MessageService] Response code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             String response = sendRequest(con, null);
 
-            // Parse as list of maps containing conversation data
+
             List<Map<String, Object>> conversations = gson.fromJson(response,
                 new TypeToken<List<Map<String, Object>>>(){}.getType());
 
-            System.out.println("✅ [MessageService] Found " + conversations.size() + " conversations");
+            System.out.println(" [MessageService] Found " + conversations.size() + " conversations");
 
             // Log conversation details for debugging
             for (Map<String, Object> conv : conversations) {
-                System.out.println("   💬 Client: " + conv.get("clientName") +
+                System.out.println("  Client: " + conv.get("clientName") +
                                  ", Last msg: " + conv.get("lastMessage") +
                                  ", Unread: " + conv.get("unreadCount"));
             }
 
             return conversations;
         } else {
-            System.err.println("❌ [MessageService] Failed to fetch conversations. Code: " + responseCode);
+            System.err.println(" [MessageService] Failed to fetch conversations. Code: " + responseCode);
             return new ArrayList<>();
         }
     }
 
-    /**
-     * Send message from user to instructor
-     */
+
     public Message sendMessageToInstructor(Long userId, Long instructorId, String messageText) throws Exception {
         checkLoggedIn();
 
@@ -206,17 +201,15 @@ public class MessageService {
 
         String response = sendRequest(con, json);
 
-        System.out.println("✅ Message sent from user " + userId + " to instructor " + instructorId);
+        System.out.println(" Message sent from user " + userId + " to instructor " + instructorId);
         return gson.fromJson(response, Message.class);
     }
 
-    /**
-     * Get instructor ID for a user (gets the instructor who has been messaging this user)
-     */
+
     public Long getInstructorIdForUser(Long userId) throws Exception {
         checkLoggedIn();
 
-        // Try to get conversations and find an instructor
+
         URL url = new URL(BASE_URL + "/user/" + userId + "/instructor");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -233,17 +226,13 @@ public class MessageService {
             }
         } catch (Exception e) {
             System.err.println("⚠️ Could not fetch instructor ID from backend: " + e.getMessage());
-            // Fallback: return a default instructor ID or null
-            // In production, you'd want to handle this better
+
         }
 
         return null; // or return a default instructor ID
     }
 
-    /**
-     * ✅ NEW: Mark all messages in conversation as read
-     * Endpoint: PUT /api/messages/conversation/{userId1}/{userId2}/mark-read
-     */
+
     public int markConversationAsRead(Long instructorId, Long clientId) throws Exception {
         String endpoint = "http://localhost:8080/api/messages/conversation/" + instructorId + "/" + clientId + "/mark-read";
         URL url = new URL(endpoint);
@@ -251,18 +240,18 @@ public class MessageService {
         con.setRequestMethod("PUT");
         applyCommonHeaders(con);
 
-        System.out.println("📖 [MessageService] Marking messages as read: " + instructorId + " <-> " + clientId);
+        System.out.println(" [MessageService] Marking messages as read: " + instructorId + " <-> " + clientId);
 
         int responseCode = con.getResponseCode();
-        System.out.println("📡 [MessageService] Response code: " + responseCode);
+        System.out.println(" [MessageService] Response code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             String response = sendRequest(con, null);
             int count = gson.fromJson(response, Integer.class);
-            System.out.println("✅ [MessageService] Marked " + count + " messages as read");
+            System.out.println(" [MessageService] Marked " + count + " messages as read");
             return count;
         } else {
-            System.err.println("❌ [MessageService] Failed to mark as read. Code: " + responseCode);
+            System.err.println(" [MessageService] Failed to mark as read. Code: " + responseCode);
             return 0;
         }
     }

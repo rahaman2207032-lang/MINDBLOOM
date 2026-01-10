@@ -36,7 +36,7 @@ public class StressService {
         this.gson = gsonBuilder.create();
     }
 
-    // Helper method to send HTTP request and get JSON response
+
     private String sendRequest(HttpURLConnection con, String json) throws Exception {
         if (json != null) {
             con.setDoOutput(true);

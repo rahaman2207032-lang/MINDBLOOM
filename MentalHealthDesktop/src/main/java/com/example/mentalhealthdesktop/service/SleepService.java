@@ -39,9 +39,7 @@ public class SleepService {
         if (Dataholder.userId != null) con.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
     }
 
-    /**
-     * Save a new sleep entry
-     */
+
     public SleepEntry saveSleepEntry(LocalDateTime startTime, LocalDateTime endTime,
                                      Integer quality, String notes) throws Exception {
         checkLoggedIn();
@@ -82,9 +80,7 @@ public class SleepService {
         }
     }
 
-    /**
-     * Get all sleep entries for the logged-in user
-     */
+
     public List<SleepEntry> getAllSleepEntries() throws Exception {
         checkLoggedIn();
 
@@ -115,9 +111,7 @@ public class SleepService {
         }
     }
 
-    /**
-     * Get sleep entries for the last 7 days
-     */
+
     public List<SleepEntry> getWeeklySleepEntries() throws Exception {
         checkLoggedIn();
 
@@ -148,9 +142,7 @@ public class SleepService {
         }
     }
 
-    /**
-     * Delete a sleep entry
-     */
+
     public void deleteSleepEntry(Long sleepId) throws Exception {
         checkLoggedIn();
 
@@ -165,9 +157,7 @@ public class SleepService {
         }
     }
 
-    /**
-     * Check if user is logged in
-     */
+
     private void checkLoggedIn() {
         if (Dataholder.userId == null) {
             throw new IllegalStateException("User not logged in");

@@ -32,12 +32,9 @@ public class NotificationService {
         if (Dataholder.userId != null) connection.setRequestProperty("X-User-Id", String.valueOf(Dataholder.userId));
     }
 
-    /**
-     * ✅ NEW: Get notifications with action details (zoom links, sender info, etc.)
-     * This is the RECOMMENDED method to use for notifications
-     */
+
     public List<Map<String, Object>> getUserNotificationsWithDetails(Long userId) throws Exception {
-        System.out.println("🌐 [NotificationService] Calling API: GET " + BASE_URL + "/user/" + userId + "/with-details");
+        System.out.println(" [NotificationService] Calling API: GET " + BASE_URL + "/user/" + userId + "/with-details");
 
         URI uri = new URI(BASE_URL + "/user/" + userId + "/with-details");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -45,7 +42,7 @@ public class NotificationService {
         applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
+        System.out.println(" [NotificationService] API Response Code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -56,14 +53,14 @@ public class NotificationService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [NotificationService] Response Body: " +
+                System.out.println(" [NotificationService] Response Body: " +
                     (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<Map<String, Object>>>(){}.getType();
                 List<Map<String, Object>> notifications = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [NotificationService] Parsed " + notifications.size() + " notifications with details");
+                System.out.println(" [NotificationService] Parsed " + notifications.size() + " notifications with details");
 
-                // Log details for debugging
+
                 for (Map<String, Object> notif : notifications) {
                     String type = (String) notif.get("notificationType");
                     String title = (String) notif.get("title");
@@ -80,7 +77,7 @@ public class NotificationService {
                 return notifications;
             }
         } else {
-            System.err.println("❌ [NotificationService] Failed to fetch notifications. Response code: " + responseCode);
+            System.err.println(" [NotificationService] Failed to fetch notifications. Response code: " + responseCode);
 
             // Try to read error response
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
@@ -89,7 +86,7 @@ public class NotificationService {
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ [NotificationService] Error response: " + errorResponse.toString());
+                System.err.println(" [NotificationService] Error response: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore if can't read error
             }
@@ -98,13 +95,10 @@ public class NotificationService {
         }
     }
 
-    /**
-     * ✅ FEATURE 2: Get ONLY UNREAD notifications with details
-     * Read notifications will NOT appear when using this endpoint
-     */
+
     public List<Map<String, Object>> getUserUnreadNotificationsWithDetails(Long userId) throws Exception {
         String endpoint = BASE_URL + "/user/" + userId + "/unread/with-details";
-        System.out.println("📬 [NotificationService] Calling API: GET " + endpoint);
+        System.out.println(" [NotificationService] Calling API: GET " + endpoint);
 
         URI uri = new URI(endpoint);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -112,7 +106,7 @@ public class NotificationService {
         applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
+        System.out.println(" [NotificationService] API Response Code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -123,12 +117,12 @@ public class NotificationService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [NotificationService] Response: " +
+                System.out.println(" [NotificationService] Response: " +
                     (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<Map<String, Object>>>(){}.getType();
                 List<Map<String, Object>> notifications = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [NotificationService] Found " + notifications.size() + " UNREAD notifications");
+                System.out.println(" [NotificationService] Found " + notifications.size() + " UNREAD notifications");
 
                 // Log details
                 for (Map<String, Object> notif : notifications) {
@@ -140,7 +134,7 @@ public class NotificationService {
                 return notifications;
             }
         } else {
-            System.err.println("❌ [NotificationService] Failed to fetch unread notifications. Code: " + responseCode);
+            System.err.println(" [NotificationService] Failed to fetch unread notifications. Code: " + responseCode);
 
             // Try to read error response
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
@@ -149,7 +143,7 @@ public class NotificationService {
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ Error: " + errorResponse.toString());
+                System.err.println(" Error: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore
             }
@@ -158,12 +152,9 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Get all notifications for a specific user (OLD METHOD - kept for backward compatibility)
-     * DEPRECATED: Use getUserNotificationsWithDetails() instead
-     */
+
     public List<Notification> getUserNotifications(Long userId) throws Exception {
-        System.out.println("🌐 [NotificationService] Calling API: GET " + BASE_URL + "/user/" + userId);
+        System.out.println(" [NotificationService] Calling API: GET " + BASE_URL + "/user/" + userId);
 
         URI uri = new URI(BASE_URL + "/user/" + userId);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -172,7 +163,7 @@ public class NotificationService {
         applyCommonHeaders(connection);
 
         int responseCode = connection.getResponseCode();
-        System.out.println("📡 [NotificationService] API Response Code: " + responseCode);
+        System.out.println(" [NotificationService] API Response Code: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
@@ -183,25 +174,25 @@ public class NotificationService {
                 }
 
                 String responseBody = response.toString();
-                System.out.println("📄 [NotificationService] Response Body: " +
+                System.out.println(" [NotificationService] Response Body: " +
                     (responseBody.length() > 200 ? responseBody.substring(0, 200) + "..." : responseBody));
 
                 Type listType = new TypeToken<ArrayList<Notification>>(){}.getType();
                 List<Notification> notifications = gson.fromJson(responseBody, listType);
-                System.out.println("✅ [NotificationService] Parsed " + notifications.size() + " notifications");
+                System.out.println(" [NotificationService] Parsed " + notifications.size() + " notifications");
                 return notifications;
             }
         } else {
-            System.err.println("❌ [NotificationService] Failed to fetch notifications. Response code: " + responseCode);
+            System.err.println(" [NotificationService] Failed to fetch notifications. Response code: " + responseCode);
 
-            // Try to read error response
+
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
                 StringBuilder errorResponse = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
                     errorResponse.append(line);
                 }
-                System.err.println("❌ [NotificationService] Error response: " + errorResponse.toString());
+                System.err.println(" [NotificationService] Error response: " + errorResponse.toString());
             } catch (Exception e) {
                 // Ignore if can't read error
             }
@@ -210,9 +201,7 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Get unread notifications count for a user
-     */
+
     public int getUnreadCount(Long userId) throws Exception {
         URI uri = new URI(BASE_URL + "/user/" + userId + "/unread-count");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -235,9 +224,7 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Mark a notification as read
-     */
+
     public void markAsRead(Long notificationId) throws Exception {
         URI uri = new URI(BASE_URL + "/" + notificationId + "/read");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -249,9 +236,7 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Mark all notifications as read for a user
-     */
+
     public void markAllAsRead(Long userId) throws Exception {
         URI uri = new URI(BASE_URL + "/user/" + userId + "/read-all");
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -263,9 +248,7 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Create a new notification (used by system/instructors)
-     */
+
     public Notification createNotification(Notification notification) throws Exception {
         URI uri = new URI(BASE_URL);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
@@ -296,9 +279,7 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Delete a notification
-     */
+
     public void deleteNotification(Long notificationId) throws Exception {
         URI uri = new URI(BASE_URL + "/" + notificationId);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
