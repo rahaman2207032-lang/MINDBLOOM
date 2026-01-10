@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 public class SessionRequest {
     private Long id;
     private Long userId;
-    private Long clientId; // Alias for userId for compatibility
-    private String clientName; // Client's name for display
+    private Long clientId;
+    private String clientName;
     private Long instructorId;
     private LocalDateTime requestedDateTime;
-    private LocalDateTime requestedDate; // Alias for requestedDateTime for compatibility
+    private LocalDateTime requestedDate;
     private String sessionType;
     private String reason;
     private String status; // PENDING, CONFIRMED, REJECTED, COMPLETED

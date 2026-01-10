@@ -24,7 +24,7 @@ public class TherapyNote {
     @SerializedName("sessionType")
     private String sessionType;
 
-    @SerializedName("notes")  // Backend expects "notes" field
+    @SerializedName("notes")
     private String notes;
 
     @SerializedName("createdAt")
@@ -116,7 +116,7 @@ public class TherapyNote {
         this.notes = notes;
     }
 
-    // Convenience methods for noteText alias
+
     public String getNoteText() {
         return notes;
     }

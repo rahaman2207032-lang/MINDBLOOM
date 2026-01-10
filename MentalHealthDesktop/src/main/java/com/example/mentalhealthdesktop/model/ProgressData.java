@@ -3,10 +3,7 @@ package com.example.mentalhealthdesktop.model;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * This class represents aggregated progress data for a user
- * combining metrics from different features
- */
+
 public class ProgressData {
     private Long userId;
     private LocalDate startDate;
