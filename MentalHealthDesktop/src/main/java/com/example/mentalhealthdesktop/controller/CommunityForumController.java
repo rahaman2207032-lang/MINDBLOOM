@@ -50,7 +50,7 @@ public class CommunityForumController {
 
     @FXML
     public void initialize() {
-        System.out.println("🌐 [CommunityForum] Initializing Community Forum...");
+        System.out.println(" [CommunityForum] Initializing Community Forum...");
         sortComboBox.setValue("Latest");
         loadPosts();
 
@@ -106,7 +106,7 @@ public class CommunityForumController {
         }
 
         if (Dataholder.userId == null) {
-            System.err.println("❌ ERROR: User ID is NULL! User not logged in properly.");
+            System.err.println(" ERROR: User ID is NULL! User not logged in properly.");
             showAlert("Error", "User not logged in", Alert.AlertType.ERROR);
             return;
         }
@@ -115,8 +115,8 @@ public class CommunityForumController {
 
         new Thread(() -> {
             try {
-                System.out.println("📝 [CommunityForum] Creating post: " + title);
-                System.out.println("📝 [CommunityForum] Sending request to backend with userId: " + Dataholder.userId);
+                System.out.println(" [CommunityForum] Creating post: " + title);
+                System.out.println("[CommunityForum] Sending request to backend with userId: " + Dataholder.userId);
                 forumService.createPost(title, content, Dataholder.userId, anonymousCheckBox.isSelected());
 
                 Platform.runLater(() -> {
@@ -128,8 +128,8 @@ public class CommunityForumController {
                     loadPosts();
                 });
             } catch (Exception e) {
-                System.err.println("❌ [CommunityForum] Failed to create post!");
-                System.err.println("❌ Error message: " + e.getMessage());
+                System.err.println(" [CommunityForum] Failed to create post!");
+                System.err.println("Error message: " + e.getMessage());
                 Platform.runLater(() -> {
                     createPostButton.setDisable(false);
                     showAlert("Error", "Failed to create post: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -147,7 +147,7 @@ public class CommunityForumController {
 
         new Thread(() -> {
             try {
-                System.out.println("📥 [CommunityForum] Loading posts with sort: " + sortType);
+                System.out.println(" [CommunityForum] Loading posts with sort: " + sortType);
                 Long currentUserId = Dataholder.userId != null ? Dataholder.userId : 0L;
                 JsonArray posts = forumService.getPosts(sortType, currentUserId);
 
@@ -155,18 +155,18 @@ public class CommunityForumController {
                     loadingIndicator.setVisible(false);
                     if (posts != null) {
                         displayPosts(posts);
-                        System.out.println("✅ [CommunityForum] Successfully loaded " + posts.size() + " posts");
+                        System.out.println("[CommunityForum] Successfully loaded " + posts.size() + " posts");
                     } else {
                         displayEmptyPosts();
                     }
                 });
             } catch (Exception e) {
-                System.err.println("❌ [CommunityForum] Failed to load posts: " + e.getMessage());
+                System.err.println(" [CommunityForum] Failed to load posts: " + e.getMessage());
                 e.printStackTrace();
                 Platform.runLater(() -> {
                     loadingIndicator.setVisible(false);
                     displayEmptyPosts();
-                    // Don't show error alert for initial load, just show empty state
+
                 });
             }
         }).start();
@@ -189,7 +189,7 @@ public class CommunityForumController {
             return;
         }
 
-        System.out.println("✅ [CommunityForum] Displaying " + posts.size() + " posts");
+        System.out.println(" [CommunityForum] Displaying " + posts.size() + " posts");
 
         for (int i = 0; i < posts.size(); i++) {
             JsonObject post = posts.get(i).getAsJsonObject();
@@ -344,7 +344,7 @@ public class CommunityForumController {
 
             // Set callback to refresh posts when comment count changes
             controller.setOnCommentCountChanged(() -> {
-                System.out.println("🔄 [CommunityForum] Comment count changed, refreshing posts...");
+                System.out.println(" [CommunityForum] Comment count changed, refreshing posts...");
                 loadPosts();
             });
 
@@ -455,7 +455,7 @@ public class CommunityForumController {
 
         new Thread(() -> {
             try {
-                System.out.println("💬 [GroupChat] Sending message: " + message.substring(0, Math.min(20, message.length())) + "...");
+                System.out.println("[GroupChat] Sending message: " + message.substring(0, Math.min(20, message.length())) + "...");
                 forumService.sendChatMessage(message, Dataholder.userId, chatAnonymousCheckBox.isSelected());
 
                 Platform.runLater(() -> {

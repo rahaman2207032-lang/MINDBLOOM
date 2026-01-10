@@ -8,12 +8,9 @@
       <change afterPath="$PROJECT_DIR$/../BACKEND_COMMUNITY_FORUM_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../BACKEND_GROUP_CHAT_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../COMMUNITY_FORUM_GROUP_CHAT_COMPLETE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FORUM_LIKE_COMMENT_COUNT_FIX.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GROUP_CHAT_BACKEND_COMPLETE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/CommunityForumController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../MentalHealthDesktop/src/main/java/com/example/mentalhealthdesktop/controller/CommunityForumController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mentalhealth/backend/model/MoodEntry.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +142,9 @@
       <workItem from="1767090902924" duration="52115000" />
       <workItem from="1767292340764" duration="383000" />
       <workItem from="1767362762136" duration="15641000" />
-      <workItem from="1767895159138" duration="13828000" />
+      <workItem from="1767895159138" duration="15130000" />
+      <workItem from="1767968498499" duration="4620000" />
+      <workItem from="1768020576432" duration="307000" />
     </task>
     <task id="LOCAL-00001" summary="fixed the folder,deleted the duplicate">
       <option name="closed" value="true" />
