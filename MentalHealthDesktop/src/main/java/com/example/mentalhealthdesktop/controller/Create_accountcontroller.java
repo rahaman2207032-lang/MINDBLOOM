@@ -312,7 +312,7 @@ public class Create_accountcontroller implements Initializable {
                                 (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) ->
                                         new JsonPrimitive(src.format(DateTimeFormatter.ISO_DATE_TIME)))
                         .create();
-                return gson.fromJson(response.toString(), User.class);  // <-- return user
+                return gson.fromJson(response.toString(), User.class);
             }
         } else {
             throw new RuntimeException("Failed to create account. Response code: " + responseCode);

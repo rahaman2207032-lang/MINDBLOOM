@@ -247,7 +247,7 @@ public class HabitTrackerController {
                     HabitService.HabitCompletionResult completionResult = habitService.completeHabit(habit.getId(), notes);
 
                     Platform.runLater(() -> {
-                        // Update the habit's streak information if available
+
                         if (completionResult.currentStreak >= 0) {
                             habit.setCurrentStreak(completionResult.currentStreak);
                             habit.setLongestStreak(completionResult.longestStreak);
@@ -255,7 +255,7 @@ public class HabitTrackerController {
                             System.out.println("✅ [HabitTracker] Updated streak - Current: " +
                                              completionResult.currentStreak + ", Longest: " + completionResult.longestStreak);
 
-                            // If we have the full updated habit, use it
+
                             if (completionResult.updatedHabit != null) {
                                 // Update all fields from the backend
                                 habit.setCurrentStreak(completionResult.updatedHabit.getCurrentStreak());
@@ -269,7 +269,7 @@ public class HabitTrackerController {
 
                         showAlert(Alert.AlertType.INFORMATION, "Success", message);
 
-                        // Reload habits to refresh the UI with updated streaks
+
                         loadHabits();
                     });
                 } catch (Exception e) {
