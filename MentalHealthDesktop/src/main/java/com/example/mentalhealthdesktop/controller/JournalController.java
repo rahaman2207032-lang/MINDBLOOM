@@ -46,9 +46,7 @@ public class JournalController {
         });
     }
 
-    /**
-     * Load existing journal from database
-     */
+
     private void loadJournalFromDatabase() {
         // Load in background thread to avoid UI freeze
         new Thread(() -> {
@@ -77,9 +75,7 @@ public class JournalController {
         }).start();
     }
 
-    /**
-     * Save journal to database
-     */
+
     @FXML
     private void handleSave() {
         String content = journalTextArea.getText();
@@ -122,9 +118,7 @@ public class JournalController {
         }).start();
     }
 
-    /**
-     * Update the last updated label
-     */
+
     private void updateLastUpdatedLabel() {
         if (currentJournal != null && currentJournal.getUpdatedAt() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a");
@@ -132,9 +126,7 @@ public class JournalController {
         }
     }
 
-    /**
-     * Go back to user dashboard
-     */
+
     @FXML
     private void handleBack() {
         try {
@@ -154,9 +146,7 @@ public class JournalController {
         }
     }
 
-    /**
-     * Show alert dialog
-     */
+
     private void showAlert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

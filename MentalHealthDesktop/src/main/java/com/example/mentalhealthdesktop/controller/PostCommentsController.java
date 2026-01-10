@@ -37,10 +37,7 @@ public class PostCommentsController {
         loadComments();
     }
 
-    /**
-     * Set a callback to be called when comment count changes
-     * This allows the parent controller to refresh the post list
-     */
+
     public void setOnCommentCountChanged(Runnable callback) {
         this.onCommentCountChanged = callback;
     }
@@ -101,7 +98,7 @@ public class PostCommentsController {
             return;
         }
 
-        System.out.println("✅ [PostComments] Displaying " + comments.size() + " comments");
+        System.out.println(" [PostComments] Displaying " + comments.size() + " comments");
 
         for (int i = 0; i < comments.size(); i++) {
             JsonObject comment = comments.get(i).getAsJsonObject();
@@ -222,11 +219,11 @@ public class PostCommentsController {
                     try {
                         System.out.println("🗑️ [PostComments] Deleting comment: " + commentId);
 
-                        // ⭐ Pass userId to deleteComment as required by backend
+
                         CommunityForumService.DeleteResult result = forumService.deleteComment(commentId, Dataholder.userId);
 
                         Platform.runLater(() -> {
-                            // Update the current post's comment count if backend provided it
+
                             if (result.updatedCommentCount >= 0 && result.postId != null) {
                                 currentPost.addProperty("commentCount", result.updatedCommentCount);
                                 System.out.println("📊 [PostComments] Updated post " + result.postId +

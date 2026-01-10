@@ -175,7 +175,7 @@ public class Login_Signup implements Initializable {
                             // Also set session manager so other services can read current user
                             SessionManager.getInstance().setCurrentUser(Dataholder.userId, Dataholder.loggedInUsername, "USER");
 
-                            System.out.println("✅ Logged in successfully!");
+                            System.out.println(" Logged in successfully!");
                             System.out.println("   Username: " + Dataholder.loggedInUsername);
                             System.out.println("   User ID: " + Dataholder.userId);
 

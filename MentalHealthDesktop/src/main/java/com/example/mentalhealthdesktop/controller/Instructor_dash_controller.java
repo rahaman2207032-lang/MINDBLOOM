@@ -41,34 +41,34 @@ public class Instructor_dash_controller {
     @FXML private VBox calendarContainer;
     @FXML private Label weekLabel;
 
-    // Tab Pane
+
     @FXML private TabPane mainTabPane;
 
-    // Clients Tab
+
     @FXML private VBox clientListContainer;
 
-    // Therapy Notes Tab
+
     @FXML private ComboBox<String> clientComboBox;
     @FXML private DatePicker sessionDatePicker;
     @FXML private ComboBox<String> sessionTypeComboBox;
     @FXML private TextArea therapyNotesArea;
     @FXML private VBox previousNotesContainer;
 
-    // Messages Tab
+
     @FXML private VBox conversationsContainer;
     @FXML private Label selectedClientLabel;
     @FXML private ScrollPane messagesScrollPane;
     @FXML private VBox messagesContainer;
     @FXML private TextArea messageTextArea;
 
-    // Analytics Tab
+
     @FXML private ComboBox<String> analyticsTimeRangeCombo;
     @FXML private Label totalSessionsLabel;
     @FXML private Label completedSessionsLabel;
     @FXML private Label avgRatingLabel;
     @FXML private VBox analyticsChartsContainer;
 
-    // Bottom Status Bar
+
     @FXML private Label statusLabel;
     @FXML private Label lastUpdateLabel;
 
@@ -84,25 +84,22 @@ public class Instructor_dash_controller {
     private final TherapyNoteService therapyNoteService = new TherapyNoteService();
     private final MessageService messageService = new MessageService();
 
-    // Data cache
+
     private List<SessionRequest> pendingRequests = new ArrayList<>();
     private List<TherapySession> weeklySessions = new ArrayList<>();
     private List<ClientOverview> allClients = new ArrayList<>();
 
-    // ✅ FIX #2: Auto-refresh for conversations (polling)
+
     private java.util.Timer autoRefreshTimer;
 
-    /**
-     * ✅ NEW: Get current instructor ID dynamically (SessionManager + Dataholder fallback)
-     * Prevents hardcoded instructor ID issues
-     */
+
     private Long getCurrentInstructorId() {
         Long instructorId = SessionManager.getInstance().getCurrentUserId();
         if (instructorId == null) {
             instructorId = Dataholder.userId;
-            System.out.println("⚠️ [Instructor] Using Dataholder fallback (SessionManager not set)");
+            System.out.println("[Instructor] Using Dataholder fallback (SessionManager not set)");
         }
-        System.out.println("🆔 [Instructor] Current instructor ID: " + instructorId);
+        System.out.println(" [Instructor] Current instructor ID: " + instructorId);
         return instructorId;
     }
 
@@ -119,23 +116,23 @@ public class Instructor_dash_controller {
                 stage.setMinHeight(700);
                 stage.setWidth(1400);
                 stage.setHeight(900);
-                System.out.println("✅ Stage configured: resizable and sized to 1400x900");
+                System.out.println(" Stage configured: resizable and sized to 1400x900");
 
-                // ✅ FIX #2: Start auto-refresh for conversations (5 seconds)
+
                 startAutoRefresh();
             } catch (Exception e) {
                 System.err.println("⚠️ Could not configure stage: " + e.getMessage());
             }
         });
 
-        // Initialize current week
+
         currentWeekStart = LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue() - 1);
         updateWeekLabel();
 
-        // Initialize combo boxes
+
         initializeComboBoxes();
 
-        // Load initial data
+
         loadDashboardData();
 
         System.out.println("Instructor Dashboard initialized successfully!");
@@ -184,7 +181,7 @@ public class Instructor_dash_controller {
                     // Load sections
                     loadSessionRequests();
                     loadCalendar();
-                    loadClientList(); // This will also load conversations after clients are ready
+                    loadClientList();
                     updateAnalytics();
 
                     updateStatus("Ready", true);
@@ -317,7 +314,7 @@ public class Instructor_dash_controller {
                         calendarContainer.getChildren().add(dayCard);
                     }
 
-                    System.out.println("✅ [Instructor] Calendar updated successfully");
+                    System.out.println(" [Instructor] Calendar updated successfully");
                 });
             } catch (Exception e) {
                 System.err.println("❌ [Instructor] Error loading calendar: " + e.getMessage());
@@ -332,10 +329,7 @@ public class Instructor_dash_controller {
         }).start();
     }
 
-    /**
-     * ✅ NEW: Load scheduled sessions for instructor (Feature 1)
-     * Returns all scheduled sessions with zoom links that instructor can join
-     */
+
     private void loadScheduledSessions() {
         new Thread(() -> {
             try {
@@ -345,7 +339,7 @@ public class Instructor_dash_controller {
                 // Use existing therapySessionService
                 List<TherapySession> scheduledSessions = therapySessionService.getScheduledSessionsForInstructor(instructorId);
 
-                System.out.println("✅ [Instructor] Found " + scheduledSessions.size() + " scheduled sessions");
+                System.out.println("[Instructor] Found " + scheduledSessions.size() + " scheduled sessions");
 
                 // Update calendar with scheduled sessions
                 weeklySessions = scheduledSessions;
@@ -356,7 +350,7 @@ public class Instructor_dash_controller {
                 });
 
             } catch (Exception e) {
-                System.err.println("❌ [Instructor] Error loading scheduled sessions: " + e.getMessage());
+                System.err.println(" [Instructor] Error loading scheduled sessions: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();
@@ -384,7 +378,7 @@ public class Instructor_dash_controller {
                 sessionLabel.setWrapText(true);
                 sessionBox.getChildren().add(sessionLabel);
 
-                // ✅ Display zoom link if available (FRONTEND_ALL_CHANGES.md)
+
                 String zoomLink = session.getZoomLink();
                 if (zoomLink != null && !zoomLink.isEmpty()) {
                     Label zoomLabel = new Label("🎥 Zoom available");
@@ -395,9 +389,9 @@ public class Instructor_dash_controller {
                     zoomLabel.setOnMouseClicked(e -> {
                         try {
                             java.awt.Desktop.getDesktop().browse(new java.net.URI(zoomLink));
-                            System.out.println("✅ [Instructor] Opening Zoom link: " + zoomLink);
+                            System.out.println("[Instructor] Opening Zoom link: " + zoomLink);
                         } catch (Exception ex) {
-                            System.err.println("❌ [Instructor] Failed to open Zoom: " + ex.getMessage());
+                            System.err.println(" [Instructor] Failed to open Zoom: " + ex.getMessage());
                         }
                     });
                     zoomLabel.setStyle(zoomLabel.getStyle() + "; -fx-cursor: hand; -fx-underline: true;");
@@ -443,10 +437,10 @@ public class Instructor_dash_controller {
                             clientComboBox.getItems().add(client.getClientName());
                         }
 
-                        System.out.println("✅ Loaded " + allClients.size() + " clients");
+                        System.out.println(" Loaded " + allClients.size() + " clients");
                     }
 
-                    // Load conversations AFTER clients are loaded
+
                     loadConversations();
                 });
             } catch (Exception e) {
@@ -525,7 +519,7 @@ public class Instructor_dash_controller {
                         noClients.setWrapText(true);
                         conversationsContainer.getChildren().add(noClients);
                     } else {
-                        System.out.println("✅ [Instructor] Loaded " + conversations.size() + " clients (including those without messages)");
+                        System.out.println("[Instructor] Loaded " + conversations.size() + " clients (including those without messages)");
 
                         // Show all clients - backend returns everyone with role='USER'
                         for (Map<String, Object> conv : conversations) {
@@ -535,7 +529,7 @@ public class Instructor_dash_controller {
                     }
                 });
             } catch (Exception e) {
-                System.err.println("❌ [Instructor] Error loading conversations: " + e.getMessage());
+                System.err.println(" [Instructor] Error loading conversations: " + e.getMessage());
                 e.printStackTrace();
                 Platform.runLater(() -> {
                     conversationsContainer.getChildren().clear();
@@ -547,11 +541,7 @@ public class Instructor_dash_controller {
         }).start();
     }
 
-    /**
-     * ✅ FIXED: Create conversation card - shows ALL clients (with/without messages)
-     * - Shows unread badge if client has sent messages
-     * - Shows "No messages yet" if no conversation history
-     */
+
     private VBox createConversationCard(Map<String, Object> conv) {
         VBox card = new VBox(8);
         card.setPadding(new Insets(12));
@@ -593,16 +583,16 @@ public class Instructor_dash_controller {
             }
             card.getChildren().addAll(headerRow, msgPreview);
         } else {
-            // ✅ FIXED: Show "No messages yet" so instructor knows they can start a conversation
+
             Label noMsgLabel = new Label("No messages yet - Click to start conversation");
             noMsgLabel.setStyle("-fx-text-fill: #999; -fx-font-size: 11; -fx-font-style: italic;");
             card.getChildren().addAll(headerRow, noMsgLabel);
         }
 
-        // Make clickable
+
         card.setOnMouseClicked(e -> {
             selectConversation(clientName, clientId);
-            // Highlight selected
+
             conversationsContainer.getChildren().forEach(node -> {
                 if (node instanceof VBox) {
                     node.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0; -fx-cursor: hand;");
@@ -611,7 +601,7 @@ public class Instructor_dash_controller {
             card.setStyle("-fx-background-color: #e3f2fd; -fx-border-color: #2196F3; -fx-border-width: 0 0 2 0; -fx-cursor: hand;");
         });
 
-        // Hover effect
+
         card.setOnMouseEntered(e -> {
             if (!card.getStyle().contains("#e3f2fd")) {
                 card.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0; -fx-cursor: hand;");
@@ -743,14 +733,13 @@ public class Instructor_dash_controller {
                 note.setInstructorId(Dataholder.userId);
                 note.setNoteText(noteText);
 
-                // Set session date from picker (or use today if not set)
+
                 if (sessionDatePicker.getValue() != null) {
                     note.setSessionDate(sessionDatePicker.getValue());
                 } else {
                     note.setSessionDate(java.time.LocalDate.now());
                 }
 
-                // Set session type from combo box (or use default)
                 if (sessionTypeComboBox.getValue() != null) {
                     note.setSessionType(sessionTypeComboBox.getValue());
                 } else {
@@ -822,19 +811,18 @@ public class Instructor_dash_controller {
         selectedClientLabel.setText("Messaging: " + clientName);
         loadMessages(clientId);
 
-        // ✅ FIX: Mark all messages in this conversation as read
-        // This will remove notifications and update unread counts
+
         new Thread(() -> {
             try {
                 int markedCount = messageService.markConversationAsRead(Dataholder.userId, clientId);
-                System.out.println("✅ [Instructor] Marked " + markedCount + " messages as read with client: " + clientName);
+                System.out.println(" [Instructor] Marked " + markedCount + " messages as read with client: " + clientName);
 
-                // Refresh conversations list to update unread badges
+
                 Platform.runLater(() -> {
                     loadConversations();
                 });
             } catch (Exception e) {
-                System.err.println("⚠️ [Instructor] Failed to mark messages as read: " + e.getMessage());
+                System.err.println(" [Instructor] Failed to mark messages as read: " + e.getMessage());
                 // Don't show error to user - this is a background operation
             }
         }).start();
@@ -856,7 +844,7 @@ public class Instructor_dash_controller {
                         for (Message message : messages) {
                             Label msgLabel = new Label(message.getMessageText());
 
-                            // Style based on sender
+
                             boolean isSentByMe = message.getSenderId().equals(Dataholder.userId);
                             if (isSentByMe) {
                                 msgLabel.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 10; -fx-font-size: 12;");
@@ -912,13 +900,13 @@ public class Instructor_dash_controller {
                     NotificationService notificationService = new NotificationService();
                     notificationService.createNotification(notification);
 
-                    System.out.println("✅ Message notification sent to user ID: " + selectedConversationClientId);
+                    System.out.println(" Message notification sent to user ID: " + selectedConversationClientId);
                 } catch (Exception notifEx) {
-                    System.err.println("⚠️ Failed to send message notification: " + notifEx.getMessage());
+                    System.err.println(" Failed to send message notification: " + notifEx.getMessage());
                 }
 
                 Platform.runLater(() -> {
-                    // Add message to UI immediately
+
                     Label newMsg = new Label(messageText);
                     newMsg.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 10; -fx-font-size: 12;");
                     newMsg.setMaxWidth(300);
@@ -975,7 +963,7 @@ public class Instructor_dash_controller {
     }
 
     private void acceptRequest(SessionRequest request) {
-        // ✅ UPDATED: No manual zoom link prompt needed - backend creates automatically!
+
 
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Accept Session Request");
@@ -995,7 +983,7 @@ public class Instructor_dash_controller {
                         // Call backend - it will create Zoom meeting automatically!
                         sessionRequestService.acceptRequest(request.getId(), null);  // null = automatic creation
 
-                        System.out.println("✅ [Instructor] Session accepted successfully!");
+                        System.out.println(" [Instructor] Session accepted successfully!");
 
                         Platform.runLater(() -> {
                             showAlert(Alert.AlertType.INFORMATION, "Request Accepted ✅",
@@ -1004,13 +992,13 @@ public class Instructor_dash_controller {
                                 "✅ Client notified with join link\n\n" +
                                 "The meeting link has been sent to the client's notifications.");
 
-                            // ✅ CRITICAL: Refresh both lists to show updated status
+
                             System.out.println("🔄 [Instructor] Refreshing pending requests and calendar...");
-                            loadSessionRequests();  // Request will disappear (status changed from PENDING to ACCEPTED)
-                            loadCalendar();         // Session will appear in calendar with zoom link
+                            loadSessionRequests();                 // Request will disappear (status changed from PENDING to ACCEPTED)
+                            loadCalendar();                           // Session will appear in calendar with zoom link
                         });
                     } catch (Exception e) {
-                        System.err.println("❌ [Instructor] Error accepting request: " + e.getMessage());
+                        System.err.println(" [Instructor] Error accepting request: " + e.getMessage());
                         e.printStackTrace();
                         Platform.runLater(() ->
                             showAlert(Alert.AlertType.ERROR, "Error",
@@ -1051,9 +1039,9 @@ public class Instructor_dash_controller {
                             NotificationService notificationService = new NotificationService();
                             notificationService.createNotification(notification);
 
-                            System.out.println("✅ Notification sent to user ID: " + request.getClientId());
+                            System.out.println(" Notification sent to user ID: " + request.getClientId());
                         } catch (Exception notifEx) {
-                            System.err.println("⚠️ Failed to send notification: " + notifEx.getMessage());
+                            System.err.println(" Failed to send notification: " + notifEx.getMessage());
                         }
 
                         Platform.runLater(() -> {
@@ -1122,7 +1110,7 @@ public class Instructor_dash_controller {
         alert.showAndWait();
     }
 
-    // ✅ FIX #2: Start auto-refresh timer for conversations
+
     private void startAutoRefresh() {
         autoRefreshTimer = new java.util.Timer();
         autoRefreshTimer.scheduleAtFixedRate(new java.util.TimerTask() {
@@ -1133,14 +1121,14 @@ public class Instructor_dash_controller {
                         // Refresh conversations only
                         loadConversations();
                     } catch (Exception e) {
-                        System.err.println("❌ Error during auto-refresh: " + e.getMessage());
+                        System.err.println("Error during auto-refresh: " + e.getMessage());
                     }
                 });
             }
         }, 0, 5000); // Every 5 seconds
     }
 
-    // ✅ FIX #2: Stop auto-refresh timer
+
     private void stopAutoRefresh() {
         if (autoRefreshTimer != null) {
             autoRefreshTimer.cancel();

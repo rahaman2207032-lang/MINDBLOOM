@@ -113,9 +113,7 @@ public class TherapistRequestController {
         );
     }
 
-    /**
-     * ✅ NEW: Load instructors from backend dynamically
-     */
+
     private void loadInstructors() {
         new Thread(() -> {
             try {
@@ -128,9 +126,9 @@ public class TherapistRequestController {
 
                     if (!instructors.isEmpty()) {
                         instructorComboBox.getSelectionModel().selectFirst();
-                        System.out.println("✅ [TherapistRequest] Loaded " + instructors.size() + " instructors");
+                        System.out.println(" [TherapistRequest] Loaded " + instructors.size() + " instructors");
                     } else {
-                        System.out.println("⚠️ [TherapistRequest] No instructors found");
+                        System.out.println(" [TherapistRequest] No instructors found");
 
                         // Fallback: Show warning but allow submission (will use default)
                         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -141,7 +139,7 @@ public class TherapistRequestController {
                     }
                 });
             } catch (Exception e) {
-                System.err.println("❌ [TherapistRequest] Error loading instructors: " + e.getMessage());
+                System.err.println(" [TherapistRequest] Error loading instructors: " + e.getMessage());
                 e.printStackTrace();
 
                 Platform.runLater(() -> {
@@ -157,7 +155,7 @@ public class TherapistRequestController {
 
     @FXML
     private void handleSubmitRequest() {
-        // ✅ Validate instructor selection FIRST
+
         Instructor selectedInstructor = instructorComboBox.getValue();
         if (selectedInstructor == null) {
             showAlert(Alert.AlertType.ERROR, "Validation Error",
@@ -192,15 +190,15 @@ public class TherapistRequestController {
 
         new Thread(() -> {
             try {
-                // Parse time
+
                 String timeStr = sessionTimeCombo.getValue();
                 LocalTime time = parseTime(timeStr);
                 LocalDateTime requestedDateTime = LocalDateTime.of(selectedDate, time);
 
-                // ✅ FIXED: Create session request with SELECTED instructor (NOT hardcoded!)
+
                 SessionRequest request = new SessionRequest();
-                request.setUserId(getCurrentUserId());  // ✅ UPDATED: Use dynamic method
-                request.setInstructorId(selectedInstructor.getId());  // ✅ Dynamic instructor selection!
+                request.setUserId(getCurrentUserId());
+                request.setInstructorId(selectedInstructor.getId());
                 request.setRequestedDateTime(requestedDateTime);
                 request.setSessionType(sessionTypeCombo.getValue());
                 request.setReason(reasonTextArea.getText().trim().isEmpty() ? null : reasonTextArea.getText().trim());
@@ -210,7 +208,7 @@ public class TherapistRequestController {
                 System.out.println("🔍 Creating session request:");
                 System.out.println("   userId: " + request.getUserId());
                 System.out.println("   instructorId: " + request.getInstructorId() +
-                                 " (" + selectedInstructor.getUsername() + ")");  // ✅ Show instructor name
+                                 " (" + selectedInstructor.getUsername() + ")");
                 System.out.println("   requestedDateTime: " + request.getRequestedDateTime());
                 System.out.println("   sessionType: " + request.getSessionType());
 
@@ -223,7 +221,7 @@ public class TherapistRequestController {
                             "You will be notified when they respond.");
 
                     // Clear form
-                    instructorComboBox.getSelectionModel().clearSelection();  // ✅ Also clear instructor
+                    instructorComboBox.getSelectionModel().clearSelection();
                     sessionDatePicker.setValue(null);
                     sessionTimeCombo.setValue(null);
                     sessionTypeCombo.setValue(null);
@@ -255,7 +253,7 @@ public class TherapistRequestController {
     private void loadUserRequests() {
         new Thread(() -> {
             try {
-                Long userId = getCurrentUserId();  // ✅ UPDATED: Use dynamic method
+                Long userId = getCurrentUserId();
                 System.out.println("📥 [TherapistRequest] Loading pending requests for user: " + userId);
 
                 List<SessionRequest> requests = sessionRequestService.getUserSessionRequests(userId);
@@ -268,7 +266,7 @@ public class TherapistRequestController {
                         emptyLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14; -fx-padding: 20;");
                         requestsContainer.getChildren().add(emptyLabel);
                     } else {
-                        System.out.println("✅ [TherapistRequest] Loaded " + requests.size() + " pending requests");
+                        System.out.println(" [TherapistRequest] Loaded " + requests.size() + " pending requests");
                         for (SessionRequest request : requests) {
                             requestsContainer.getChildren().add(createRequestCard(request));
                         }
@@ -276,7 +274,7 @@ public class TherapistRequestController {
                 });
 
             } catch (Exception e) {
-                System.err.println("❌ [TherapistRequest] Error loading requests: " + e.getMessage());
+                System.err.println(" [TherapistRequest] Error loading requests: " + e.getMessage());
                 Platform.runLater(() -> {
                     Label errorLabel = new Label("Failed to load requests: " + e.getMessage());
                     errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 12;");
@@ -294,7 +292,7 @@ public class TherapistRequestController {
                 System.out.println("📅 [TherapistRequest] Loading scheduled sessions for user: " + userId);
                 System.out.println("   🆕 NEW WORKFLOW: Fetching from therapy_sessions table");
 
-                // ✅ NEW WORKFLOW: Use TherapySessionService to fetch from therapy_sessions table
+
                 List<com.example.mentalhealthdesktop.model.TherapySession> scheduledSessions =
                     therapySessionService.getScheduledSessionsForUser(userId);
 
@@ -307,7 +305,7 @@ public class TherapistRequestController {
                         emptyLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14; -fx-padding: 20;");
                         upcomingSessionsContainer.getChildren().add(emptyLabel);
                     } else {
-                        System.out.println("✅ [TherapistRequest] Loaded " + scheduledSessions.size() + " scheduled sessions");
+                        System.out.println(" [TherapistRequest] Loaded " + scheduledSessions.size() + " scheduled sessions");
                         for (com.example.mentalhealthdesktop.model.TherapySession session : scheduledSessions) {
                             // Create session card from TherapySession object
                             upcomingSessionsContainer.getChildren().add(createTherapySessionCard(session));
@@ -316,7 +314,7 @@ public class TherapistRequestController {
                 });
 
             } catch (Exception e) {
-                System.err.println("❌ [TherapistRequest] Error loading sessions: " + e.getMessage());
+                System.err.println(" [TherapistRequest] Error loading sessions: " + e.getMessage());
                 Platform.runLater(() -> {
                     upcomingSessionsContainer.getChildren().clear();
                     Label errorLabel = new Label("Failed to load sessions: " + e.getMessage());

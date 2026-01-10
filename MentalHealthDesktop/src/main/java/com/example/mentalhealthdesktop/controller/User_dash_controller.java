@@ -77,9 +77,7 @@ public class User_dash_controller {
         navigateToScene("CommunityForum.fxml", "Community Forum", 1200, 800);
     }
 
-    /**
-     * Helper method to navigate to different scenes
-     */
+
     private void navigateToScene(String fxmlFile, String title, int width, int height) {
         try {
             FXMLLoader loader = new FXMLLoader(

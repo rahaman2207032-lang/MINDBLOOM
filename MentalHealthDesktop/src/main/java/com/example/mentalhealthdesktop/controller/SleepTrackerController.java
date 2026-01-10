@@ -85,7 +85,7 @@ public class SleepTrackerController {
             LocalDateTime startTime = LocalDateTime.of(sleepDate, LocalTime.of(startHour, startMin));
             LocalDateTime endTime = LocalDateTime.of(sleepDate.plusDays(1), LocalTime.of(endHour, endMin));
 
-            // If end time is before start time, it's the same day
+
             if (endHour > startHour) {
                 endTime = LocalDateTime.of(sleepDate, LocalTime.of(endHour, endMin));
             }
@@ -95,7 +95,7 @@ public class SleepTrackerController {
             final Integer quality = qualityRating.getValue();
             final String notes = sleepNotes.getText();
 
-            // Save to backend in a separate thread
+
             new Thread(() -> {
                 try {
                     sleepService.saveSleepEntry(finalStartTime, finalEndTime, quality, notes);

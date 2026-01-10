@@ -43,14 +43,12 @@ public class MeditationController {
                  "A simple breathing exercise to help you relax and center yourself.");
     }
 
-    /**
-     * Load a YouTube video in the WebView
-     */
+
     private void loadVideo(String videoId, String title, String description) {
         currentVideoTitle.setText(title);
         videoDescription.setText(description);
 
-        // Embed YouTube video using iframe
+
         String html = """
             <!DOCTYPE html>
             <html>
@@ -128,9 +126,7 @@ public class MeditationController {
                  "Start your day with positive energy and mindful intention.");
     }
 
-    /**
-     * Go back to user dashboard
-     */
+
     @FXML
     private void handleBack() {
         try {

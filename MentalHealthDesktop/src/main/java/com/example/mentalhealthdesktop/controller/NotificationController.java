@@ -21,13 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * ✅ UPDATED: Controller for displaying notifications with action buttons
- * - Shows "Join Meeting" button for SESSION_ACCEPTED notifications
- * - Shows "Reply" button for MESSAGE notifications
- * - Uses SessionManager for dynamic user handling
- * - Integrates with backend /with-details endpoint
- */
+
 public class NotificationController {
 
     @FXML private VBox notificationsContainer;
@@ -45,7 +39,7 @@ public class NotificationController {
 
     @FXML
     public void initialize() {
-        System.out.println("✅ [NotificationController] Initializing...");
+        System.out.println(" [NotificationController] Initializing...");
         loadNotifications();
     }
 
@@ -54,7 +48,7 @@ public class NotificationController {
      */
     public void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
-        System.out.println("✅ [NotificationController] HostServices set - can open URLs");
+        System.out.println(" [NotificationController] HostServices set - can open URLs");
     }
 
     @FXML
@@ -130,10 +124,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Load notifications with details from backend
-     * ✅ FEATURE 2: Now uses /unread endpoint so read notifications disappear after refresh
-     */
+
     private void loadNotifications() {
         new Thread(() -> {
             try {
@@ -148,7 +139,7 @@ public class NotificationController {
 
                 System.out.println("📬 [NotificationController] Fetching UNREAD notifications for user: " + userId);
 
-                // ✅ FEATURE 2: Use new endpoint that returns ONLY unread notifications
+
                 allNotificationsWithDetails = notificationService.getUserUnreadNotificationsWithDetails(userId);
 
                 System.out.println("📥 [NotificationController] Received " + allNotificationsWithDetails.size() + " notifications");
@@ -167,7 +158,7 @@ public class NotificationController {
                 });
 
             } catch (Exception e) {
-                System.err.println("❌ [NotificationController] Error loading notifications: " + e.getMessage());
+                System.err.println(" [NotificationController] Error loading notifications: " + e.getMessage());
                 Platform.runLater(() -> {
                     notificationsContainer.getChildren().clear();
                     Label errorLabel = new Label("Failed to load notifications: " + e.getMessage());
@@ -179,9 +170,7 @@ public class NotificationController {
         }).start();
     }
 
-    /**
-     * Display notifications with action buttons
-     */
+
     private void displayNotifications(List<Map<String, Object>> notifications) {
         notificationsContainer.getChildren().clear();
 
@@ -197,9 +186,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * ✅ NEW: Create notification card with action buttons
-     */
+
     private VBox createNotificationCard(Map<String, Object> notification) {
         VBox card = new VBox(12);
         card.setPadding(new Insets(15));
@@ -235,14 +222,14 @@ public class NotificationController {
 
         card.getChildren().addAll(header, new Separator(), messageLabel);
 
-        // ✅ Add action buttons based on notification type
+
         if ("SESSION_ACCEPTED".equals(type)) {
             addJoinMeetingButton(card, notification);
         } else if ("MESSAGE".equals(type)) {
             addReplyButton(card, notification);
         }
 
-        // Footer with timestamp and mark as read
+
         HBox footer = new HBox(10);
         footer.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
@@ -267,9 +254,7 @@ public class NotificationController {
         return card;
     }
 
-    /**
-     * ✅ Add "Join Meeting" button for session notifications
-     */
+
     private void addJoinMeetingButton(VBox card, Map<String, Object> notification) {
         Boolean canJoin = (Boolean) notification.get("canJoin");
         String zoomLink = (String) notification.get("zoomLink");
@@ -302,9 +287,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * ✅ Add "Reply" button for message notifications
-     */
+
     private void addReplyButton(VBox card, Map<String, Object> notification) {
         Boolean canReply = (Boolean) notification.get("canReply");
         Object senderIdObj = notification.get("senderId");
@@ -326,9 +309,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Open Zoom link in browser
-     */
+
     private void openZoomLink(String zoomLink) {
         if (hostServices != null) {
             hostServices.showDocument(zoomLink);
@@ -344,9 +325,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Open reply dialog
-     */
+
     private void openReplyDialog(Long recipientId, String recipientName) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Reply to " + recipientName);
@@ -360,9 +339,7 @@ public class NotificationController {
         });
     }
 
-    /**
-     * Send reply message
-     */
+
     private void sendReply(Long recipientId, String recipientName, String messageText) {
         new Thread(() -> {
             try {
@@ -376,7 +353,7 @@ public class NotificationController {
                             "Your reply to " + recipientName + " has been sent successfully!");
                 });
             } catch (Exception e) {
-                System.err.println("❌ Error sending reply: " + e.getMessage());
+                System.err.println(" Error sending reply: " + e.getMessage());
                 Platform.runLater(() -> {
                     showAlert(Alert.AlertType.ERROR, "Error", "Failed to send reply: " + e.getMessage());
                 });
@@ -385,9 +362,7 @@ public class NotificationController {
         }).start();
     }
 
-    /**
-     * Mark notification as read
-     */
+
     private void markAsRead(Map<String, Object> notification) {
         new Thread(() -> {
             try {
@@ -396,15 +371,13 @@ public class NotificationController {
 
                 Platform.runLater(this::loadNotifications);
             } catch (Exception e) {
-                System.err.println("❌ Error marking as read: " + e.getMessage());
+                System.err.println(" Error marking as read: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();
     }
 
-    /**
-     * Update filter button styles
-     */
+
     private void updateFilterButtons() {
         String inactiveStyle = "-fx-background-color: #95a5a6; -fx-text-fill: white; " +
                 "-fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 5; -fx-cursor: hand;";
@@ -424,9 +397,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get type icon for notification
-     */
+
     private String getTypeIcon(String type) {
         if (type == null || type.isEmpty()) {
             return "❓";
@@ -440,9 +411,7 @@ public class NotificationController {
         };
     }
 
-    /**
-     * Get current user ID (with SessionManager support)
-     */
+
     private Long getUserId() {
         Long userId = SessionManager.getInstance().getCurrentUserId();
         if (userId == null) {
@@ -452,9 +421,7 @@ public class NotificationController {
         return userId;
     }
 
-    /**
-     * Navigate back to dashboard
-     */
+
     @FXML
     private void handleBack() {
         try {
@@ -471,9 +438,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Show alert dialog
-     */
+
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
