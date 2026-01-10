@@ -8,19 +8,26 @@
       <change afterPath="$PROJECT_DIR$/../BACKEND_COMMUNITY_FORUM_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../BACKEND_GROUP_CHAT_GUIDE.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../COMMUNITY_FORUM_GROUP_CHAT_COMPLETE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_EXPLANATION_PART1_AUTHENTICATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_EXPLANATION_PART2_MENTAL_HEALTH_TRACKING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_EXPLANATION_PART3_FORUM_MESSAGING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_EXPLANATION_PART4_THERAPY_SESSIONS_ZOOM.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DOCUMENTATION_INDEX.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DOCUMENTATION_PACKAGE_OVERVIEW.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_BACKEND_COMPLETE_DOCUMENTATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_CODE_DOCUMENTATION_INDEX.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_CODE_EXPLANATION_PART1_AUTH.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_CODE_EXPLANATION_PART2_JOURNAL_MOOD.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_CODE_EXPLANATION_PART3_FORUM_SESSIONS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_DOCUMENTATION_COMPLETE_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_DOCUMENTATION_PART2_AUTHENTICATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_DOCUMENTATION_PART3_MENTAL_HEALTH_TRACKING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_DOCUMENTATION_PART4_FORUM_MESSAGING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PROJECT_DOCUMENTATION_PART5_THERAPY_SESSIONS_ZOOM.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/QUICK_REFERENCE_CHEAT_SHEET.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/InstructorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/InstructorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/JournalEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/JournalEntryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/MessageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/MoodLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/MoodLogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/SessionRequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/SessionRequestService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/SleepService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/SleepService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/StressAssessmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/StressAssessmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapyNoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapyNoteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/TherapySessionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ZoomService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/service/ZoomService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mentalhealth/backend/controller/HabitController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +161,7 @@
       <workItem from="1767362762136" duration="15641000" />
       <workItem from="1767895159138" duration="15130000" />
       <workItem from="1767968498499" duration="4620000" />
-      <workItem from="1768020576432" duration="5632000" />
+      <workItem from="1768020576432" duration="13554000" />
     </task>
     <task id="LOCAL-00001" summary="fixed the folder,deleted the duplicate">
       <option name="closed" value="true" />
@@ -188,7 +195,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768026113682</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="enhanced and fixed some features">
+      <option name="closed" value="true" />
+      <created>1768031306865</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1768031306865</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

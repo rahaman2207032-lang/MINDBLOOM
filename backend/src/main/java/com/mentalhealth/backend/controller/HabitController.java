@@ -183,10 +183,7 @@ public class HabitController {
         }
     }
 
-    /**
-     * Get completion history for a habit
-     * GET /api/habits/{habitId}/completions
-     */
+
     @GetMapping("/{habitId}/completions")
     public ResponseEntity<?> getHabitCompletions(@PathVariable Long habitId) {
         try {
@@ -198,10 +195,7 @@ public class HabitController {
         }
     }
 
-    /**
-     * Check if habit is completed today
-     * GET /api/habits/{habitId}/completed-today
-     */
+
     @GetMapping("/{habitId}/completed-today")
     public ResponseEntity<?> isCompletedToday(@PathVariable Long habitId) {
         try {
@@ -215,10 +209,7 @@ public class HabitController {
         }
     }
 
-    /**
-     * Get habit statistics for a user
-     * GET /api/habits/user/{userId}/stats
-     */
+
     @GetMapping("/user/{userId}/stats")
     public ResponseEntity<?> getHabitStats(@PathVariable Long userId) {
         try {
@@ -230,18 +221,12 @@ public class HabitController {
         }
     }
 
-    /**
-     * Helper method to create error response
-     */
     private Map<String, String> createErrorResponse(String message) {
         Map<String, String> error = new HashMap<>();
         error.put("error", message);
         return error;
     }
 
-    /**
-     * Helper method to create success response
-     */
     private Map<String, String> createSuccessResponse(String message) {
         Map<String, String> response = new HashMap<>();
         response.put("message", message);
